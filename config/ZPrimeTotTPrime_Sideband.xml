@@ -3,7 +3,7 @@
 
 	  <!ENTITY NEVT "-1">
 	  <!ENTITY PRESELdir "/nfs/dust/cms/user/abenecke/ZPrimeTotTPrime/25ns/Pre/rootfile/CMSSW_7_6_3"> 
-	  <!ENTITY SELdir "/nfs/dust/cms/user/abenecke/ZPrimeTotTPrime/25ns/rootfile/Sideband_Data/side3">
+	  <!ENTITY SELdir "/nfs/dust/cms/user/abenecke/ZPrimeTotTPrime/25ns/rootfile/Sideband_Data/side3/test">
 	  <!ENTITY PROOFdir  "/nfs/dust/cms/user/abenecke/PROOF">
 	  <!ENTITY b_Cacheable  "False">
 	  <!ENTITY HLT "HLT_Mu45_eta2p1_v*">
@@ -111,7 +111,7 @@
 	  ]>
 
 <!--
-   <ConfigParse NEventsBreak="10000" FileSplit="0" />
+   <ConfigParse NEventsBreak="20000" FileSplit="0" />
    <ConfigSGE RAM ="8" DISK ="2" Mail="anna.benecke@desy.de" Notification="as" Workdir="workdir"/>
    -->
 
@@ -124,7 +124,7 @@
   <!--  <Cycle Name="uhh2::AnalysisModuleRunner" OutputDirectory="&SELdir;/" PostFix="" TargetLumi="2521.8" RunMode="PROOF" ProofServer="lite://" ProofWorkDir="&PROOFdir;/" ProofNodes="10" > -->
 
   
-  <InputData Version= "Data_C" Lumi="1" Type="Data" NEventsMax="&NEVT;" Cacheable="&b_Cacheable;">
+<InputData Version= "Data_C" Lumi="1" Type="Data" NEventsMax="&NEVT;" Cacheable="&b_Cacheable;">
       <In FileName="&Data_C;" Lumi="0.0"/> <InputTree Name="AnalysisTree"/> <OutputTree Name="AnalysisTree"/> </InputData>
 
  <InputData Version= "Data_D" Lumi="1" Type="Data" NEventsMax="&NEVT;" Cacheable="&b_Cacheable;">
@@ -133,7 +133,7 @@
 
 	  <!--                                                                       Sideband                                                                                               -->
 	  
-	  <InputData Version= "MC_ZPrime1500ToTPrime1200T_TPrimeToHT" Lumi="202594" Type="MC" NEventsMax="&NEVT;" Cacheable="&b_Cacheable;">
+ <InputData Version= "MC_ZPrime1500ToTPrime1200T_TPrimeToHT" Lumi="202594" Type="MC" NEventsMax="&NEVT;" Cacheable="&b_Cacheable;">
       <In FileName="&MC_ZPrime1500ToTPrime1200T_TPrimeToHT;" Lumi="0.0"/> <InputTree Name="AnalysisTree"/> <OutputTree Name="AnalysisTree"/> </InputData>
 <InputData Version= "MC_ZPrime2000ToTPrime1200T_TPrimeToHT" Lumi="205818" Type="MC" NEventsMax="&NEVT;" Cacheable="&b_Cacheable;"> 
       <In FileName="&MC_ZPrime2000ToTPrime1200T_TPrimeToHT;" Lumi="0.0"/> <InputTree Name="AnalysisTree"/> <OutputTree Name="AnalysisTree"/> </InputData>
@@ -157,13 +157,13 @@
       <In FileName="&MC_ZPrime2500ToTPrime1200T_TPrimeToWB;" Lumi="0.0"/> <InputTree Name="AnalysisTree"/> <OutputTree Name="AnalysisTree"/> </InputData>
 
 
-    <InputData Version="TTbarAll" Lumi="117767.6758" Type="MC" NEventsMax="&NEVT;" Cacheable="&b_Cacheable;">
+  <InputData Version="TTbarAll" Lumi="117767.6758" Type="MC" NEventsMax="&NEVT;" Cacheable="&b_Cacheable;">
             <In FileName="&TTbarAll;" Lumi="0.0"/> <InputTree Name="AnalysisTree"/> <OutputTree Name="AnalysisTree"/> </InputData> 
 
 	  <InputData Version="TTbar_Mtt0700to1000" Lumi="486718.504" Type="MC" NEventsMax="&NEVT;" Cacheable="&b_Cacheable;">
             <In FileName="&TTbar_Mtt0700to1000;" Lumi="0.0"/> <InputTree Name="AnalysisTree"/> <OutputTree Name="AnalysisTree"/> </InputData>
 
- 	  <InputData Version="TTbar_Mtt1000toINFT" Lumi="86605.11" Type="MC" NEventsMax="&NEVT;" Cacheable="&b_Cacheable;">
+     <InputData Version="TTbar_Mtt1000toINFT" Lumi="86605.11" Type="MC" NEventsMax="&NEVT;" Cacheable="&b_Cacheable;">
 	    <In FileName="&TTbar_Mtt1000toINFT;" Lumi="0.0"/> <InputTree Name="AnalysisTree"/> <OutputTree Name="AnalysisTree"/> </InputData>
 
 <InputData Version="WJets_LNu_HT100To200" Lumi="6264.6" Type="MC" NEventsMax="&NEVT;" Cacheable="&b_Cacheable;">
@@ -251,6 +251,13 @@
   
   <Item Name="lumihists_lumi_per_bin" Value="50"/> 
   <Item Name="trigger" Value="&HLT;"/>
+
+ <Item Name="MCBtagEfficiencies" Value="/nfs/dust/cms/user/abenecke/CMSSW_7_6_3/src/UHH2/ZPrimeTotTPrime/hist/BTagMCEfficiencyHists.root" />
+  <Item Name="BTagCalibration" Value="/nfs/dust/cms/user/abenecke/CMSSW_7_6_3/src/UHH2/common/data/CSVv2.csv" />
+  <Item Name="btagging_sys" Value="central" />
+  <Item Name="subjetbtag_sys" Value="central" />
+  <Item Name="data_dir_path" Value="/nfs/dust/cms/user/abenecke/CMSSW_7_6_3/src/UHH2/common/data/" />
+
   <Item Name="AnalysisModule" Value="ZPrimeTotTPrimeSidebandModuleside3" />
 
 </UserConfig>

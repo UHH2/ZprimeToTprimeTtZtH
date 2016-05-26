@@ -12,10 +12,12 @@ class ZPrimeTotTPrimeReconstructionHypothesis {
   LorentzVector toplep_v4() const{return m_toplep_v4;}
   LorentzVector tophad_v4() const{return m_tophad_v4;} 
   LorentzVector HZW_v4() const{return m_HZW_v4;} 
+  LorentzVector W_v4() const{return m_W_v4;} 
   LorentzVector neutrino_v4() const{return m_neutrino_v4;} 
   Particle lepton() const{return m_lepton;}
   // TopJet HZW() const{return m_HZW;}
   const std::vector<Jet>& HZW_subjets()const{return m_subjets;}
+  const std::vector<Jet>& W_subjets()const{return m_Wsubjets;}
   const std::vector<Jet>& toplep_jets() const{return m_toplep_jets;}
   const std::vector<Jet>& tophad_jets() const{return m_tophad_jets;}
   //const std::vector<Jet>& HZW_jets() const{return m_HZW_jets;}
@@ -28,6 +30,7 @@ class ZPrimeTotTPrimeReconstructionHypothesis {
   LorentzVector antitop_v4() const{ return m_lepton.charge() < 0 ? m_toplep_v4 : m_tophad_v4;}
   LorentzVector wlep_v4() const{ return m_neutrino_v4+m_lepton.v4();}
   LorentzVector blep_v4() const{return m_blep_v4;}
+  LorentzVector bhad_v4() const{return m_bhad_v4;}
 
   /// get the discriminator value for this hypothesis; thows a runtime_error if it does not exist.
   float discriminator(const std::string & l) const {
@@ -44,12 +47,14 @@ class ZPrimeTotTPrimeReconstructionHypothesis {
   }
   
   void set_blep_v4(LorentzVector v4){m_blep_v4=v4;}
+  void set_bhad_v4(LorentzVector v4){m_bhad_v4=v4;}
   void set_toplep_v4(LorentzVector v4){m_toplep_v4=v4;}
   void set_tophad_v4(LorentzVector v4){m_tophad_v4=v4;} 
   void set_HZW_v4(LorentzVector v4){m_HZW_v4=v4;} 
+  void set_W_v4(LorentzVector v4){m_W_v4=v4;} 
   void set_neutrino_v4(LorentzVector v4){m_neutrino_v4=v4;}
   void add_toplep_jet(const Jet& j){m_toplep_jets.push_back(j);}
-   void add_tophad_jet(const Jet& j){m_tophad_jets.push_back(j);}
+  void add_tophad_jet(const Jet& j){m_tophad_jets.push_back(j);}
   //void add_HZW_jet(const Jet& j){m_HZW_jets.push_back(j);}
   // void add_TOPtoplep_jet(const TopJet& j){m_TOPtoplep_jets.push_back(j);}
   // void add_tophad_jet(const TopJet& j){m_tophad_jets.push_back(j);}
@@ -57,21 +62,26 @@ class ZPrimeTotTPrimeReconstructionHypothesis {
   void clear_toplep_jet(){m_toplep_jets.clear();}
   void clear_tophad_jet(){m_tophad_jets.clear();}
   void clear_subjets(){m_subjets.clear();}
+  void clear_Wsubjets(){m_Wsubjets.clear();}
   void set_tophad_topjet_ptr(const TopJet* const tjp){m_tophad_topjet_ptr = tjp;}
   void set_lepton(const Particle & l){m_lepton = l;}
-  //  void set_HZW(const TopJet & l){m_HZW = l;}
+  void set_W(const TopJet & l){m_W = l;}
   void set_subjets(const Jet& subjet){m_subjets.push_back(subjet);}
+  void set_Wsubjets(const Jet& subjet){m_Wsubjets.push_back(subjet);}
   void set_discriminator(const std::string & label, float discr){
     m_discriminators[label] = discr;
   }
   
  private:
   LorentzVector m_blep_v4;
+  LorentzVector m_bhad_v4;
   LorentzVector m_toplep_v4;
   LorentzVector m_tophad_v4;
   LorentzVector m_HZW_v4;
+  LorentzVector m_W_v4;
   LorentzVector m_neutrino_v4;
   std::vector<Jet>m_subjets;
+  std::vector<Jet>m_Wsubjets;
 
   std::vector<Jet> m_toplep_jets;
   std::vector<Jet> m_tophad_jets;
@@ -82,7 +92,7 @@ class ZPrimeTotTPrimeReconstructionHypothesis {
 
   const TopJet* m_tophad_topjet_ptr;
   Particle m_lepton;
-  // TopJet m_HZW;
+  TopJet m_W;
 
   std::map<std::string, float> m_discriminators;
 };

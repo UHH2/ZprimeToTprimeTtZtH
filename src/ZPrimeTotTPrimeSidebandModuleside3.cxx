@@ -26,6 +26,7 @@
 #include "UHH2/common/include/PrimaryLepton.h"
 #include <UHH2/common/include/TriggerSelection.h>
 #include "UHH2/common/include/LuminosityHists.h"
+#include <fstream>
 
 #include <UHH2/ZPrimeTotTPrime/include/ZPrimeTotTPrimeSelections.h>
 #include <UHH2/ZPrimeTotTPrime/include/ZPrimeTotTPrimeHists.h>
@@ -77,9 +78,15 @@ private:
   std::unique_ptr<uhh2::Selection> trigger_sel;
   std::unique_ptr<AndSelection>  metfilters_selection;
 
+ //correctors
+ // std::unique_ptr<SubJetCorrector> subjetcorrector;
+ 
+
   // Data/MC scale factors
   std::unique_ptr<uhh2::AnalysisModule> pileup_SF;
   std::unique_ptr<uhh2::AnalysisModule> lumiweight;
+  std::unique_ptr<uhh2::AnalysisModule> muonscale;
+  std::unique_ptr<uhh2::AnalysisModule> btagwAK4;
 
   //Selections
   std::unique_ptr<uhh2::Selection> lumi_sel;
@@ -398,8 +405,15 @@ ZPrimeTotTPrimeSidebandModuleside3::ZPrimeTotTPrimeSidebandModuleside3(uhh2::Con
   else throw std::runtime_error("ZprimeSelectionModule -- undefined argument for 'channel' key in xml file (must be 'muon' or 'elec'): "+channel);
 
   const bool isMC = (ctx.get("dataset_type") == "MC");
-  //// COMMON MODULES
-  if(isMC){ pileup_SF.reset(new MCPileupReweight(ctx)); lumiweight.reset(new MCLumiWeight(ctx));}
+  //// Data/MC
+ auto data_dir_path = ctx.get("data_dir_path");
+
+  if(isMC){ 
+    pileup_SF.reset(new MCPileupReweight(ctx)); 
+    lumiweight.reset(new MCLumiWeight(ctx)); 
+    // btagwAK4.reset(new MCBTagScaleFactor(ctx, CSVBTag::WP_MEDIUM, "jets")); 
+    // muonscale.reset(new MCMuonScaleFactor(ctx,data_dir_path + "MuonID_Z_RunCD_Reco76X_Feb15.root","MC_NUM_MediumID_DEN_genTracks_PAR_pt_spliteta_bin1", 1.));
+  }
   else     lumi_sel.reset(new LumiSelection(ctx));
 
   PrimaryVertexId pvid=StandardPrimaryVertexId();
@@ -442,46 +456,50 @@ ZPrimeTotTPrimeSidebandModuleside3::ZPrimeTotTPrimeSidebandModuleside3(uhh2::Con
   htcalc.push_back(std::unique_ptr<AnalysisModule>(new HTlepCalculator(ctx)));
   topjetlepton_cleaner.reset(new TopJetLeptonDeltaRCleaner(.8));
 
- 
+  //  //correctors
+  // if(isMC) subjetcorrector.reset(new SubJetCorrector(ctx,JERFiles::Fall15_25ns_L123_AK4PFchs_MC));
+  // else subjetcorrector.reset(new SubJetCorrector(ctx,JERFiles::Fall15_25ns_L123_AK4PFchs_DATA));
+
+
   // TOPJET SELECTIONS
   TOPjet1_sel.reset(new NTopJetSelection(1, -1, TopJetId(PtEtaCut( 250., 2.4))));
  
  
-//BTAG
+  //BTAG
   btag1_sel.reset(new NBTagSelection(1, -1));
   btag0_sel.reset(new NBTagSelection(0, 0));
 
 
   //2D Cut
-   twodcut_sel.reset(new TwoDCut(.4, 40.));
+  twodcut_sel.reset(new TwoDCut(.4, 40.));
   // reliso_sel.reset(new ZPrimeTotTPrimeRelIsoCut(0.15));
 
   //TOP TAGGER
-   const TopJetId topjetID = AndId<TopJet>(Type2TopTag(150,240,Type2TopTag::MassType::groomed), Tau32(0.6));
-   //  const TopJetId untopjetID =VetoId<TopJet>(topjetID);
+  const TopJetId topjetID = AndId<TopJet>(Type2TopTag(150,240,Type2TopTag::MassType::groomed), Tau32(0.6));
+  //  const TopJetId untopjetID =VetoId<TopJet>(topjetID);
   toptag_sel.reset(new NTopJetSelection(1, -1, topjetID));
   toptag_cleaner.reset(new TopJetCleaner(ctx,topjetID));
   //toptag_uncleaner.reset(new TopJetCleaner(ctx,untopjetID));
 
 
   //Higgs TAGGER
-     const TopJetId higgsjetID = AndId<TopJet>(HiggsTag(100,150,VetoId<Jet>(CSVBTag(CSVBTag::WP_MEDIUM))), Tau21(1) );
-     //const TopJetId higgsjetID = AndId<TopJet>(HiggsTag(100,150), Tau21(1) );
-// const TopJetId higgsjetID = AndId<TopJet>(ZPrimeTotTPrimeUnHiggstag(60,150), Tau21(1)  );
- higgstag_sel.reset(new NTopJetSelection(1, -1, higgsjetID));
- higgstag_cleaner.reset(new TopJetCleaner(ctx,higgsjetID));
- // higgstag_uncleaner.reset(new TopJetCleaner(ctx,unhiggsjetID));
+  const TopJetId higgsjetID = AndId<TopJet>(HiggsTag(100,150,VetoId<Jet>(CSVBTag(CSVBTag::WP_MEDIUM))), Tau21(1) );
+  //const TopJetId higgsjetID = AndId<TopJet>(HiggsTag(100,150), Tau21(1) );
+  // const TopJetId higgsjetID = AndId<TopJet>(ZPrimeTotTPrimeUnHiggstag(60,150), Tau21(1)  );
+  higgstag_sel.reset(new NTopJetSelection(1, -1, higgsjetID));
+  higgstag_cleaner.reset(new TopJetCleaner(ctx,higgsjetID));
+  // higgstag_uncleaner.reset(new TopJetCleaner(ctx,unhiggsjetID));
 
   //W/Z TAGGER
   const TopJetId ZWjetID = AndId<TopJet>(Type2TopTag(60,115,Type2TopTag::MassType::groomed),VetoId<TopJet>( Tau21(0.4)));
   //  const TopJetId ZWjetID = AndId<TopJet>(Type2TopTag(60,115,Type2TopTag::MassType::groomed), Tau21(0.5));
- // const TopJetId ZWjetID = AndId<TopJet>(ZPrimeTotTPrimeUnHiggstag(60,150) , Tau21(1) );
-    // const TopJetId unZWjetID =VetoId<TopJet>(ZWjetID);
- ZWtag_sel.reset(new NTopJetSelection(1, -1, ZWjetID));
- ZWtag_cleaner.reset(new TopJetCleaner(ctx,ZWjetID));
- // ZWtag_uncleaner.reset(new TopJetCleaner(ctx,unZWjetID));
+  // const TopJetId ZWjetID = AndId<TopJet>(ZPrimeTotTPrimeUnHiggstag(60,150) , Tau21(1) );
+  // const TopJetId unZWjetID =VetoId<TopJet>(ZWjetID);
+  ZWtag_sel.reset(new NTopJetSelection(1, -1, ZWjetID));
+  ZWtag_cleaner.reset(new TopJetCleaner(ctx,ZWjetID));
+  // ZWtag_uncleaner.reset(new TopJetCleaner(ctx,unZWjetID));
 
- // const TopJetId untagID = AndId<TopJet>(VetoId<TopJet>(higgsjetID),VetoId<TopJet>(ZWjetID));
+  // const TopJetId untagID = AndId<TopJet>(VetoId<TopJet>(higgsjetID),VetoId<TopJet>(ZWjetID));
 
   //LEPTONSELECTION
   lep1_sel.reset(new uhh2::AndSelection(ctx));
@@ -501,8 +519,8 @@ ZPrimeTotTPrimeSidebandModuleside3::ZPrimeTotTPrimeSidebandModuleside3(uhh2::Con
   /* KINEMATICAL RECO */
   const std::string ZprimeTotTPrime_gen_label ("zprimegen");
   const std::string ZprimeTotTPrime_hyps_label("ZPrimeTotTPrimeReconstruction");
- const std::string ZprimeTotTPrime_selection_hyps_label("ZPrimeTotTPrimeReconstruction"); 
- const std::string ttbar_hyps_label("TTbarReconstruction");
+  const std::string ZprimeTotTPrime_selection_hyps_label("ZPrimeTotTPrimeReconstruction"); 
+  const std::string ttbar_hyps_label("TTbarReconstruction");
   const std::string ZprimeTotTPrime_chi2_label("Chi2");
   const std::string ttbar_chi2_label("Chi2");
   const std::string ttbar_gen_label ("ttbargen");
@@ -555,23 +573,23 @@ ZPrimeTotTPrimeSidebandModuleside3::ZPrimeTotTPrimeSidebandModuleside3(uhh2::Con
   // muon_reliso_h.reset(new MuonHists(ctx, "muon_reliso"));
   // event_reliso_h.reset(new EventHists(ctx, "event_reliso"));
 
-//Hists btag0
+  //Hists btag0
   topjet_btag0_h.reset(new TopJetHists(ctx, "topjet_btag0"));
   eff_btag0_h.reset(new ZPrimeTotTPrimeHists(ctx, "eff_btag0"));
   jet_btag0_h.reset(new JetHists(ctx, "jet_btag0"));
   muon_btag0_h.reset(new MuonHists(ctx, "muon_btag0"));
   event_btag0_h.reset(new EventHists(ctx, "event_btag0"));
- chi2min_btag0_h.reset(new ZPrimeTotTPrimeHypothesisHists(ctx, "chi2min_btag0",ZprimeTotTPrime_hyps_label,ZprimeTotTPrime_chi2_label ));
+  chi2min_btag0_h.reset(new ZPrimeTotTPrimeHypothesisHists(ctx, "chi2min_btag0",ZprimeTotTPrime_hyps_label,ZprimeTotTPrime_chi2_label ));
 
-//Hists btag1
+  //Hists btag1
   topjet_btag1_h.reset(new TopJetHists(ctx, "topjet_btag1"));
   eff_btag1_h.reset(new ZPrimeTotTPrimeHists(ctx, "eff_btag1"));
   jet_btag1_h.reset(new JetHists(ctx, "jet_btag1"));
   muon_btag1_h.reset(new MuonHists(ctx, "muon_btag1"));
   event_btag1_h.reset(new EventHists(ctx, "event_btag1"));
- chi2min_btag1_h.reset(new ZPrimeTotTPrimeHypothesisHists(ctx, "chi2min_btag1",ZprimeTotTPrime_hyps_label,ZprimeTotTPrime_chi2_label ));
+  chi2min_btag1_h.reset(new ZPrimeTotTPrimeHypothesisHists(ctx, "chi2min_btag1",ZprimeTotTPrime_hyps_label,ZprimeTotTPrime_chi2_label ));
 
- higgs_top_chi2min_btag1_h.reset(new ZPrimeTotTPrimeHypothesisHists(ctx, "higgs_top_chi2min_btag1",ZprimeTotTPrime_hyps_label,ZprimeTotTPrime_chi2_label));
+  higgs_top_chi2min_btag1_h.reset(new ZPrimeTotTPrimeHypothesisHists(ctx, "higgs_top_chi2min_btag1",ZprimeTotTPrime_hyps_label,ZprimeTotTPrime_chi2_label));
   higgs_notop_chi2min_btag1_h.reset(new ZPrimeTotTPrimeHypothesisHists(ctx, "higgs_notop_chi2min_btag1",ZprimeTotTPrime_hyps_label,ZprimeTotTPrime_chi2_label));
   zw_top_chi2min_btag1_h.reset(new ZPrimeTotTPrimeHypothesisHists(ctx, "zw_top_chi2min_btag1",ZprimeTotTPrime_hyps_label,ZprimeTotTPrime_chi2_label));
   zw_notop_chi2min_btag1_h.reset(new ZPrimeTotTPrimeHypothesisHists(ctx, "zw_notop_chi2min_btag1",ZprimeTotTPrime_hyps_label,ZprimeTotTPrime_chi2_label));
@@ -829,29 +847,32 @@ bool ZPrimeTotTPrimeSidebandModuleside3::process(uhh2::Event& event){
 
  if(berror)   std::cout<<"SelectionModule L:232 vor Input Histogrammen"<<std::endl;
   
-  /////////////////////////////////////////////////////////// Common Modules   ///////////////////////////////////////////////////////////////////////////////
+ /////////////////////////////////////////////////////////// Common Modules   ///////////////////////////////////////////////////////////////////////////////
 
 
-  //common Modules
-  /* luminosity sections from CMS golden-JSON file */
-  if(event.isRealData && !lumi_sel->passes(event)) return false;
-  /* pileup SF */
-  if(!event.isRealData){ pileup_SF->process(event);lumiweight->process(event);}
-  ////
+ //common Modules
+ /* luminosity sections from CMS golden-JSON file */
+ if(event.isRealData && !lumi_sel->passes(event)) return false;
+ /* pileup SF */
+ // if(!event.isRealData){ pileup_SF->process(event);lumiweight->process(event);btagwAK4->process(event);muonscale->process(event);}
+if(!event.isRealData){ pileup_SF->process(event);lumiweight->process(event);}
+ ////
 
-  // OBJ CLEANING
-  muo_cleaner->process(event);
-  sort_by_pt<Muon>(*event.muons);
+ //correctors
+// subjetcorrector->process(event);
+ // OBJ CLEANING
+ muo_cleaner->process(event);
+ sort_by_pt<Muon>(*event.muons);
 
-  ele_cleaner->process(event);
-  sort_by_pt<Electron>(*event.electrons);
+ ele_cleaner->process(event);
+ sort_by_pt<Electron>(*event.electrons);
 
-  jet_IDcleaner->process(event);
-  jetlepton_cleaner->process(event);
-  jet_cleaner2->process(event); 
+ jet_IDcleaner->process(event);
+ jetlepton_cleaner->process(event);
+ jet_cleaner2->process(event); 
   
-  sort_by_pt<Jet>(*event.jets);
-  sort_by_pt<TopJet>(*event.topjets);
+ sort_by_pt<Jet>(*event.jets);
+ sort_by_pt<TopJet>(*event.topjets);
 
 ///////Trigger///////
   const bool pass_trigger = trigger_sel->passes(event);
@@ -1254,7 +1275,23 @@ bool pass_btag0 = btag0_sel->passes(event);
    event_btag0_h->fill(event);
    chi2min_btag0_h->fill(event);
  }
+ // //////////////////////////////////////////////////////////  Eventnumber  ////////////////////////////////////////////////////////
+ //  // Outputfile of Eventnumber, Runnumber, Lumiblock to compare to Z'>tT'(Wb)
+ //  if(filename.find("Data_C")!=std::string::npos){
+ //  std::fstream g;
+ //  g.open("eventnumber_side3_C.txt", ios::out);
+ //  g << event.run<<" "<<event.luminosityBlock<<" "<<event.event  << std::endl;
+ //  g.close();
+ // }
 
+ // if(filename.find("Data_D")!=std::string::npos){
+ //  std::fstream f;
+ //  f.open("eventnumber_side3_D.txt", ios::out);
+ //  f << event.run<<" "<<event.luminosityBlock<<" "<<event.event  << std::endl;
+ //  f.close();
+ // }
+ // ////////////
+ /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// 
 
  lumi_h->fill(event);
 

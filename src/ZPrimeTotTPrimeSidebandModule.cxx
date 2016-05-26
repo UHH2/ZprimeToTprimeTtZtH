@@ -26,6 +26,7 @@
 #include "UHH2/common/include/PrimaryLepton.h"
 #include <UHH2/common/include/TriggerSelection.h>
 #include "UHH2/common/include/LuminosityHists.h"
+#include <fstream>
 
 #include <UHH2/ZPrimeTotTPrime/include/ZPrimeTotTPrimeSelections.h>
 #include <UHH2/ZPrimeTotTPrime/include/ZPrimeTotTPrimeHists.h>
@@ -75,9 +76,14 @@ private:
   std::unique_ptr<uhh2::Selection> trigger_sel;
   std::unique_ptr<AndSelection>  metfilters_selection;
 
+ //correctors
+  std::unique_ptr<SubJetCorrector> subjetcorrector;
+
   // Data/MC scale factors
   std::unique_ptr<uhh2::AnalysisModule> pileup_SF;
   std::unique_ptr<uhh2::AnalysisModule> lumiweight;
+  std::unique_ptr<uhh2::AnalysisModule> muonscale;
+  std::unique_ptr<uhh2::AnalysisModule> btagwAK4;
 
   //Selections
   std::unique_ptr<uhh2::Selection> lumi_sel;
@@ -89,7 +95,7 @@ private:
   std::unique_ptr<uhh2::Selection> btag1_sel;
  std::unique_ptr<uhh2::Selection> btag0_sel;
 
-  std::unique_ptr<uhh2::Selection> twodcut_sel;// pt 20 rel 0.4
+  std::unique_ptr<uhh2::Selection> twodcut_sel;// pt 40 rel 0.4
   std::unique_ptr<uhh2::Selection> reliso_sel; //relIso < 0.35
   std::unique_ptr<uhh2::Selection> met_sel;
   std::unique_ptr<uhh2::Selection> ht_sel;
@@ -425,9 +431,18 @@ ZPrimeTotTPrimeSidebandModule::ZPrimeTotTPrimeSidebandModule(uhh2::Context& ctx)
   else throw std::runtime_error("ZprimeSelectionModule -- undefined argument for 'channel' key in xml file (must be 'muon' or 'elec'): "+channel);
 
   const bool isMC = (ctx.get("dataset_type") == "MC");
-  //// COMMON MODULES
-  if(isMC){ pileup_SF.reset(new MCPileupReweight(ctx)); lumiweight.reset(new MCLumiWeight(ctx));}
+  //// Data/MC scale
+  auto data_dir_path = ctx.get("data_dir_path");
+  if(isMC){ 
+    pileup_SF.reset(new MCPileupReweight(ctx)); 
+    lumiweight.reset(new MCLumiWeight(ctx));
+    btagwAK4.reset(new MCBTagScaleFactor(ctx, CSVBTag::WP_MEDIUM, "jets")); 
+    muonscale.reset(new MCMuonScaleFactor(ctx,data_dir_path + "MuonID_Z_RunCD_Reco76X_Feb15.root","MC_NUM_MediumID_DEN_genTracks_PAR_pt_spliteta_bin1", 1.));
+  }
   else     lumi_sel.reset(new LumiSelection(ctx));
+
+
+
 
   PrimaryVertexId pvid=StandardPrimaryVertexId();
   metfilters.emplace_back(new PrimaryVertexCleaner(pvid));
@@ -440,6 +455,7 @@ ZPrimeTotTPrimeSidebandModule::ZPrimeTotTPrimeSidebandModule(uhh2::Context& ctx)
   metfilters_selection->add<TriggerSelection>("chargedHadronTrackResolutionFilter", "Flag_chargedHadronTrackResolutionFilter"); 
   metfilters_selection->add<TriggerSelection>("muonBadTrackFilter", "Flag_muonBadTrackFilter");
   metfilters_selection->add<NPVSelection>("1 good PV",1,-1,pvid);
+
 
   std::vector<std::string> JEC_AK4, JEC_AK8;
   if(isMC){
@@ -470,6 +486,12 @@ ZPrimeTotTPrimeSidebandModule::ZPrimeTotTPrimeSidebandModule(uhh2::Context& ctx)
   htcalc.push_back(std::unique_ptr<AnalysisModule>(new HTlepCalculator(ctx)));
   topjetlepton_cleaner.reset(new TopJetLeptonDeltaRCleaner(.8));
 
+
+//correctors
+  if(isMC) subjetcorrector.reset(new SubJetCorrector(ctx,JERFiles::Fall15_25ns_L123_AK4PFchs_MC));
+  else subjetcorrector.reset(new SubJetCorrector(ctx,JERFiles::Fall15_25ns_L123_AK4PFchs_DATA));
+
+  
   // SELECTIONS
   //jet1_sel.reset(new NJetSelection(1,-1, JetId(PtEtaCut(0.,2.5))));
   
@@ -483,7 +505,7 @@ ZPrimeTotTPrimeSidebandModule::ZPrimeTotTPrimeSidebandModule(uhh2::Context& ctx)
   btag0_sel.reset(new NBTagSelection(0, 0));
 
   //2D Cut
-   twodcut_sel.reset(new TwoDCut(.4, 25.));
+   twodcut_sel.reset(new TwoDCut(.4, 20.));
   // reliso_sel.reset(new ZPrimeTotTPrimeRelIsoCut(0.15));
    //  muonpt_sel.reset(new ZPrimeTotTPrimeMuonPT(170));
   //TOP TAGGER
@@ -883,8 +905,11 @@ bool ZPrimeTotTPrimeSidebandModule::process(uhh2::Event& event){
   /* luminosity sections from CMS golden-JSON file */
   if(event.isRealData && !lumi_sel->passes(event)) return false;
   /* pileup SF */
-  if(!event.isRealData){ pileup_SF->process(event);lumiweight->process(event);}
+  if(!event.isRealData){ pileup_SF->process(event);lumiweight->process(event);btagwAK4->process(event);muonscale->process(event);}
   ////
+
+  //correctors
+  subjetcorrector->process(event);
 
   // OBJ CLEANING
   muo_cleaner->process(event);
@@ -1060,11 +1085,11 @@ if(berror) std::cout<<"SelectionModule L:858 Size topjets Collection "<<event.to
  hyps.clear();
  hyps.push_back(hyp_obj);
 
- chi2min_reco_h->fill(event);
+ //chi2min_reco_h->fill(event);
 
 
 
-
+ if(berror) std::cout<<"SelectionModule L:338 vor chi2cut"<<std::endl;
  //////////////////////////////////////////////////////////  CHi2 Cut  ////////////////////////////////////////////////////////
 
  bool pass_chi2cut = chi2cut_sel->passes(event);
@@ -1076,6 +1101,8 @@ if(berror) std::cout<<"SelectionModule L:858 Size topjets Collection "<<event.to
  muon_chi2cut_h->fill(event);
  event_chi2cut_h->fill(event);
 
+
+if(berror) std::cout<<"SelectionModule L:338 vor btag"<<std::endl;
 /////////////////////////////////////////////////////////  btag  ////////////////////////////////////////////////////////
 bool pass_btag1 = btag1_sel->passes(event);
  bool pass_btag0 = btag0_sel->passes(event);
@@ -1097,8 +1124,24 @@ bool pass_btag1 = btag1_sel->passes(event);
    event_btag0_h->fill(event);
    chi2min_btag0_h->fill(event);
  }
+ // //////////////////////////////////////////////////////////  Eventnumber  ////////////////////////////////////////////////////////
+ //  // Outputfile of Eventnumber, Runnumber, Lumiblock to compare to Z'>tT'(Wb)
+ //  if(filename.find("Data_C")!=std::string::npos){
+ //  std::fstream g;
+ //  g.open("eventnumber_side1_C.txt", ios::out);
+ //  g << event.run<<" "<<event.luminosityBlock<<" "<<event.event  << std::endl;
+ //  g.close();
+ // }
 
-
+ // if(filename.find("Data_D")!=std::string::npos){
+ //  std::fstream f;
+ //  f.open("eventnumber_side1_D.txt", ios::out);
+ //  f << event.run<<" "<<event.luminosityBlock<<" "<<event.event  << std::endl;
+ //  f.close();
+ // }
+ // ////
+ /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// 
+ lumi_h->fill(event);
  ///////////      counting signal events      /////////////////////////
  /////AK8 und AK4 auf urspruenglich zurueck setzten
 

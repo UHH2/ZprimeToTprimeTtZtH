@@ -26,6 +26,7 @@
 #include "UHH2/common/include/PrimaryLepton.h"
 #include <UHH2/common/include/TriggerSelection.h>
 #include "UHH2/common/include/LuminosityHists.h"
+#include <fstream>
 
 #include <UHH2/ZPrimeTotTPrime/include/ZPrimeTotTPrimeSelections.h>
 #include <UHH2/ZPrimeTotTPrime/include/ZPrimeTotTPrimeHists.h>
@@ -77,9 +78,15 @@ private:
   std::unique_ptr<uhh2::Selection> trigger_sel;
   std::unique_ptr<AndSelection>  metfilters_selection;
 
+ //correctors
+  std::unique_ptr<SubJetCorrector> subjetcorrector;
+ 
+
   // Data/MC scale factors
   std::unique_ptr<uhh2::AnalysisModule> pileup_SF;
   std::unique_ptr<uhh2::AnalysisModule> lumiweight;
+  std::unique_ptr<uhh2::AnalysisModule> muonscale;
+  std::unique_ptr<uhh2::AnalysisModule> btagwAK4;
 
   //Selections
   std::unique_ptr<uhh2::Selection> lumi_sel;
@@ -398,8 +405,15 @@ ZPrimeTotTPrimeSidebandModuleside2::ZPrimeTotTPrimeSidebandModuleside2(uhh2::Con
   else throw std::runtime_error("ZprimeSelectionModule -- undefined argument for 'channel' key in xml file (must be 'muon' or 'elec'): "+channel);
 
   const bool isMC = (ctx.get("dataset_type") == "MC");
-  //// COMMON MODULES
-  if(isMC){ pileup_SF.reset(new MCPileupReweight(ctx)); lumiweight.reset(new MCLumiWeight(ctx));}
+  //// Data/MC scale
+ auto data_dir_path = ctx.get("data_dir_path");
+
+  if(isMC){ 
+    pileup_SF.reset(new MCPileupReweight(ctx)); 
+    lumiweight.reset(new MCLumiWeight(ctx)); 
+    btagwAK4.reset(new MCBTagScaleFactor(ctx, CSVBTag::WP_MEDIUM, "jets")); 
+    muonscale.reset(new MCMuonScaleFactor(ctx,data_dir_path + "MuonID_Z_RunCD_Reco76X_Feb15.root","MC_NUM_MediumID_DEN_genTracks_PAR_pt_spliteta_bin1", 1.));
+  }
   else     lumi_sel.reset(new LumiSelection(ctx));
 
   PrimaryVertexId pvid=StandardPrimaryVertexId();
@@ -443,6 +457,11 @@ ZPrimeTotTPrimeSidebandModuleside2::ZPrimeTotTPrimeSidebandModuleside2(uhh2::Con
   topjetlepton_cleaner.reset(new TopJetLeptonDeltaRCleaner(.8));
 
  
+ //correctors
+  if(isMC) subjetcorrector.reset(new SubJetCorrector(ctx,JERFiles::Fall15_25ns_L123_AK4PFchs_MC));
+  else subjetcorrector.reset(new SubJetCorrector(ctx,JERFiles::Fall15_25ns_L123_AK4PFchs_DATA));
+
+
   // TOPJET SELECTIONS
   TOPjet1_sel.reset(new NTopJetSelection(1, -1, TopJetId(PtEtaCut( 250., 2.4))));
  
@@ -808,12 +827,12 @@ bool ZPrimeTotTPrimeSidebandModuleside2::process(uhh2::Event& event){
   if(berror)  std::cout<<"/////////////////////////////////////SelectionModule L:218 Am Anfang///////////////////////////////////////////////////////////////////////////////"<<std::endl;
 
   for (auto & mod : htcalc) {
-      mod->process(event);
-    }
+    mod->process(event);
+  }
 
   if(!metfilters_selection->passes(event)) return false;
   for(auto & m : metfilters){
-        m->process(event);
+    m->process(event);
   }
 
   //Select of the inclusiv ttbar sample only events from 0 to 700 GeV
@@ -827,7 +846,7 @@ bool ZPrimeTotTPrimeSidebandModuleside2::process(uhh2::Event& event){
     ZprimeTotTPrimeprod->process(event); 
   }
 
- if(berror)   std::cout<<"SelectionModule L:232 vor Input Histogrammen"<<std::endl;
+  if(berror)   std::cout<<"SelectionModule L:232 vor Input Histogrammen"<<std::endl;
   
   /////////////////////////////////////////////////////////// Common Modules   ///////////////////////////////////////////////////////////////////////////////
 
@@ -836,9 +855,11 @@ bool ZPrimeTotTPrimeSidebandModuleside2::process(uhh2::Event& event){
   /* luminosity sections from CMS golden-JSON file */
   if(event.isRealData && !lumi_sel->passes(event)) return false;
   /* pileup SF */
-  if(!event.isRealData){ pileup_SF->process(event);lumiweight->process(event);}
+  if(!event.isRealData){ pileup_SF->process(event);lumiweight->process(event);btagwAK4->process(event);muonscale->process(event);}
   ////
 
+  //correctors
+  subjetcorrector->process(event);
   // OBJ CLEANING
   muo_cleaner->process(event);
   sort_by_pt<Muon>(*event.muons);
@@ -853,11 +874,11 @@ bool ZPrimeTotTPrimeSidebandModuleside2::process(uhh2::Event& event){
   sort_by_pt<Jet>(*event.jets);
   sort_by_pt<TopJet>(*event.topjets);
 
-///////Trigger///////
+  ///////Trigger///////
   const bool pass_trigger = trigger_sel->passes(event);
   if(!pass_trigger) return false;
 
-/////////////////////////////////////////////////////////// Input Histogramme ///////////////////////////////////////////////////////////////////////////////
+  /////////////////////////////////////////////////////////// Input Histogramme ///////////////////////////////////////////////////////////////////////////////
  
   input_eff_h ->fill(event);
   input_event_h->fill(event);
@@ -1256,7 +1277,23 @@ bool pass_btag0 = btag0_sel->passes(event);
    chi2min_btag0_h->fill(event);
  }
 
+ // //////////////////////////////////////////////////////////  Eventnumber  ////////////////////////////////////////////////////////
+ //  // Outputfile of Eventnumber, Runnumber, Lumiblock to compare to Z'>tT'(Wb)
+ //  if(filename.find("Data_C")!=std::string::npos){
+ //  std::fstream g;
+ //  g.open("eventnumber_side2_C.txt", ios::out);
+ //  g << event.run<<" "<<event.luminosityBlock<<" "<<event.event  << std::endl;
+ //  g.close();
+ // }
 
+ // if(filename.find("Data_D")!=std::string::npos){
+ //  std::fstream f;
+ //  f.open("eventnumber_side2_D.txt", ios::out);
+ //  f << event.run<<" "<<event.luminosityBlock<<" "<<event.event  << std::endl;
+ //  f.close();
+ // }
+ // ////////
+ /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// 
  lumi_h->fill(event);
 
   //if(berror)   std::cout << "SelectionModule L:877 vor TestSection"<<std::endl;

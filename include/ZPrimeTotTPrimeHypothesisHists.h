@@ -3,6 +3,7 @@
 #include "UHH2/ZPrimeTotTPrime/include/ZPrimeTotTPrimeReconstructionHypothesis.h"
 #include "UHH2/ZPrimeTotTPrime/include/ZPrimeTotTPrimeReconstructionHypothesisDiscriminators.h"
 #include "UHH2/ZPrimeTotTPrime/include/ZPrimeTotTPrimeGenSelections.h"
+#include "UHH2/common/include/TTbarGen.h"
 
 /** \brief Common histograms for reconstruction hypotheses
  *
@@ -35,6 +36,7 @@ protected:
 
     uhh2::Event::Handle<std::vector<ZPrimeTotTPrimeReconstructionHypothesis>> h_hyps;
     uhh2::Event::Handle<ZPrimeGen> h_zprimegen;
+    uhh2::Event::Handle<TTbarGen> h_ttbargen;
     std::string m_discriminator_name;
     
 };

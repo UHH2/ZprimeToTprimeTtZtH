@@ -53,10 +53,10 @@ ZPrimeTotTPrimeChi2Discriminator::ZPrimeTotTPrimeChi2Discriminator(Context & ctx
 
 bool ZPrimeTotTPrimeChi2Discriminator::process(uhh2::Event & event){
     auto & hyps = event.get(h_hyps);
-    const double mass_thad = 181;
+    const double mass_thad = 176;
     const double mass_thad_sigma = 15;
-    const double mass_tlep = 174;
-    const double mass_tlep_sigma = 18;
+    const double mass_tlep = 173;
+    const double mass_tlep_sigma = 16;
     const double mass_Higgs=125;
     const double mass_Higgs_sigma = 18;
     const double mass_Z=91;

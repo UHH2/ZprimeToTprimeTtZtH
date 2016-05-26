@@ -2,6 +2,7 @@
 #include "TH2F.h"
  #include "UHH2/ZPrimeTotTPrime/include/ZPrimeTotTPrimeHypothesisHists.h" 
 #include "UHH2/ZPrimeTotTPrime/include/ZPrimeTotTPrimeGenSelections.h"
+
 using namespace uhh2;
 
 ZPrimeTotTPrimeHypothesisHists::ZPrimeTotTPrimeHypothesisHists(uhh2::Context & ctx, const std::string & dirname, const std::string & hyps_name, const std::string & discriminator_name ): Hists(ctx, dirname){
@@ -148,16 +149,18 @@ ZPrimeTotTPrimeHypothesisHists::ZPrimeTotTPrimeHypothesisHists(uhh2::Context & c
     eta_blep_rec_vs_eta_blep_gen = book<TH2F>("eta_blep_rec_vs_eta_blep_gen","#eta^{blep,rec} vs #eta^{blep,gen}",100,-5,5,100,-5,5 );
     eta_neutrino_rec_vs_eta_neutrino_gen = book<TH2F>("eta_neutrino_rec_vs_eta_neutrino_gen","#eta^{#nu,rec} vs #eta^{#nu,gen}",100,-5,5,100,-5,5 );
 
+
+    ///////////////////////////////////////////////////         Matching tests //////////////////////////////////////////////////////////////////////////////////////////////
     massfitHiggs = book<TH1F>("massfitHiggs","Mass reco Higgs",200, 50, 400);
     massfitZ = book <TH1F>("massfitZ","Mass reco Z",200, 50, 400);
     massfithadTop = book<TH1F>("massfithadTop","Mass reco hadTop",200, 50, 400);
     massfitlepTop = book<TH1F>("massfitlepTop","Mass reco lepTop",200, 50, 400);
  
     missmatch = book<TH1F>("missmatch","Match Rate",8,0,8);
-   
-    
+       
     h_hyps = ctx.get_handle<std::vector<ZPrimeTotTPrimeReconstructionHypothesis>>(hyps_name);
     h_zprimegen = ctx.get_handle<ZPrimeGen>("zprimegen");
+    h_ttbargen = ctx.get_handle<TTbarGen>("ttbargen");
     m_discriminator_name = discriminator_name;
 }
 
@@ -480,5 +483,6 @@ M_TPrime_rec4->Fill(mTPrime_rec4, weight);
   Pt_toplep_rec->Fill( hyp->toplep_v4().Pt(),weight );
   Pt_tophad_rec->Fill( hyp->tophad_v4().Pt(),weight );
 
+ 
 
 }

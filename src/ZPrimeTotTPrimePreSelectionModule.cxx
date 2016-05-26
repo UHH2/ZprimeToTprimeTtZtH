@@ -161,8 +161,8 @@ ZPrimeTotTPrimePreSelectionModule::ZPrimeTotTPrimePreSelectionModule(uhh2::Conte
   muo1_sel.reset(new NMuonSelection(1)); // at least 1 muon
   ele1_sel.reset(new NElectronSelection(1)); // at least 1 electron
   jet2_sel.reset(new NJetSelection(2)); // at least 2 jets
-  jet1_sel.reset(new NJetSelection(1)); // at least 2 jets
- topjet1_sel.reset(new NTopJetSelection(1)); // at least 2 jets
+  jet1_sel.reset(new NJetSelection(1)); // at least 1 jets
+ topjet1_sel.reset(new NTopJetSelection(1)); // at least 1 jets
  topjet2_sel.reset(new NTopJetSelection(2)); // at least 2 jets
 
   // set up histograms
