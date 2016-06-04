@@ -16,6 +16,7 @@ class ZPrimeTotTPrimeReconstructionHypothesis {
   LorentzVector neutrino_v4() const{return m_neutrino_v4;} 
   Particle lepton() const{return m_lepton;}
   // TopJet HZW() const{return m_HZW;}
+  TopJet HZW() const{return m_W;}
   const std::vector<Jet>& HZW_subjets()const{return m_subjets;}
   const std::vector<Jet>& W_subjets()const{return m_Wsubjets;}
   const std::vector<Jet>& toplep_jets() const{return m_toplep_jets;}

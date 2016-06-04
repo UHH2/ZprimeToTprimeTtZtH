@@ -412,4 +412,3 @@ UnType2TopTag::UnType2TopTag(double mjetLower, double mjetUpper, MassType typeOf
 UnType2TopTag::UnType2TopTag(MassType typeOfMass): m_mjetLower(60.), m_mjetUpper(100.), m_typeOfMass(typeOfMass), m_SubjetId(boost::none){}
 
 
-///////////////////////////////////////////////////////////////////

@@ -94,6 +94,16 @@ EffHists::EffHists(Context & ctx, const string & dirname, const std::string & hy
   hist("matched_reco_W")->Fill("W matched",0);
   hist("matched_reco_W")->Fill("W missed",0);
 
+//matched W
+  book<TH1F>("matched_reco_Wqq","Matching reco Wqq to GenLevel W",2,0,2);
+  hist("matched_reco_Wqq")->Fill("W matched",0);
+  hist("matched_reco_Wqq")->Fill("W missed",0);
+
+  //matched W
+  book<TH1F>("matched_reco_WAK4","Matching reco AK4 to GenLevel quarks",2,0,2);
+  hist("matched_reco_WAK4")->Fill("both quarks matched",0);
+  hist("matched_reco_WAK4")->Fill("both quarks missed",0);
+ book<TH1F>("matched_reco_WAK4_mass","mass of two AK4 jets",100,0,200);
   //controll variables
 
   //mass reco W
@@ -119,6 +129,10 @@ EffHists::EffHists(Context & ctx, const string & dirname, const std::string & hy
   book<TH1F>("reco_deltar_blepW","DeltaR between blep and W (reco)",50,0,5);
   book<TH1F>("reco_deltaphi_bhadW","DeltaPhi between bhad and W (reco)",50,0,M_PI);
   book<TH1F>("reco_deltar_bhadW","DeltaR between bhad and W (reco)",50,0,5);
+
+  //////////////////////////////////    MatchingCuts   //////////////////////////////////////////////////////
+  book<TH1F>("matchingCut_WTopjets", "DeltaR between W and Topjets",50,0,5);
+  book<TH1F>("matchingCut_TopTopjets", "DeltaR between Top and Topjets",50,0,5);
 
   //////////////////////////////////    Handles   //////////////////////////////////////////////////////
 
@@ -148,11 +162,14 @@ EffHists::EffHists(Context & ctx, const string & dirname, const std::string & hy
  if(ttbargen.IsSemiLeptonicDecay()){
       for(const auto & s : *event.topjets){
 	double delta_Wtopjet = deltaR(s, ttbargen.WHad());
-	if(delta_Wtopjet <= 0.8)hist("match_gen_WTopjet")->Fill("matched",weight);
+      /////Matching cuts
+	hist("matchingCut_WTopjets")->Fill(delta_Wtopjet);
+	if(delta_Wtopjet <= 0.6)hist("match_gen_WTopjet")->Fill("matched",weight);
 	else {
 	  hist("match_gen_WTopjet")->Fill("missed",weight);
 	  double delta_TopTopjet = deltaR(s, ttbargen.TopHad());
-	  if(delta_TopTopjet<=0.8) hist("match_gen_WTopjet")->Fill("top matched",weight);
+	  hist("matchingCut_TopTopjets")->Fill(delta_TopTopjet);
+	  if(delta_TopTopjet<=0.6) hist("match_gen_WTopjet")->Fill("top matched",weight);
 	}
       }// over all topjets
    
@@ -288,8 +305,32 @@ if(event.is_valid(h_btag_medium)){
 
       //matched W
       double delta_W = deltaR(hyp->W_v4(), ttbargen.WHad());      
-      if(delta_W < 0.8) hist("matched_reco_W")->Fill("W matched",weight);
+      if(delta_W < 0.6) hist("matched_reco_W")->Fill("W matched",weight);
       else hist("matched_reco_W")->Fill("W missed",weight);
+
+      //matched Wqq
+      double delta_q1 = deltaR(hyp->W_v4(), ttbargen.Q1());
+      double delta_q2 = deltaR(hyp->W_v4(), ttbargen.Q2());
+      if(delta_q1 < 0.8 && delta_q2 <0.8) hist("matched_reco_Wqq")->Fill("W matched",weight);
+      else hist("matched_reco_Wqq")->Fill("W missed",weight);
+ 
+      //matched Quarks with AK4
+	bool delta_q1AK4 = false;
+	bool delta_q2AK4 = false;
+	LorentzVector Q1;
+	LorentzVector Q2;
+      for(auto s : *event.jets){
+	double delta_q1AK4 = deltaR(ttbargen.Q1(),s);
+	double delta_q2AK4 = deltaR(ttbargen.Q2(),s);
+	if(delta_q1AK4<0.4){delta_q1AK4 = true;  Q1 = s.v4();}
+	if(delta_q2AK4<0.4){delta_q2AK4 = true;  Q2 = s.v4();}
+      }
+
+      if(delta_q1AK4 && delta_q2AK4)  hist("matched_reco_WAK4")->Fill("both quarks matched",weight);
+      else hist("matched_reco_WAK4")->Fill("both quarks missed",weight);
+      double mass_q1q2 = (Q1 + Q2).M();
+      hist("matched_reco_WAK4_mass")->Fill(mass_q1q2,weight);
+
 
     }//valid h_hyps
     }//isSemiLeptonicDecay
