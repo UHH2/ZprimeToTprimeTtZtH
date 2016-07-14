@@ -1,0 +1,47 @@
+ ( INFO  )  SCycleController   : Initializing
+ ( INFO  )  SCycleController   : Deleting all analysis cycle algorithms from memory
+ ( INFO  )  SCycleController   : Reading xml file: 'Data_D_11.xml'
+ ( INFO  )  SCycleController   : Created cycle 'uhh2::AnalysisModuleRunner'
+ ( INFO  )  SCycleBaseExec     : Initializing from configuration
+ ( INFO  )  SCycleBaseExec     : Reading SInputData: DATA - Data_D
+ ( INFO  )  SCycleConfig       : ===========================================================
+ ( INFO  )  SCycleConfig       :                     Cycle configuration
+ ( INFO  )  SCycleConfig       :   - Running mode: LOCAL
+ ( INFO  )  SCycleConfig       :   - Target luminosity: 2690.7
+ ( INFO  )  SCycleConfig       :   - Output directory: /nfs/dust/cms/user/abenecke/ZPrimeTotTPrime/25ns/rootfile/QCD/mass//workdir/
+ ( INFO  )  SCycleConfig       :   - Post-fix: _10
+ ( INFO  )  SInputData         :  ---------------------------------------------------------
+ ( INFO  )  SInputData         :  Type               : DATA
+ ( INFO  )  SInputData         :  Version            : Data_D
+ ( INFO  )  SInputData         :  Total luminosity   : 1pb-1
+ ( INFO  )  SInputData         :  NEventsMax         : 10000
+ ( INFO  )  SInputData         :  NEventsSkip        : 100000
+ ( INFO  )  SInputData         :  Cacheable          : No
+ ( INFO  )  SInputData         :  Skip validation    : No
+ ( INFO  )  SInputData         :  Skip file lookup   : No
+ ( INFO  )  SInputData         :  Input File         : '/nfs/dust/cms/user/abenecke/ZPrimeTotTPrime/25ns/Pre/rootfile/Misstag/uhh2.AnalysisModuleRunner.DATA.JetHT_Run2015D_PromptReco_v4.root' (file) | '0' (lumi)
+ ( INFO  )  SInputData         :  Tree               : 'AnalysisTree' (name) | 'Flat input tree' (type)
+ ( INFO  )  SInputData         :  Tree               : 'AnalysisTree' (name) | 'Flat output tree' (type)
+ ( INFO  )  SInputData         :  ---------------------------------------------------------
+ ( INFO  )  SCycleConfig       : ===========================================================
+ ( INFO  )  SCycleController   : Job 'ExampleCycleJob' configured
+ ( INFO  )  SCycleController   : Time needed for initialisation:    2.3 s
+ ( INFO  )  SCycleController   : Entering ExecuteAllCycles()
+ ( INFO  )  SInputData         : Input type "DATA" version "Data_D" : 426669 events
+ ( INFO  )  SCycleController   : Executing Cycle #0 ('uhh2::AnalysisModuleRunner') locally
+ ( INFO  )  SCycleController   : Processing input data type: DATA version: Data_D
+ ( INFO  )  SCycleBaseExec     : Initialised InputData "DATA" (Version:Data_D) on worker node
+ ( INFO  )  SCycleBaseExec     : Processing entry: 100999 (999 / 10000 events processed so far)
+ ( INFO  )  SCycleBaseExec     : Processing entry: 101999 (1999 / 10000 events processed so far)
+ ( INFO  )  SCycleBaseExec     : Processing entry: 102999 (2999 / 10000 events processed so far)
+ ( INFO  )  SCycleBaseExec     : Processing entry: 103999 (3999 / 10000 events processed so far)
+ ( INFO  )  SCycleBaseExec     : Processing entry: 104999 (4999 / 10000 events processed so far)
+ ( INFO  )  SCycleBaseExec     : Processing entry: 105999 (5999 / 10000 events processed so far)
+ ( INFO  )  SCycleBaseExec     : Processing entry: 106999 (6999 / 10000 events processed so far)
+ ( INFO  )  SCycleBaseExec     : Processing entry: 107999 (7999 / 10000 events processed so far)
+ ( INFO  )  SCycleBaseExec     : Processing entry: 108999 (8999 / 10000 events processed so far)
+ ( INFO  )  SCycleBaseExec     : Processing entry: 109999 (9999 / 10000 events processed so far)
+ ( INFO  )  SCycleBaseExec     : Terminated InputData "DATA" (Version:Data_D) on worker node
+ ( INFO  )  SCycleController   : Writing output of "uhh2::AnalysisModuleRunner" to: /nfs/dust/cms/user/abenecke/ZPrimeTotTPrime/25ns/rootfile/QCD/mass//workdir/uhh2.AnalysisModuleRunner.DATA.Data_D_10.root
+ ( INFO  )  SCycleController   : Overall cycle statistics:
+ ( INFO  )  SCycleController   :      10000 Events - Real time  15.70 s  -   637 Hz | CPU time   7.71 s  -  1297 Hz

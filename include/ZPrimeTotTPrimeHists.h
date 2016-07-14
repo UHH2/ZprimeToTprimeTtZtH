@@ -28,7 +28,7 @@ public:
     uhh2::Event::Handle<std::vector<TopJet> > h_ZWtag;
     uhh2::Event::Handle<TTbarGen> h_ttbargen;
     std::string btopjets;
-
+    bool isMC=false;;
 };
 
 }

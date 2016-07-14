@@ -1,0 +1,38 @@
+ ( INFO  )  SCycleController   : Initializing
+ ( INFO  )  SCycleController   : Deleting all analysis cycle algorithms from memory
+ ( INFO  )  SCycleController   : Reading xml file: 'QCD_HT1000to1500_38.xml'
+ ( INFO  )  SCycleController   : Created cycle 'uhh2::AnalysisModuleRunner'
+ ( INFO  )  SCycleBaseExec     : Initializing from configuration
+ ( INFO  )  SCycleBaseExec     : Reading SInputData: MC - QCD_HT1000to1500
+ ( INFO  )  SCycleConfig       : ===========================================================
+ ( INFO  )  SCycleConfig       :                     Cycle configuration
+ ( INFO  )  SCycleConfig       :   - Running mode: LOCAL
+ ( INFO  )  SCycleConfig       :   - Target luminosity: 2690.7
+ ( INFO  )  SCycleConfig       :   - Output directory: /nfs/dust/cms/user/abenecke/ZPrimeTotTPrime/25ns/rootfile/QCD/mass//workdir/
+ ( INFO  )  SCycleConfig       :   - Post-fix: _37
+ ( INFO  )  SInputData         :  ---------------------------------------------------------
+ ( INFO  )  SInputData         :  Type               : MC
+ ( INFO  )  SInputData         :  Version            : QCD_HT1000to1500
+ ( INFO  )  SInputData         :  Total luminosity   : 4183.32pb-1
+ ( INFO  )  SInputData         :  NEventsMax         : 1421
+ ( INFO  )  SInputData         :  NEventsSkip        : 370000
+ ( INFO  )  SInputData         :  Cacheable          : No
+ ( INFO  )  SInputData         :  Skip validation    : No
+ ( INFO  )  SInputData         :  Skip file lookup   : No
+ ( INFO  )  SInputData         :  Input File         : '/nfs/dust/cms/user/abenecke/ZPrimeTotTPrime/25ns/Pre/rootfile/Misstag/uhh2.AnalysisModuleRunner.MC.QCD_HT1000to1500.root' (file) | '0' (lumi)
+ ( INFO  )  SInputData         :  Tree               : 'AnalysisTree' (name) | 'Flat input tree' (type)
+ ( INFO  )  SInputData         :  Tree               : 'AnalysisTree' (name) | 'Flat output tree' (type)
+ ( INFO  )  SInputData         :  ---------------------------------------------------------
+ ( INFO  )  SCycleConfig       : ===========================================================
+ ( INFO  )  SCycleController   : Job 'ExampleCycleJob' configured
+ ( INFO  )  SCycleController   : Time needed for initialisation:    1.2 s
+ ( INFO  )  SCycleController   : Entering ExecuteAllCycles()
+ ( INFO  )  SInputData         : Input type "MC" version "QCD_HT1000to1500" : 371421 events
+ ( INFO  )  SCycleController   : Executing Cycle #0 ('uhh2::AnalysisModuleRunner') locally
+ ( INFO  )  SCycleController   : Processing input data type: MC version: QCD_HT1000to1500
+ ( INFO  )  SCycleBaseExec     : Initialised InputData "MC" (Version:QCD_HT1000to1500) on worker node
+ ( INFO  )  SCycleBaseExec     : Processing entry: 370999 (999 / 1421 events processed so far)
+ ( INFO  )  SCycleBaseExec     : Terminated InputData "MC" (Version:QCD_HT1000to1500) on worker node
+ ( INFO  )  SCycleController   : Writing output of "uhh2::AnalysisModuleRunner" to: /nfs/dust/cms/user/abenecke/ZPrimeTotTPrime/25ns/rootfile/QCD/mass//workdir/uhh2.AnalysisModuleRunner.MC.QCD_HT1000to1500_37.root
+ ( INFO  )  SCycleController   : Overall cycle statistics:
+ ( INFO  )  SCycleController   :       1421 Events - Real time   2.79 s  -   509 Hz | CPU time   2.24 s  -   634 Hz

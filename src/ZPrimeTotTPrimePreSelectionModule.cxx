@@ -79,7 +79,7 @@ private:
   std::unique_ptr<uhh2::Hists> input_h_ele;
   std::unique_ptr<uhh2::Hists> input_h_jet;
   std::unique_ptr<Hists> input_h_eff;
-std::unique_ptr<Hists>input_h_topjet;
+  std::unique_ptr<Hists>input_h_topjet;
 
 
   std::unique_ptr<uhh2::Hists> cleaner_h_event;
@@ -87,21 +87,21 @@ std::unique_ptr<Hists>input_h_topjet;
   std::unique_ptr<uhh2::Hists> cleaner_h_ele;
   std::unique_ptr<uhh2::Hists> cleaner_h_jet;
   std::unique_ptr<Hists> cleaner_h_eff;
-std::unique_ptr<Hists>cleaner_h_topjet;
+  std::unique_ptr<Hists>cleaner_h_topjet;
 
   std::unique_ptr<uhh2::Hists> lepton_h_event;
   std::unique_ptr<uhh2::Hists> lepton_h_muo;
   std::unique_ptr<uhh2::Hists> lepton_h_ele;
   std::unique_ptr<uhh2::Hists> lepton_h_jet;
   std::unique_ptr<Hists> lepton_h_eff;
-std::unique_ptr<Hists>lepton_h_topjet;
+  std::unique_ptr<Hists>lepton_h_topjet;
 
   std::unique_ptr<uhh2::Hists> output_h_event;
   std::unique_ptr<uhh2::Hists> output_h_muo;
   std::unique_ptr<uhh2::Hists> output_h_ele;
   std::unique_ptr<uhh2::Hists> output_h_jet;
   std::unique_ptr<Hists> output_h_eff;
-std::unique_ptr<Hists>output_h_topjet;
+  std::unique_ptr<Hists>output_h_topjet;
 
   std::string filename;
   std::unique_ptr<uhh2::AnalysisModule> ZprimeTotTPrimeprod;

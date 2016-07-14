@@ -1,5 +1,5 @@
 #include "UHH2/core/include/LorentzVector.h"
-
+#include "UHH2/core/include/Utils.h"
 #include "UHH2/ZPrimeTotTPrime/include/EffHists.h"
 #include "UHH2/common/include/TTbarGen.h"
 #include "TH1F.h"
@@ -53,6 +53,9 @@ EffHists::EffHists(Context & ctx, const string & dirname, const std::string & hy
   book<TH1F>("deltar_gen_lephadtop","DeltaR between lep. top and had. top (GenLevel)",50,0,5);
   book<TH1F>("deltaphi_gen_lephadtop","DeltaPhi between lep. top and had. top (GenLevel)",50,0,M_PI);
 
+  book<TH1F>("number_semilep","Number of Semileptonic decays",2,0,2);
+  hist("number_semilep")->Fill("not semi",0);
+  hist("number_semilep")->Fill("semi",0);
 
    ///////////////////////////      Reco Studies for ttbar  ///////////////////////////////////
 
@@ -141,29 +144,32 @@ EffHists::EffHists(Context & ctx, const string & dirname, const std::string & hy
   h_btag_loose = ctx.get_handle<std::vector<Jet> >("BTag_loose");
   h_btag_tight = ctx.get_handle<std::vector<Jet> >("BTag_tight");
   h_hyps = ctx.get_handle<std::vector<ZPrimeTotTPrimeReconstructionHypothesis>>(hyps_name);
+  matching = string2double( ctx.get("matching"));
 
   m_discriminator_name = discriminator_name;
 }//constructor definition
 
 
-  void EffHists::fill(const Event & event){
+void EffHists::fill(const Event & event){
 
-    assert(event.met);
-    assert(event.jets);
-    assert(event.topjets);
-    double weight = event.weight;
+  assert(event.met);
+  assert(event.jets);
+  assert(event.topjets);
+  double weight = event.weight;
     
     
-    ///////////////////////////      GenLevel Studies for ttbar  ///////////////////////////////////
-  
-    //Analysis idea: W has to be a topjet (also tagger requierment)
-    if(event.is_valid(h_ttbargen)){  
-      const auto & ttbargen = event.get(h_ttbargen);
- if(ttbargen.IsSemiLeptonicDecay()){
+  ///////////////////////////      GenLevel Studies for ttbar  ///////////////////////////////////
+
+  //Analysis idea: W has to be a topjet (also tagger requierment)
+  if(event.is_valid(h_ttbargen)){  
+    const auto & ttbargen = event.get(h_ttbargen);
+    hist("number_semilep")->Fill("not semi",weight);
+    if(ttbargen.IsSemiLeptonicDecay()){
+      hist("number_semilep")->Fill("semi",weight);
       for(const auto & s : *event.topjets){
 	double delta_Wtopjet = deltaR(s, ttbargen.WHad());
-      /////Matching cuts
-	hist("matchingCut_WTopjets")->Fill(delta_Wtopjet);
+	/////Matching cuts
+	hist("matchingCut_WTopjets")->Fill(delta_Wtopjet,weight);
 	if(delta_Wtopjet <= 0.6)hist("match_gen_WTopjet")->Fill("matched",weight);
 	else {
 	  hist("match_gen_WTopjet")->Fill("missed",weight);
@@ -179,237 +185,236 @@ EffHists::EffHists(Context & ctx, const string & dirname, const std::string & hy
 	for(Jet s:btag_medium){
 	  double delta_blepbjet = deltaR(s,ttbargen.BLep());
 	  if(delta_blepbjet <= 0.4) hist("match_gen_blepbjet")->Fill("matched medium",weight);
-	else  hist("match_gen_blepbjet")->Fill("missed medium",weight);
-      }//over all medium btags
-    }//valid h_medium_btag
-
-    if(event.is_valid(h_btag_loose)){
-      const auto & btag_loose = event.get(h_btag_loose);
-      for(Jet s:btag_loose){
-	double delta_blepbjet = deltaR(s,ttbargen.BLep());
-	if(delta_blepbjet <= 0.4) hist("match_gen_blepbjet")->Fill("matched loose",weight);
-	else  hist("match_gen_blepbjet")->Fill("missed loose",weight);
-      }//over all loose btags
-    }//valid h_loose_btag
-
-
-    if(event.is_valid(h_btag_tight)){
-      const auto & btag_tight = event.get(h_btag_tight);
-      for(Jet s:btag_tight){
-	double delta_blepbjet = deltaR(s,ttbargen.BLep());
-	if(delta_blepbjet <= 0.4) hist("match_gen_blepbjet")->Fill("matched tight",weight);
-	else  hist("match_gen_blepbjet")->Fill("missed tight",weight);
-      }//over all tight btags
-    }//valid h_tight_btag
-
-
- //Analysis idea: Are b (GenLevel) fullfilling b jet criteria (loose, medium, tight)   BHad
-if(event.is_valid(h_btag_medium)){
-      const auto & btag_medium = event.get(h_btag_medium);
-      for(Jet s:btag_medium){
-	double delta_bhadbjet = deltaR(s,ttbargen.BHad());
-	if(delta_bhadbjet <= 0.4) hist("match_gen_bhadbjet")->Fill("matched medium",weight);
-	else  hist("match_gen_bhadbjet")->Fill("missed medium",weight);
-      }//over all medium btags
-    }//valid h_medium_btag
-
-    if(event.is_valid(h_btag_loose)){
-      const auto & btag_loose = event.get(h_btag_loose);
-      for(Jet s:btag_loose){
-	double delta_bhadbjet = deltaR(s,ttbargen.BHad());
-	if(delta_bhadbjet <= 0.4) hist("match_gen_bhadbjet")->Fill("matched loose",weight);
-	else  hist("match_gen_bhadbjet")->Fill("missed loose",weight);
-      }//over all loose btags
-    }//valid h_loose_btag
-
-
-    if(event.is_valid(h_btag_tight)){
-      const auto & btag_tight = event.get(h_btag_tight);
-      for(Jet s:btag_tight){
-	double delta_bhadbjet = deltaR(s,ttbargen.BHad());
-	if(delta_bhadbjet <= 0.4) hist("match_gen_bhadbjet")->Fill("matched tight",weight);
-	else  hist("match_gen_bhadbjet")->Fill("missed tight",weight);
-      }//over all tight btags
-    }//valid h_tight_btag
-
-   
-    //Analysis idea: the distance between blep und mu is smaller than bhad and mu
-    double deltaR_gen_blepmu = deltaR(ttbargen.ChargedLepton(),ttbargen.BLep());
-    double deltaPhi_gen_blepmu = deltaPhi(ttbargen.ChargedLepton(),ttbargen.BLep());
-
-    double deltaR_gen_bhadmu = deltaR(ttbargen.ChargedLepton(),ttbargen.BHad());
-    double deltaPhi_gen_bhadmu = deltaPhi(ttbargen.ChargedLepton(),ttbargen.BHad());
-
-    hist("deltar_gen_blepmu")->Fill(deltaR_gen_blepmu,weight);
-    hist("deltaphi_gen_blepmu")->Fill(deltaPhi_gen_blepmu,weight);
-    hist("deltar_gen_bhadmu")->Fill(deltaR_gen_bhadmu,weight);
-    hist("deltaphi_gen_bhadmu")->Fill(deltaPhi_gen_bhadmu,weight);
-
-
-    double deltaR_gen_blepW = deltaR(ttbargen.WHad(),ttbargen.BLep());
-    double deltaPhi_gen_blepW = deltaPhi(ttbargen.WHad(),ttbargen.BLep());
-
-    double deltaR_gen_bhadW = deltaR(ttbargen.WHad(),ttbargen.BHad());
-    double deltaPhi_gen_bhadW = deltaPhi(ttbargen.WHad(),ttbargen.BHad());
- 
-    hist("deltar_gen_blepW")->Fill(deltaR_gen_blepW,weight);
-    hist("deltaphi_gen_blepW")->Fill(deltaPhi_gen_blepW,weight);
-    hist("deltar_gen_bhadW")->Fill(deltaR_gen_bhadW,weight);
-    hist("deltaphi_gen_bhadW")->Fill(deltaPhi_gen_bhadW,weight);
-    
-
-    //difference between deltaR and deltaPhi between lep top and had top
-    double deltaR_lephadtop = deltaR(ttbargen.TopLep(),ttbargen.TopHad());
-    double deltaPhi_lephadtop = deltaPhi(ttbargen.TopLep(),ttbargen.TopHad());
-
-    hist("deltar_gen_lephadtop")->Fill(deltaR_lephadtop,weight);
-    hist("deltaphi_gen_lephadtop")->Fill(deltaPhi_lephadtop,weight);
-
-   
-    ///////////////////////////      Reco Studies for ttbar  ///////////////////////////////////
-
-    // Matching test
-    //b jets matching to GenLevel
-    if(event.is_valid(h_hyps)){
-
-      std::vector<ZPrimeTotTPrimeReconstructionHypothesis> hyps = event.get(h_hyps);
-      const ZPrimeTotTPrimeReconstructionHypothesis* hyp = get_best_hypothesis( hyps, m_discriminator_name );
-
-      double deltaR_blep = deltaR(hyp->blep_v4(),ttbargen.BLep());
-      if(deltaR_blep <= 0.4) hist("match_reco_blep")->Fill("matched",weight);
-      else   hist("match_reco_blep")->Fill("missed",weight);
-
-
-      double deltaR_bhad = deltaR(hyp->bhad_v4(),ttbargen.BLep());
-      if(deltaR_bhad <= 0.4) hist("match_reco_bhad")->Fill("matched",weight);
-      else   hist("match_reco_bhad")->Fill("missed",weight);
-
-
-      double deltaR_leptop = deltaR(hyp->toplep_v4(), ttbargen.TopLep());
-      if(deltaR_leptop <= 0.4)  hist("match_reco_leptop")->Fill("matched",weight);
-      else  hist("match_reco_leptop")->Fill("missed",weight);
-
-      //bjets on lep hemisphere (medium, medium, tight)
-      if(event.is_valid(h_btag_medium)){
-	const auto & btag_medium = event.get(h_btag_medium);
-	for(Jet s:btag_medium){
-	  double delta_bleptop = deltaPhi(s,hyp->toplep_v4());
-	  if(delta_bleptop <= M_PI/2) hist("reco_binleptop_medium")->Fill("no_otherbjet",weight);
-	  else  {
-	    hist("reco_binleptop_medium")->Fill("otherbjet",weight);
-	    double deltaR_bbhad = deltaR(s,hyp->bhad_v4());
-	    if(deltaR_bbhad <= 0.4 ) hist("reco_binleptop_medium")->Fill("otherbjet_bhad",0);
-	  }
+	  else  hist("match_gen_blepbjet")->Fill("missed medium",weight);
 	}//over all medium btags
       }//valid h_medium_btag
 
-      //matched W
-      double delta_W = deltaR(hyp->W_v4(), ttbargen.WHad());      
-      if(delta_W < 0.6) hist("matched_reco_W")->Fill("W matched",weight);
-      else hist("matched_reco_W")->Fill("W missed",weight);
+      if(event.is_valid(h_btag_loose)){
+	const auto & btag_loose = event.get(h_btag_loose);
+	for(Jet s:btag_loose){
+	  double delta_blepbjet = deltaR(s,ttbargen.BLep());
+	  if(delta_blepbjet <= 0.4) hist("match_gen_blepbjet")->Fill("matched loose",weight);
+	  else  hist("match_gen_blepbjet")->Fill("missed loose",weight);
+	}//over all loose btags
+      }//valid h_loose_btag
 
-      //matched Wqq
-      double delta_q1 = deltaR(hyp->W_v4(), ttbargen.Q1());
-      double delta_q2 = deltaR(hyp->W_v4(), ttbargen.Q2());
-      if(delta_q1 < 0.8 && delta_q2 <0.8) hist("matched_reco_Wqq")->Fill("W matched",weight);
-      else hist("matched_reco_Wqq")->Fill("W missed",weight);
+
+      if(event.is_valid(h_btag_tight)){
+	const auto & btag_tight = event.get(h_btag_tight);
+	for(Jet s:btag_tight){
+	  double delta_blepbjet = deltaR(s,ttbargen.BLep());
+	  if(delta_blepbjet <= 0.4) hist("match_gen_blepbjet")->Fill("matched tight",weight);
+	  else  hist("match_gen_blepbjet")->Fill("missed tight",weight);
+	}//over all tight btags
+      }//valid h_tight_btag
+
+
+      //Analysis idea: Are b (GenLevel) fullfilling b jet criteria (loose, medium, tight)   BHad
+      if(event.is_valid(h_btag_medium)){
+	const auto & btag_medium = event.get(h_btag_medium);
+	for(Jet s:btag_medium){
+	  double delta_bhadbjet = deltaR(s,ttbargen.BHad());
+	  if(delta_bhadbjet <= 0.4) hist("match_gen_bhadbjet")->Fill("matched medium",weight);
+	  else  hist("match_gen_bhadbjet")->Fill("missed medium",weight);
+	}//over all medium btags
+      }//valid h_medium_btag
+
+      if(event.is_valid(h_btag_loose)){
+	const auto & btag_loose = event.get(h_btag_loose);
+	for(Jet s:btag_loose){
+	  double delta_bhadbjet = deltaR(s,ttbargen.BHad());
+	  if(delta_bhadbjet <= 0.4) hist("match_gen_bhadbjet")->Fill("matched loose",weight);
+	  else  hist("match_gen_bhadbjet")->Fill("missed loose",weight);
+	}//over all loose btags
+      }//valid h_loose_btag
+
+
+      if(event.is_valid(h_btag_tight)){
+	const auto & btag_tight = event.get(h_btag_tight);
+	for(Jet s:btag_tight){
+	  double delta_bhadbjet = deltaR(s,ttbargen.BHad());
+	  if(delta_bhadbjet <= 0.4) hist("match_gen_bhadbjet")->Fill("matched tight",weight);
+	  else  hist("match_gen_bhadbjet")->Fill("missed tight",weight);
+	}//over all tight btags
+      }//valid h_tight_btag
+
+   
+      //Analysis idea: the distance between blep und mu is smaller than bhad and mu
+      double deltaR_gen_blepmu = deltaR(ttbargen.ChargedLepton(),ttbargen.BLep());
+      double deltaPhi_gen_blepmu = deltaPhi(ttbargen.ChargedLepton(),ttbargen.BLep());
+
+      double deltaR_gen_bhadmu = deltaR(ttbargen.ChargedLepton(),ttbargen.BHad());
+      double deltaPhi_gen_bhadmu = deltaPhi(ttbargen.ChargedLepton(),ttbargen.BHad());
+
+      hist("deltar_gen_blepmu")->Fill(deltaR_gen_blepmu,weight);
+      hist("deltaphi_gen_blepmu")->Fill(deltaPhi_gen_blepmu,weight);
+      hist("deltar_gen_bhadmu")->Fill(deltaR_gen_bhadmu,weight);
+      hist("deltaphi_gen_bhadmu")->Fill(deltaPhi_gen_bhadmu,weight);
+
+
+      double deltaR_gen_blepW = deltaR(ttbargen.WHad(),ttbargen.BLep());
+      double deltaPhi_gen_blepW = deltaPhi(ttbargen.WHad(),ttbargen.BLep());
+
+      double deltaR_gen_bhadW = deltaR(ttbargen.WHad(),ttbargen.BHad());
+      double deltaPhi_gen_bhadW = deltaPhi(ttbargen.WHad(),ttbargen.BHad());
  
-      //matched Quarks with AK4
+      hist("deltar_gen_blepW")->Fill(deltaR_gen_blepW,weight);
+      hist("deltaphi_gen_blepW")->Fill(deltaPhi_gen_blepW,weight);
+      hist("deltar_gen_bhadW")->Fill(deltaR_gen_bhadW,weight);
+      hist("deltaphi_gen_bhadW")->Fill(deltaPhi_gen_bhadW,weight);
+    
+
+      //difference between deltaR and deltaPhi between lep top and had top
+      double deltaR_lephadtop = deltaR(ttbargen.TopLep(),ttbargen.TopHad());
+      double deltaPhi_lephadtop = deltaPhi(ttbargen.TopLep(),ttbargen.TopHad());
+
+      hist("deltar_gen_lephadtop")->Fill(deltaR_lephadtop,weight);
+      hist("deltaphi_gen_lephadtop")->Fill(deltaPhi_lephadtop,weight);
+
+   
+      ///////////////////////////      Reco Studies for ttbar  ///////////////////////////////////
+
+      // Matching test
+      //b jets matching to GenLevel
+      if(event.is_valid(h_hyps)){
+
+	std::vector<ZPrimeTotTPrimeReconstructionHypothesis> hyps = event.get(h_hyps);
+	const ZPrimeTotTPrimeReconstructionHypothesis* hyp = get_best_hypothesis( hyps, m_discriminator_name );
+
+	double deltaR_blep = deltaR(hyp->blep_v4(),ttbargen.BLep());
+	if(deltaR_blep <= 0.4) hist("match_reco_blep")->Fill("matched",weight);
+	else   hist("match_reco_blep")->Fill("missed",weight);
+
+
+	double deltaR_bhad = deltaR(hyp->bhad_v4(),ttbargen.BLep());
+	if(deltaR_bhad <= 0.4) hist("match_reco_bhad")->Fill("matched",weight);
+	else   hist("match_reco_bhad")->Fill("missed",weight);
+
+
+	double deltaR_leptop = deltaR(hyp->toplep_v4(), ttbargen.TopLep());
+	if(deltaR_leptop <= 0.4)  hist("match_reco_leptop")->Fill("matched",weight);
+	else  hist("match_reco_leptop")->Fill("missed",weight);
+
+	//bjets on lep hemisphere (medium, medium, tight)
+	if(event.is_valid(h_btag_medium)){
+	  const auto & btag_medium = event.get(h_btag_medium);
+	  for(Jet s:btag_medium){
+	    double delta_bleptop = deltaPhi(s,hyp->toplep_v4());
+	    if(delta_bleptop <= M_PI/2) hist("reco_binleptop_medium")->Fill("no_otherbjet",weight);
+	    else  {
+	      hist("reco_binleptop_medium")->Fill("otherbjet",weight);
+	      double deltaR_bbhad = deltaR(s,hyp->bhad_v4());
+	      if(deltaR_bbhad <= 0.4 ) hist("reco_binleptop_medium")->Fill("otherbjet_bhad",0);
+	    }
+	  }//over all medium btags
+	}//valid h_medium_btag
+
+	//matched W
+	double delta_W = deltaR(hyp->W_v4(), ttbargen.WHad());      
+	if(delta_W < 0.6) hist("matched_reco_W")->Fill("W matched",weight);
+	else hist("matched_reco_W")->Fill("W missed",weight);
+
+	//matched Wqq
+	double delta_q1 = deltaR(hyp->W_v4(), ttbargen.Q1());
+	double delta_q2 = deltaR(hyp->W_v4(), ttbargen.Q2());
+	if(delta_q1 < matching && delta_q2 < matching) hist("matched_reco_Wqq")->Fill("W matched",weight);
+	else hist("matched_reco_Wqq")->Fill("W missed",weight);
+ 
+	//matched Quarks with AK4
 	bool delta_q1AK4 = false;
 	bool delta_q2AK4 = false;
 	LorentzVector Q1;
 	LorentzVector Q2;
-      for(auto s : *event.jets){
-	double delta_q1AK4 = deltaR(ttbargen.Q1(),s);
-	double delta_q2AK4 = deltaR(ttbargen.Q2(),s);
-	if(delta_q1AK4<0.4){delta_q1AK4 = true;  Q1 = s.v4();}
-	if(delta_q2AK4<0.4){delta_q2AK4 = true;  Q2 = s.v4();}
-      }
+	for(auto s : *event.jets){
+	  double delta_q1AK4 = deltaR(ttbargen.Q1(),s);
+	  double delta_q2AK4 = deltaR(ttbargen.Q2(),s);
+	  if(delta_q1AK4<0.4){delta_q1AK4 = true;  Q1 = s.v4();}
+	  if(delta_q2AK4<0.4){delta_q2AK4 = true;  Q2 = s.v4();}
+	}
 
-      if(delta_q1AK4 && delta_q2AK4)  hist("matched_reco_WAK4")->Fill("both quarks matched",weight);
-      else hist("matched_reco_WAK4")->Fill("both quarks missed",weight);
-      double mass_q1q2 = (Q1 + Q2).M();
-      hist("matched_reco_WAK4_mass")->Fill(mass_q1q2,weight);
+	if(delta_q1AK4 && delta_q2AK4)  hist("matched_reco_WAK4")->Fill("both quarks matched",weight);
+	else hist("matched_reco_WAK4")->Fill("both quarks missed",weight);
+	double mass_q1q2 = (Q1 + Q2).M();
+	hist("matched_reco_WAK4_mass")->Fill(mass_q1q2,weight);
 
 
-    }//valid h_hyps
+      }//valid h_hyps
     }//isSemiLeptonicDecay
-    }// valid h_ttbargen
+  }// valid h_ttbargen
 
 
 
-    ///////////////////////////      Reco Studies for ttbar  ///////////////////////////////////
+  ///////////////////////////      Reco Studies for ttbar  ///////////////////////////////////
 
-    //controll variables
+  //controll variables
 
-    //mass reco W
-    if(event.is_valid(h_hyps)){
+  //mass reco W
+  if(event.is_valid(h_hyps)){
 
-      std::vector<ZPrimeTotTPrimeReconstructionHypothesis> hyps = event.get(h_hyps);
-      const ZPrimeTotTPrimeReconstructionHypothesis* hyp = get_best_hypothesis( hyps, m_discriminator_name );
+    std::vector<ZPrimeTotTPrimeReconstructionHypothesis> hyps = event.get(h_hyps);
+    const ZPrimeTotTPrimeReconstructionHypothesis* hyp = get_best_hypothesis( hyps, m_discriminator_name );
       
-      double mass_W=0;
-      if( (hyp->W_v4()).isTimelike() ){
-	LorentzVector subjet_sum;
-	for (const auto s : hyp->W_subjets()) {
-	  subjet_sum += s.v4();
-	}
-	mass_W=subjet_sum.M();
-      }else{
-	LorentzVector subjet_sum;
-	for (const auto s : hyp->W_subjets()) {
-	  subjet_sum += s.v4();
-	}
-	mass_W=sqrt( -subjet_sum.mass2());
+    double mass_W=0;
+    if( (hyp->W_v4()).isTimelike() ){
+      LorentzVector subjet_sum;
+      for (const auto s : hyp->W_subjets()) {
+	subjet_sum += s.v4();
       }
+      mass_W=subjet_sum.M();
+    }else{
+      LorentzVector subjet_sum;
+      for (const auto s : hyp->W_subjets()) {
+	subjet_sum += s.v4();
+      }
+      mass_W=sqrt( -subjet_sum.mass2());
+    }
 
-      hist("reco_mass_W")->Fill(mass_W,weight);
+    hist("reco_mass_W")->Fill(mass_W,weight);
+    double mass_leptop=0;
+    if(hyp->toplep_v4().isTimelike()) mass_leptop = hyp->toplep_v4().M();
+    else mass_leptop = sqrt(hyp->toplep_v4().mass2());
 
-      double mass_leptop=0;
-      if(hyp->toplep_v4().isTimelike()) mass_leptop = hyp->toplep_v4().M();
-      else mass_leptop = sqrt(hyp->toplep_v4().mass2());
+    hist("reco_mass_leptop")->Fill(mass_leptop,weight);
 
-      hist("reco_mass_leptop")->Fill(mass_leptop,weight);
+    double mass_hadtop=0;
+    if(hyp->tophad_v4().isTimelike()) mass_hadtop = hyp->tophad_v4().M();
+    else mass_hadtop = sqrt(hyp->tophad_v4().mass2());
 
-      double mass_hadtop=0;
-      if(hyp->tophad_v4().isTimelike()) mass_hadtop = hyp->tophad_v4().M();
-      else mass_hadtop = sqrt(hyp->tophad_v4().mass2());
+    hist("reco_mass_hadtop")->Fill(mass_hadtop,weight);
 
-      hist("reco_mass_hadtop")->Fill(mass_hadtop,weight);
+    double deltaphi_top = deltaPhi(hyp->toplep_v4(), hyp->tophad_v4());
+    hist("reco_deltaphi_top")->Fill(deltaphi_top,weight);
 
-      double deltaphi_top = deltaPhi(hyp->toplep_v4(), hyp->tophad_v4());
-      hist("reco_deltaphi_top")->Fill(deltaphi_top,weight);
+    double deltar_top = deltaR(hyp->toplep_v4(), hyp->tophad_v4());
+    hist("reco_deltar_top")->Fill(deltar_top,weight);
 
-      double deltar_top = deltaR(hyp->toplep_v4(), hyp->tophad_v4());
-      hist("reco_deltar_top")->Fill(deltar_top,weight);
+    //deltaR and deltaPhi between decay products
+    double deltaphi_blepmu = deltaPhi(hyp->blep_v4(), hyp->lepton());
+    hist("reco_deltaphi_blepmu")->Fill(deltaphi_blepmu,weight);
 
-      //deltaR and deltaPhi between decay products
-      double deltaphi_blepmu = deltaPhi(hyp->blep_v4(), hyp->lepton());
-      hist("reco_deltaphi_blepmu")->Fill(deltaphi_blepmu,weight);
+    double deltar_blepmu = deltaR(hyp->blep_v4(), hyp->lepton());
+    hist("reco_deltar_blepmu")->Fill(deltar_blepmu,weight);
 
-      double deltar_blepmu = deltaR(hyp->blep_v4(), hyp->lepton());
-      hist("reco_deltar_blepmu")->Fill(deltar_blepmu,weight);
+    double deltaphi_bhadmu = deltaPhi(hyp->bhad_v4(), hyp->lepton());
+    hist("reco_deltaphi_bhadmu")->Fill(deltaphi_bhadmu,weight);
 
-      double deltaphi_bhadmu = deltaPhi(hyp->bhad_v4(), hyp->lepton());
-      hist("reco_deltaphi_bhadmu")->Fill(deltaphi_bhadmu,weight);
+    double deltar_bhadmu = deltaR(hyp->bhad_v4(), hyp->lepton());
+    hist("reco_deltar_bhadmu")->Fill(deltar_bhadmu,weight);
 
-      double deltar_bhadmu = deltaR(hyp->bhad_v4(), hyp->lepton());
-      hist("reco_deltar_bhadmu")->Fill(deltar_bhadmu,weight);
+    double deltaphi_blepW = deltaPhi(hyp->blep_v4(), hyp->W_v4());
+    hist("reco_deltaphi_blepW")->Fill(deltaphi_blepW,weight);
 
-      double deltaphi_blepW = deltaPhi(hyp->blep_v4(), hyp->W_v4());
-      hist("reco_deltaphi_blepW")->Fill(deltaphi_blepW,weight);
+    double deltar_blepW = deltaR(hyp->blep_v4(), hyp->W_v4());
+    hist("reco_deltar_blepW")->Fill(deltar_blepW,weight);
 
-      double deltar_blepW = deltaR(hyp->blep_v4(), hyp->W_v4());
-      hist("reco_deltar_blepW")->Fill(deltar_blepW,weight);
+    double deltaphi_bhadW = deltaPhi(hyp->bhad_v4(), hyp->W_v4());
+    hist("reco_deltaphi_bhadW")->Fill(deltaphi_bhadW,weight);
 
-      double deltaphi_bhadW = deltaPhi(hyp->bhad_v4(), hyp->W_v4());
-      hist("reco_deltaphi_bhadW")->Fill(deltaphi_bhadW,weight);
-
-      double deltar_bhadW = deltaR(hyp->bhad_v4(), hyp->W_v4());
-      hist("reco_deltar_bhadW")->Fill(deltar_bhadW,weight);
+    double deltar_bhadW = deltaR(hyp->bhad_v4(), hyp->W_v4());
+    hist("reco_deltar_bhadW")->Fill(deltar_bhadW,weight);
 
 
-    } //valid h_hyps
+  } //valid h_hyps
 
  
   

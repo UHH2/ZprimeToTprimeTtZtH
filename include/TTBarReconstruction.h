@@ -40,6 +40,7 @@ private:
     std::vector<ZPrimeTotTPrimeReconstructionHypothesis> recoHyps;
     bool berror;
     const double M_Pi= 3.14159265359;
+    double distance;
 };
 
 

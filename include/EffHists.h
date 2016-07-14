@@ -22,6 +22,7 @@
     uhh2::Event::Handle<std::vector<Jet>> h_btag_loose; 
     uhh2::Event::Handle<std::vector<Jet>> h_btag_tight;
     uhh2::Event::Handle<std::vector<ZPrimeTotTPrimeReconstructionHypothesis>> h_hyps;
+    double matching;
 
     std::string m_discriminator_name;
   };

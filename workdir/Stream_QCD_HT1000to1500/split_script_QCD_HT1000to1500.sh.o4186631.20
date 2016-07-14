@@ -1,0 +1,47 @@
+ ( INFO  )  SCycleController   : Initializing
+ ( INFO  )  SCycleController   : Deleting all analysis cycle algorithms from memory
+ ( INFO  )  SCycleController   : Reading xml file: 'QCD_HT1000to1500_20.xml'
+ ( INFO  )  SCycleController   : Created cycle 'uhh2::AnalysisModuleRunner'
+ ( INFO  )  SCycleBaseExec     : Initializing from configuration
+ ( INFO  )  SCycleBaseExec     : Reading SInputData: MC - QCD_HT1000to1500
+ ( INFO  )  SCycleConfig       : ===========================================================
+ ( INFO  )  SCycleConfig       :                     Cycle configuration
+ ( INFO  )  SCycleConfig       :   - Running mode: LOCAL
+ ( INFO  )  SCycleConfig       :   - Target luminosity: 2690.7
+ ( INFO  )  SCycleConfig       :   - Output directory: /nfs/dust/cms/user/abenecke/ZPrimeTotTPrime/25ns/rootfile/QCD/mass//workdir/
+ ( INFO  )  SCycleConfig       :   - Post-fix: _19
+ ( INFO  )  SInputData         :  ---------------------------------------------------------
+ ( INFO  )  SInputData         :  Type               : MC
+ ( INFO  )  SInputData         :  Version            : QCD_HT1000to1500
+ ( INFO  )  SInputData         :  Total luminosity   : 4183.32pb-1
+ ( INFO  )  SInputData         :  NEventsMax         : 10000
+ ( INFO  )  SInputData         :  NEventsSkip        : 190000
+ ( INFO  )  SInputData         :  Cacheable          : No
+ ( INFO  )  SInputData         :  Skip validation    : No
+ ( INFO  )  SInputData         :  Skip file lookup   : No
+ ( INFO  )  SInputData         :  Input File         : '/nfs/dust/cms/user/abenecke/ZPrimeTotTPrime/25ns/Pre/rootfile/Misstag/uhh2.AnalysisModuleRunner.MC.QCD_HT1000to1500.root' (file) | '0' (lumi)
+ ( INFO  )  SInputData         :  Tree               : 'AnalysisTree' (name) | 'Flat input tree' (type)
+ ( INFO  )  SInputData         :  Tree               : 'AnalysisTree' (name) | 'Flat output tree' (type)
+ ( INFO  )  SInputData         :  ---------------------------------------------------------
+ ( INFO  )  SCycleConfig       : ===========================================================
+ ( INFO  )  SCycleController   : Job 'ExampleCycleJob' configured
+ ( INFO  )  SCycleController   : Time needed for initialisation:    1.3 s
+ ( INFO  )  SCycleController   : Entering ExecuteAllCycles()
+ ( INFO  )  SInputData         : Input type "MC" version "QCD_HT1000to1500" : 371421 events
+ ( INFO  )  SCycleController   : Executing Cycle #0 ('uhh2::AnalysisModuleRunner') locally
+ ( INFO  )  SCycleController   : Processing input data type: MC version: QCD_HT1000to1500
+ ( INFO  )  SCycleBaseExec     : Initialised InputData "MC" (Version:QCD_HT1000to1500) on worker node
+ ( INFO  )  SCycleBaseExec     : Processing entry: 190999 (999 / 10000 events processed so far)
+ ( INFO  )  SCycleBaseExec     : Processing entry: 191999 (1999 / 10000 events processed so far)
+ ( INFO  )  SCycleBaseExec     : Processing entry: 192999 (2999 / 10000 events processed so far)
+ ( INFO  )  SCycleBaseExec     : Processing entry: 193999 (3999 / 10000 events processed so far)
+ ( INFO  )  SCycleBaseExec     : Processing entry: 194999 (4999 / 10000 events processed so far)
+ ( INFO  )  SCycleBaseExec     : Processing entry: 195999 (5999 / 10000 events processed so far)
+ ( INFO  )  SCycleBaseExec     : Processing entry: 196999 (6999 / 10000 events processed so far)
+ ( INFO  )  SCycleBaseExec     : Processing entry: 197999 (7999 / 10000 events processed so far)
+ ( INFO  )  SCycleBaseExec     : Processing entry: 198999 (8999 / 10000 events processed so far)
+ ( INFO  )  SCycleBaseExec     : Processing entry: 199999 (9999 / 10000 events processed so far)
+ ( INFO  )  SCycleBaseExec     : Terminated InputData "MC" (Version:QCD_HT1000to1500) on worker node
+ ( INFO  )  SCycleController   : Writing output of "uhh2::AnalysisModuleRunner" to: /nfs/dust/cms/user/abenecke/ZPrimeTotTPrime/25ns/rootfile/QCD/mass//workdir/uhh2.AnalysisModuleRunner.MC.QCD_HT1000to1500_19.root
+ ( INFO  )  SCycleController   : Overall cycle statistics:
+ ( INFO  )  SCycleController   :      10000 Events - Real time   7.84 s  -  1275 Hz | CPU time   6.66 s  -  1502 Hz

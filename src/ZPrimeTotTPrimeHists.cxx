@@ -2,6 +2,7 @@
 #include "UHH2/core/include/Event.h"
 #include "UHH2/ZPrimeTotTPrime/include/ZPrimeTotTPrimeGenSelections.h"
 #include "UHH2/common/include/TTbarGen.h"
+#include "UHH2/common/include/PartonHT.h"
 
 #include "TH1F.h"
 #include <iostream>
@@ -107,7 +108,7 @@ ZPrimeTotTPrimeHists::ZPrimeTotTPrimeHists(Context & ctx, const string & dirname
   h_higgstag = ctx.get_handle<std::vector<TopJet>>("HiggsTag");
   h_ZWtag = ctx.get_handle<std::vector<TopJet>>("ZWTag");
   h_ttbargen = ctx.get_handle<TTbarGen>("ttbargen");
-
+ 
 
   //to get the ordering correct
  
@@ -150,7 +151,9 @@ ZPrimeTotTPrimeHists::ZPrimeTotTPrimeHists(Context & ctx, const string & dirname
  book<TH1D>("number_btag_loose","Number of btagged Jets",10,0,10);
  book<TH1D>("number_btag_tight","Number of btagged Jets",10,0,10);
 
-
+ //patron HT
+ book<TH1F>("partonht", "partonht", 2000, 0, 2000);
+ isMC = (ctx.get("dataset_type") == "MC");
 }
 
 
@@ -504,7 +507,11 @@ const auto & ttbargen = event.get(h_ttbargen);
       hist("deltaR_mub_had")->Fill(delta_mub_had,weight);
     }//ttbar semilep
   }
-  
+  if(isMC){
+  assert(event.genparticles);
+  auto pht = PartonHT::calculate(*event.genparticles);  
+  hist("partonht")->Fill(pht,weight);
+  }
 }
 
 ZPrimeTotTPrimeHists::~ZPrimeTotTPrimeHists(){}
