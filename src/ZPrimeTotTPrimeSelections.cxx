@@ -1,7 +1,9 @@
 #include "UHH2/ZPrimeTotTPrime/include/ZPrimeTotTPrimeSelections.h"
 #include <limits>
 #include <cmath>
-
+#include "TH2.h"
+#include "TFile.h"
+#include "TH1F.h"
 #include <stdexcept>
 
 using namespace uhh2examples;
@@ -411,4 +413,20 @@ UnType2TopTag::UnType2TopTag(double mjetLower, double mjetUpper, MassType typeOf
 
 UnType2TopTag::UnType2TopTag(MassType typeOfMass): m_mjetLower(60.), m_mjetUpper(100.), m_typeOfMass(typeOfMass), m_SubjetId(boost::none){}
 
+//////////////////////////////////////////////////////////// Scale factors ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// ZPrimeTotTPrimeEff::ZPrimeTotTPrimeEff(uhh2::Context & ctx){
+//   TString unc_name = ctx.get("unc_name");
+//   TString unc_folder = "/nfs/dust/cms/user/abenecke/ZPrimeTotTPrime/25ns/rootfile/eff/hists/";
+//   TFile* file = new TFile(unc_folder +"Eff_"+unc_name+".root", "READ");
+//   TH1F* sf_hist = (TH1F*) file->Get("tot_eff_h");
+//   SF = sf_hist->GetBinContent(1);
 
+     
+// }
+    
+// bool ZPrimeTotTPrimeEff::process(const Event & event){
+//   cout << "zwtag "<<pass_zwtag << " higgs tag "<< pass_higgstag << endl;
+//   cout<<"SF" << SF << " weight " << event.weight<<endl;
+//   event.weight = event.weight * SF;
+//   cout <<"weight "<<event.weight<<endl;
+// }
