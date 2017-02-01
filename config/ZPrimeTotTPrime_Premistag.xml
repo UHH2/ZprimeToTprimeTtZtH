@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE JobConfiguration PUBLIC "" "JobConfig.dtd" [
 
-	  <!ENTITY NEVT "100">
-	  <!ENTITY SELdir "/nfs/dust/cms/user/abenecke/ZPrimeTotTPrime/25ns/Pre/rootfile/Misstag/test">
+	  <!ENTITY NEVT "-1">
+	  <!ENTITY SELdir "/nfs/dust/cms/user/abenecke/ZPrimeTotTPrime/25ns/Pre/rootfile/Misstag/jersmear_up">
 	  <!ENTITY PROOFdir  "/nfs/dust/cms/user/abenecke/PROOF">
 	  <!ENTITY b_Cacheable  "False">
 
@@ -114,6 +114,10 @@
         
         <Item Name="AnalysisModule" Value="ZPrimeTotTPrimeGenModule" /> -->
 	<Item Name="AnalysisModule" Value="ZPrimeTotTPrimePreMisstagModule" />
+	
+	<Item Name="jecsmear_direction" Value="nominal" />
+	<Item Name="jersmear_direction" Value="up" />
+
       </UserConfig>
 
     </Cycle>
