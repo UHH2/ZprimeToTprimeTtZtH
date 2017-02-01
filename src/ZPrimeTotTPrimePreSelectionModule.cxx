@@ -48,7 +48,7 @@ private:
   std::unique_ptr<JetLeptonCleaner> jetlepton_cleaner;
   std::unique_ptr<JetCleaner>       jet_cleaner;
   std::unique_ptr<JetResolutionSmearer> jetER_smearer;
-
+ std::unique_ptr<SubJetCorrector> subjetcorrector;
   std::unique_ptr<JetCleaner>                topjet_IDcleaner;
   std::unique_ptr<TopJetCorrector>           topjet_corrector;
   // std::unique_ptr<TopJetLeptonDeltaRCleaner> topjetlepton_cleaner;
@@ -142,6 +142,8 @@ ZPrimeTotTPrimePreSelectionModule::ZPrimeTotTPrimePreSelectionModule(uhh2::Conte
     JEC_AK4 = JERFiles::Summer15_25ns_L123_AK4PFchs_DATA;
     JEC_AK8 = JERFiles::Summer15_25ns_L123_AK8PFchs_DATA;
   }
+  if(isMC) subjetcorrector.reset(new SubJetCorrector(ctx,JERFiles::Fall15_25ns_L123_AK4PFchs_MC));
+  else subjetcorrector.reset(new SubJetCorrector(ctx,JERFiles::Fall15_25ns_L123_AK4PFchs_DATA));
 
   jet_corrector.reset(new JetCorrector(ctx, JEC_AK4));
   jetlepton_cleaner.reset(new JetLeptonCleaner(ctx,JEC_AK4));
@@ -198,6 +200,8 @@ ZPrimeTotTPrimePreSelectionModule::ZPrimeTotTPrimePreSelectionModule(uhh2::Conte
   const std::string ZprimeTotTPrime_gen_label ("zprimegen");
  ZprimeTotTPrimeprod.reset(new ZPrimeGenProducer(ctx, ZprimeTotTPrime_gen_label, false));
 
+
+
 }
 
 bool ZPrimeTotTPrimePreSelectionModule::process(Event & event) {
@@ -243,7 +247,7 @@ bool ZPrimeTotTPrimePreSelectionModule::process(Event & event) {
   jet_corrector->process(event);
   jetlepton_cleaner->process(event);
   jet_cleaner->process(event);
-
+  subjetcorrector->process(event);
   topjet_corrector->process(event);
   //topjetlepton_cleaner->process(event);
   topjet_cleaner->process(event);
