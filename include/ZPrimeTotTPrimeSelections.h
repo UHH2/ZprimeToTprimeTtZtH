@@ -346,3 +346,15 @@ public:
    MassType m_typeOfMass;
    boost::optional<JetId> m_SubjetId;
 };
+//////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+/* class ZPrimeTotTPrimeEff: public uhh2::AnalysisModule { */
+/* public: */
+/*   explicit ZPrimeTotTPrimeEff(uhh2::Context & ctx);  */
+
+/*   virtual bool process(uhh2::Event & event) override; */
+
+/* private: */
+/*   double SF; */
+/* }; */
+//////////////////////////////////////////////////////////////////////////////////////////////////////////
