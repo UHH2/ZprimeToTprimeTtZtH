@@ -147,9 +147,9 @@ ZPrimeTotTPrimeHists::ZPrimeTotTPrimeHists(Context & ctx, const string & dirname
 
 
  //Anzahl der gebtaggeten jets
- book<TH1D>("number_btag_medium","Number of btagged Jets",10,0,10);
- book<TH1D>("number_btag_loose","Number of btagged Jets",10,0,10);
- book<TH1D>("number_btag_tight","Number of btagged Jets",10,0,10);
+ book<TH1D>("number_btag_medium","Number of btagged Jets",7,0,7);
+ book<TH1D>("number_btag_loose","Number of btagged Jets",7,0,7);
+ book<TH1D>("number_btag_tight","Number of btagged Jets",7,0,7);
 
  //patron HT
  book<TH1F>("partonht", "partonht", 2000, 0, 2000);
