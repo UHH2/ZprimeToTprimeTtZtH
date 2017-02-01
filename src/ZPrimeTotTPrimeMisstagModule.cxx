@@ -141,6 +141,15 @@ private:
   std::unique_ptr<uhh2::Selection> genmttbar_sel;
   std::unique_ptr<uhh2::AnalysisModule> ttgenprod;
   bool b_error;
+
+
+  //systematicen
+
+  std::unique_ptr<AnalysisModule> syst_module;
+  bool do_scale_variation;
+  
+
+
 };
 
 ZPrimeTotTPrimeMisstagModule::ZPrimeTotTPrimeMisstagModule(uhh2::Context& ctx){ 
@@ -154,7 +163,7 @@ ZPrimeTotTPrimeMisstagModule::ZPrimeTotTPrimeMisstagModule(uhh2::Context& ctx){
    
   //// Data/MC scale
   if(isMC){ 
-    pileup_SF.reset(new MCPileupReweight(ctx)); 
+    pileup_SF.reset(new MCPileupReweight(ctx,ctx.get("puVariation"))); 
     lumiweight.reset(new MCLumiWeight(ctx));
   } else     lumi_sel.reset(new LumiSelection(ctx));
 
@@ -187,6 +196,7 @@ ZPrimeTotTPrimeMisstagModule::ZPrimeTotTPrimeMisstagModule(uhh2::Context& ctx){
   //Selections
   topjet2_sel.reset(new NTopJetSelection(2,-1,TopJetId(PtEtaCut( 250., 2.4)))); 
   const TopJetId ZWjetID = AndId<TopJet>(Type2TopTag(60,115,Type2TopTag::MassType::groomed), Tau21(0.5));
+  const TopJetId higgsjetID = AndId<TopJet>(HiggsTag(100,150), Tau21(1) );
   tagger_sel.reset(new NTopJetSelection(1, -1, ZWjetID));
   
   //Genral
@@ -259,6 +269,15 @@ ZPrimeTotTPrimeMisstagModule::ZPrimeTotTPrimeMisstagModule(uhh2::Context& ctx){
    topjet_pass_zwtag_h.reset(new TopJetHists(ctx, "topjet_pass_zwtag",4,"zwtag_topjets"));
    topjet_nopass_zwtag_h.reset(new TopJetHists(ctx, "topjet_nopass_zwtag",4,"nozwtag_topjets"));
 
+//systematics
+   syst_module.reset(new MCScaleVariation(ctx));
+
+
+
+   do_scale_variation = (ctx.get("ScaleVariationMuR") == "up" || ctx.get("ScaleVariationMuR") == "down") || (ctx.get("ScaleVariationMuF") == "up" || ctx.get("ScaleVariationMuF") == "down");
+  
+  
+
    b_error=false;
 }
 
@@ -283,6 +302,11 @@ bool ZPrimeTotTPrimeMisstagModule::process(Event & event) {
     ttgenprod->process(event);
     if(!genmttbar_sel->passes(event)) return false;
   }
+
+  //systematicen
+ if(do_scale_variation) syst_module->process(event); 
+
+
 
   uhh2::Event::TriggerIndex ti_HT;
   ti_HT=event.get_trigger_index("HLT_PFHT800_v*");
