@@ -11,8 +11,8 @@
 #include "UHH2/common/include/EventHists.h"
 #include "UHH2/common/include/JetHists.h"
 #include "UHH2/common/include/NSelections.h"
-#include "UHH2/ZPrimeTotTPrime/include/ZPrimeTotTPrimeSelections.h"
-#include "UHH2/ZPrimeTotTPrime/include/ZPrimeTotTPrimeHists.h"
+#include "UHH2/ZprimeToTprimeTtZtH/include/ZPrimeTotTPrimeSelections.h"
+#include "UHH2/ZprimeToTprimeTtZtH/include/ZPrimeTotTPrimeHists.h"
 
 using namespace std;
 using namespace uhh2;
