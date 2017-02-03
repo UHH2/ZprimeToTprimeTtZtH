@@ -2,9 +2,8 @@
 <!DOCTYPE JobConfiguration PUBLIC "" "JobConfig.dtd" [
 
 	  <!ENTITY NEVT "-1">
-	  <!ENTITY PRESELdir "/nfs/dust/cms/user/abenecke/ZPrimeTotTPrime/25ns/Pre/rootfile/CMSSW_7_6_3"> 
-	  <!-- 	  <!ENTITY SELdir "/nfs/dust/cms/user/abenecke/ZPrimeTotTPrime/25ns/rootfile/HT">-->
-	  <!ENTITY SELdir "/nfs/dust/cms/user/abenecke/ZPrimeTotTPrime/25ns/rootfile/thesis/test">
+	  <!ENTITY PRESELdir "/nfs/dust/cms/user/abenecke/ZPrimeTotTPrime/CMSSW_8X/PreSelection/rootfiles/none"> 
+	  <!ENTITY SELdir "/nfs/dust/cms/user/abenecke/ZPrimeTotTPrime/CMSSW_8X/rootfiles/data2016">
 	  <!ENTITY PROOFdir  "/nfs/dust/cms/user/abenecke/PROOF">
 	  <!ENTITY b_Cacheable  "False">
 	  <!ENTITY HLT "HLT_Mu45_eta2p1_v*">
