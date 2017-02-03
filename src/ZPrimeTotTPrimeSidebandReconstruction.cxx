@@ -4,10 +4,10 @@
 #include <cassert>
 #include "UHH2/core/include/Event.h"
 #include <vector>
-#include "UHH2/ZPrimeTotTPrime/include/ZPrimeTotTPrimeGenSelections.h"
+#include "UHH2/ZprimeToTprimeTtZtH/include/ZPrimeTotTPrimeGenSelections.h"
 
 
-#include "UHH2/ZPrimeTotTPrime/include/ZPrimeTotTPrimeSidebandReconstruction.h"
+#include "UHH2/ZprimeToTprimeTtZtH/include/ZPrimeTotTPrimeSidebandReconstruction.h"
 
 using namespace uhh2;
 using namespace std;

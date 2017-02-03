@@ -28,10 +28,10 @@
 #include "UHH2/common/include/LuminosityHists.h"
 #include <fstream>
 
-#include <UHH2/ZPrimeTotTPrime/include/ZPrimeTotTPrimeSelections.h>
-#include <UHH2/ZPrimeTotTPrime/include/ZPrimeTotTPrimeHists.h>
-//#include <UHH2/ZPrimeTotTPrime/include/MistagHists.h>
-#include <UHH2/ZPrimeTotTPrime/include/ZPrimeTotTPrimeGenSelections.h>
+#include <UHH2/ZprimeToTprimeTtZtH/include/ZPrimeTotTPrimeSelections.h>
+#include <UHH2/ZprimeToTprimeTtZtH/include/ZPrimeTotTPrimeHists.h>
+//#include <UHH2/ZprimeToTprimeTtZtH/include/MistagHists.h>
+#include <UHH2/ZprimeToTprimeTtZtH/include/ZPrimeTotTPrimeGenSelections.h>
 
 
 using namespace uhh2examples;

@@ -1,6 +1,6 @@
-#include "UHH2/ZPrimeTotTPrime/include/ZPrimeTotTPrimeGenHists.h"
+#include "UHH2/ZprimeToTprimeTtZtH/include/ZPrimeTotTPrimeGenHists.h"
 #include "UHH2/core/include/Event.h"
-#include "UHH2/ZPrimeTotTPrime/include/ZPrimeTotTPrimeGenSelections.h"
+#include "UHH2/ZprimeToTprimeTtZtH/include/ZPrimeTotTPrimeGenSelections.h"
 
 #include "TH1F.h"
 #include <iostream>

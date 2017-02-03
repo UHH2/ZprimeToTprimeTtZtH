@@ -3,8 +3,8 @@
 #include "UHH2/core/include/AnalysisModule.h"
 #include "UHH2/core/include/Event.h"
 
-#include "UHH2/ZPrimeTotTPrime/include/ZPrimeTotTPrimeReconstructionHypothesis.h"
-#include <UHH2/ZPrimeTotTPrime/include/ZPrimeTotTPrimeGenSelections.h>
+#include "UHH2/ZprimeToTprimeTtZtH/include/ZPrimeTotTPrimeReconstructionHypothesis.h"
+#include <UHH2/ZprimeToTprimeTtZtH/include/ZPrimeTotTPrimeGenSelections.h>
 
 const ZPrimeTotTPrimeReconstructionHypothesis * get_best_hypothesis(const std::vector<ZPrimeTotTPrimeReconstructionHypothesis> & hyps, const std::string & label);
 

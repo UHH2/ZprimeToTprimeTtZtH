@@ -22,10 +22,10 @@
 #include <UHH2/common/include/JetHists.h>
 #include <UHH2/common/include/Utils.h>
 
-#include <UHH2/ZPrimeTotTPrime/include/ZPrimeTotTPrimePreSelections.h>
-#include <UHH2/ZPrimeTotTPrime/include/ZPrimeTotTPrimeSelections.h>
-#include <UHH2/ZPrimeTotTPrime/include/ZPrimeTotTPrimeHists.h>
-#include <UHH2/ZPrimeTotTPrime/include/ZPrimeTotTPrimeGenSelections.h>
+#include <UHH2/ZprimeToTprimeTtZtH/include/ZPrimeTotTPrimePreSelections.h>
+#include <UHH2/ZprimeToTprimeTtZtH/include/ZPrimeTotTPrimeSelections.h>
+#include <UHH2/ZprimeToTprimeTtZtH/include/ZPrimeTotTPrimeHists.h>
+#include <UHH2/ZprimeToTprimeTtZtH/include/ZPrimeTotTPrimeGenSelections.h>
 
 
 using namespace uhh2examples;
@@ -42,7 +42,7 @@ private:
 
   // cleaners
   std::unique_ptr<MuonCleaner>     muo_cleaner;
-  std::unique_ptr<ElectronCleaner> ele_cleaner;
+  //  std::unique_ptr<ElectronCleaner> ele_cleaner;
 
   std::unique_ptr<JetCorrector>     jet_corrector;
   std::unique_ptr<JetLeptonCleaner> jetlepton_cleaner;
@@ -129,7 +129,7 @@ ZPrimeTotTPrimePreSelectionModule::ZPrimeTotTPrimePreSelectionModule(uhh2::Conte
 
   // set up object cleaners
   muo_cleaner.reset(new MuonCleaner (AndId<Muon> (PtEtaCut (50, 2.5), MuonIDMedium())));
-  ele_cleaner.reset(new ElectronCleaner(AndId<Electron>(PtEtaSCCut(20., 2.5), ElectronID_MVAnotrig_Spring15_25ns_loose)));
+  // ele_cleaner.reset(new ElectronCleaner(AndId<Electron>(PtEtaSCCut(20., 2.5), ElectronID_MVAnotrig_Spring15_25ns_loose)));
 
   std::vector<std::string> JEC_AK4, JEC_AK8;
   if(isMC){
@@ -237,7 +237,7 @@ bool ZPrimeTotTPrimePreSelectionModule::process(Event & event) {
 
   // LEPTON CLEANING
   muo_cleaner->process(event);
-  ele_cleaner->process(event);
+  // ele_cleaner->process(event);
 
   // keep Jets *before cleaning* to store them in the ntuple if event is accepted
   std::unique_ptr< std::vector<Jet> >    uncleaned_jets   (new std::vector<Jet>   (*event.jets));

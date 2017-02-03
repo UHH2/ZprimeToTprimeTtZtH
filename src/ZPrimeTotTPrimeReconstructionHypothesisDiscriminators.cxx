@@ -1,5 +1,5 @@
 #include "UHH2/core/include/Utils.h"
-#include "UHH2/ZPrimeTotTPrime/include/ZPrimeTotTPrimeReconstructionHypothesisDiscriminators.h"
+#include "UHH2/ZprimeToTprimeTtZtH/include/ZPrimeTotTPrimeReconstructionHypothesisDiscriminators.h"
 
 #include <set>
 

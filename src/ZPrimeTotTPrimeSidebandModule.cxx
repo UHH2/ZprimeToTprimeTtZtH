@@ -28,16 +28,16 @@
 #include "UHH2/common/include/LuminosityHists.h"
 #include <fstream>
 
-#include <UHH2/ZPrimeTotTPrime/include/ZPrimeTotTPrimeSelections.h>
-#include <UHH2/ZPrimeTotTPrime/include/ZPrimeTotTPrimeHists.h>
-#include <UHH2/ZPrimeTotTPrime/include/ZPrimeTotTPrimeGenSelections.h>
+#include <UHH2/ZprimeToTprimeTtZtH/include/ZPrimeTotTPrimeSelections.h>
+#include <UHH2/ZprimeToTprimeTtZtH/include/ZPrimeTotTPrimeHists.h>
+#include <UHH2/ZprimeToTprimeTtZtH/include/ZPrimeTotTPrimeGenSelections.h>
 
 
-#include "UHH2/ZPrimeTotTPrime/include/ZPrimeTotTPrimeReconstructionHypothesis.h"
-#include "UHH2/ZPrimeTotTPrime/include/ZPrimeTotTPrimeReconstructionHypothesisDiscriminators.h"
-#include "UHH2/ZPrimeTotTPrime/include/ZPrimeTotTPrimeSidebandReconstruction.h"
-#include "UHH2/ZPrimeTotTPrime/include/ZPrimeTotTPrimeReconstruction.h"
-#include "UHH2/ZPrimeTotTPrime/include/ZPrimeTotTPrimeHypothesisHists.h" 
+#include "UHH2/ZprimeToTprimeTtZtH/include/ZPrimeTotTPrimeReconstructionHypothesis.h"
+#include "UHH2/ZprimeToTprimeTtZtH/include/ZPrimeTotTPrimeReconstructionHypothesisDiscriminators.h"
+#include "UHH2/ZprimeToTprimeTtZtH/include/ZPrimeTotTPrimeSidebandReconstruction.h"
+#include "UHH2/ZprimeToTprimeTtZtH/include/ZPrimeTotTPrimeReconstruction.h"
+#include "UHH2/ZprimeToTprimeTtZtH/include/ZPrimeTotTPrimeHypothesisHists.h" 
 
 // #include <UHH2/common/include/HypothesisHists.h>
 // #include <UHH2/common/include/TTbarReconstruction.h>
@@ -59,7 +59,7 @@ private:
 
   // cleaners
   std::unique_ptr<MuonCleaner>     muo_cleaner;
-  std::unique_ptr<ElectronCleaner> ele_cleaner;
+  // std::unique_ptr<ElectronCleaner> ele_cleaner;
   std::unique_ptr<JetCleaner>      jet_IDcleaner;
   std::unique_ptr<JetCleaner>      jet_cleaner2;
   std::unique_ptr<JetCleaner>      jet_cleaner1;
@@ -471,7 +471,7 @@ ZPrimeTotTPrimeSidebandModule::ZPrimeTotTPrimeSidebandModule(uhh2::Context& ctx)
 
   //// OBJ CLEANING
   muo_cleaner.reset(new MuonCleaner    (AndId<Muon>    (PtEtaCut  (50., 2.1), MuonIDMedium())));
-  ele_cleaner.reset(new ElectronCleaner(AndId<Electron>(PtEtaSCCut(50., 2.4), ElectronID_MVAnotrig_Spring15_25ns_loose)));
+  // ele_cleaner.reset(new ElectronCleaner(AndId<Electron>(PtEtaSCCut(50., 2.4), ElectronID_MVAnotrig_Spring15_25ns_loose)));
 
   const JetId jetID(JetPFID(JetPFID::WP_LOOSE));
   jet_IDcleaner.reset(new JetCleaner(ctx,jetID));
@@ -866,10 +866,10 @@ chi2min_btag1_h.reset(new ZPrimeTotTPrimeHypothesisHists(ctx, "chi2min_btag1",Zp
   h_AK8 = ctx.get_handle<std::vector<TopJet>>("AK8");
   h_AK4 = ctx.get_handle<std::vector<Jet>>("AK4");
 
-  //Trigger
- const std::string& trigger = ctx.get("trigger", "NULL");
-if(trigger != "NULL") trigger_sel = make_unique<TriggerSelection>(trigger);
-    else                  trigger_sel = make_unique<TriggerSelection>("HLT_Mu45_eta2p1_v*");
+ //  //Trigger
+//  const std::string& trigger = ctx.get("trigger", "NULL");
+// if(trigger != "NULL") trigger_sel = make_unique<TriggerSelection>(trigger);
+//     else                  trigger_sel = make_unique<TriggerSelection>("HLT_Mu45_eta2p1_v*");
   
 }
 
@@ -915,8 +915,8 @@ bool ZPrimeTotTPrimeSidebandModule::process(uhh2::Event& event){
   muo_cleaner->process(event);
   sort_by_pt<Muon>(*event.muons);
 
-  ele_cleaner->process(event);
-  sort_by_pt<Electron>(*event.electrons);
+  // ele_cleaner->process(event);
+  //sort_by_pt<Electron>(*event.electrons);
 
   jet_IDcleaner->process(event);
   jetlepton_cleaner->process(event);
@@ -925,9 +925,9 @@ bool ZPrimeTotTPrimeSidebandModule::process(uhh2::Event& event){
   sort_by_pt<Jet>(*event.jets);
   sort_by_pt<TopJet>(*event.topjets);
 
-///////Trigger///////
-  const bool pass_trigger = trigger_sel->passes(event);
-  if(!pass_trigger) return false;
+// ///////Trigger///////
+//   const bool pass_trigger = trigger_sel->passes(event);
+//   if(!pass_trigger) return false;
 
 /////////////////////////////////////////////////////////// Input Histogramme ///////////////////////////////////////////////////////////////////////////////
  

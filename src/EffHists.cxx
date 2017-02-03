@@ -1,6 +1,6 @@
 #include "UHH2/core/include/LorentzVector.h"
 #include "UHH2/core/include/Utils.h"
-#include "UHH2/ZPrimeTotTPrime/include/EffHists.h"
+#include "UHH2/ZprimeToTprimeTtZtH/include/EffHists.h"
 #include "UHH2/common/include/TTbarGen.h"
 #include "TH1F.h"
 

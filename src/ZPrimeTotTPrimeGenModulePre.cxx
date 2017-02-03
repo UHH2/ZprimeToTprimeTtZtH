@@ -3,9 +3,9 @@
 
 #include "UHH2/core/include/AnalysisModule.h"
 #include "UHH2/core/include/Event.h"
-#include "UHH2/ZPrimeTotTPrime/include/ZPrimeTotTPrimeGenSelections.h"
+#include "UHH2/ZprimeToTprimeTtZtH/include/ZPrimeTotTPrimeGenSelections.h"
 #include "UHH2/common/include/PrintingModules.h"
-#include "UHH2/ZPrimeTotTPrime/include/ZPrimeTotTPrimeGenHists.h"
+#include "UHH2/ZprimeToTprimeTtZtH/include/ZPrimeTotTPrimeGenHists.h"
 bool bZPrime, bTPrime;
 using namespace std;
 using namespace uhh2; 

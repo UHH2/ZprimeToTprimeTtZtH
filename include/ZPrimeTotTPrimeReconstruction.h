@@ -7,7 +7,7 @@
 #include "UHH2/common/include/TopJetIds.h"
 #include "UHH2/common/include/PrimaryLepton.h"
 
-#include <UHH2/ZPrimeTotTPrime/include/ZPrimeTotTPrimeReconstructionHypothesis.h>
+#include <UHH2/ZprimeToTprimeTtZtH/include/ZPrimeTotTPrimeReconstructionHypothesis.h>
 
 typedef std::function< std::vector<LorentzVector>  (const LorentzVector & lepton, const LorentzVector & met)> NeutrinoReconstructionMethod;
 

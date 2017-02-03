@@ -33,15 +33,15 @@
 #include "UHH2/common/include/LuminosityHists.h"
 #include <fstream>
 
-#include <UHH2/ZPrimeTotTPrime/include/ZPrimeTotTPrimeSelections.h>
-#include <UHH2/ZPrimeTotTPrime/include/ZPrimeTotTPrimeHists.h>
-#include <UHH2/ZPrimeTotTPrime/include/ZPrimeTotTPrimeGenSelections.h>
-#include <UHH2/ZPrimeTotTPrime/include/BackgroundGenSelection.h>
+#include <UHH2/ZprimeToTprimeTtZtH/include/ZPrimeTotTPrimeSelections.h>
+#include <UHH2/ZprimeToTprimeTtZtH/include/ZPrimeTotTPrimeHists.h>
+#include <UHH2/ZprimeToTprimeTtZtH/include/ZPrimeTotTPrimeGenSelections.h>
+#include <UHH2/ZprimeToTprimeTtZtH/include/BackgroundGenSelection.h>
 
-#include "UHH2/ZPrimeTotTPrime/include/ZPrimeTotTPrimeReconstructionHypothesis.h"
-#include "UHH2/ZPrimeTotTPrime/include/ZPrimeTotTPrimeReconstructionHypothesisDiscriminators.h"
-#include "UHH2/ZPrimeTotTPrime/include/ZPrimeTotTPrimeReconstruction.h"
-#include "UHH2/ZPrimeTotTPrime/include/ZPrimeTotTPrimeHypothesisHists.h" 
+#include "UHH2/ZprimeToTprimeTtZtH/include/ZPrimeTotTPrimeReconstructionHypothesis.h"
+#include "UHH2/ZprimeToTprimeTtZtH/include/ZPrimeTotTPrimeReconstructionHypothesisDiscriminators.h"
+#include "UHH2/ZprimeToTprimeTtZtH/include/ZPrimeTotTPrimeReconstruction.h"
+#include "UHH2/ZprimeToTprimeTtZtH/include/ZPrimeTotTPrimeHypothesisHists.h" 
 
 using namespace uhh2examples;
 using namespace uhh2;
@@ -59,7 +59,7 @@ private:
 
   // cleaners
   std::unique_ptr<MuonCleaner>     muo_cleaner;
-  std::unique_ptr<ElectronCleaner> ele_cleaner;
+  // std::unique_ptr<ElectronCleaner> ele_cleaner;
   std::unique_ptr<JetCleaner>      jet_IDcleaner;
   std::unique_ptr<JetCleaner>      jet_cleaner2;
   std::unique_ptr<JetCleaner>      jet_cleaner1;
@@ -90,7 +90,7 @@ private:
 
   //Selections
   std::unique_ptr<AndSelection>  metfilters_selection;
-  std::unique_ptr<uhh2::Selection> trigger_sel;
+  //  std::unique_ptr<uhh2::Selection> trigger_sel;
   std::unique_ptr<uhh2::Selection> lumi_sel;
   std::unique_ptr<uhh2::AndSelection> lep1_sel;     //  exactly one lepton(muon) 
   std::unique_ptr<uhh2::Selection> twodcut_sel;     // pt 40 rel 0.4
@@ -390,7 +390,7 @@ ZPrimeTotTPrimeSelectionModule::ZPrimeTotTPrimeSelectionModule(uhh2::Context& ct
 
   //// OBJ CLEANING
   muo_cleaner.reset(new MuonCleaner    (AndId<Muon>    (PtEtaCut  (50., 2.1), MuonIDMedium())));
-  ele_cleaner.reset(new ElectronCleaner(AndId<Electron>(PtEtaSCCut(50., 2.4), ElectronID_MVAnotrig_Spring15_25ns_loose)));
+  // ele_cleaner.reset(new ElectronCleaner(AndId<Electron>(PtEtaSCCut(50., 2.4), ElectronID_MVAnotrig_Spring15_25ns_loose)));
 
   const JetId jetID(JetPFID(JetPFID::WP_LOOSE));
   jet_IDcleaner.reset(new JetCleaner(ctx,jetID));
@@ -694,10 +694,10 @@ ZPrimeTotTPrimeSelectionModule::ZPrimeTotTPrimeSelectionModule(uhh2::Context& ct
   h_zprimegen = ctx.get_handle<ZPrimeGen>("zprimegen");
   h_background = ctx.get_handle<BackgroundGen>("backgroundgen");
   h_ttbargen = ctx.get_handle<TTbarGen>("ttbargen");
-  //Trigger
-  const std::string& trigger = ctx.get("trigger", "NULL");
-  if(trigger != "NULL") trigger_sel = make_unique<TriggerSelection>(trigger);
-  else                  trigger_sel = make_unique<TriggerSelection>("HLT_Mu45_eta2p1_v*");
+  // //Trigger
+  // const std::string& trigger = ctx.get("trigger", "NULL");
+  // if(trigger != "NULL") trigger_sel = make_unique<TriggerSelection>(trigger);
+  // else                  trigger_sel = make_unique<TriggerSelection>("HLT_Mu45_eta2p1_v*");
 
 
   h_btag_medium = ctx.declare_event_output< std::vector<Jet> > ("BTag_medium");
@@ -765,8 +765,8 @@ bool ZPrimeTotTPrimeSelectionModule::process(uhh2::Event& event){
   muo_cleaner->process(event);
   sort_by_pt<Muon>(*event.muons);
 
-  ele_cleaner->process(event);
-  sort_by_pt<Electron>(*event.electrons);
+  // ele_cleaner->process(event);
+  //sort_by_pt<Electron>(*event.electrons);
 
   jet_IDcleaner->process(event);
   jetlepton_cleaner->process(event);
@@ -775,9 +775,9 @@ bool ZPrimeTotTPrimeSelectionModule::process(uhh2::Event& event){
   sort_by_pt<Jet>(*event.jets);
   sort_by_pt<TopJet>(*event.topjets);
 
-  ///////Trigger///////
-  const bool pass_trigger = trigger_sel->passes(event);
-  if(!pass_trigger) return false;
+  // ///////Trigger///////
+  // const bool pass_trigger = trigger_sel->passes(event);
+  // if(!pass_trigger) return false;
 
   /////////////////////////////////////////////////////////// Input Histogramme ///////////////////////////////////////////////////////////////////////////////
  
