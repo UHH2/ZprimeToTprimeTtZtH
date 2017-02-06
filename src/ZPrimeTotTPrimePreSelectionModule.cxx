@@ -42,7 +42,7 @@ private:
 
   // cleaners
   std::unique_ptr<MuonCleaner>     muo_cleaner;
-  //  std::unique_ptr<ElectronCleaner> ele_cleaner;
+  std::unique_ptr<ElectronCleaner> ele_cleaner;
 
   std::unique_ptr<JetCorrector>     jet_corrector;
   std::unique_ptr<JetLeptonCleaner> jetlepton_cleaner;
@@ -51,13 +51,8 @@ private:
  std::unique_ptr<SubJetCorrector> subjetcorrector;
   std::unique_ptr<JetCleaner>                topjet_IDcleaner;
   std::unique_ptr<TopJetCorrector>           topjet_corrector;
-  // std::unique_ptr<TopJetLeptonDeltaRCleaner> topjetlepton_cleaner;
   std::unique_ptr<TopJetCleaner>             topjet_cleaner;
   std::vector<std::unique_ptr<AnalysisModule>> htcalc;
-
- // // Data/MC scale factors
- //  std::unique_ptr<uhh2::AnalysisModule> pileup_SF;
- //  std::unique_ptr<uhh2::AnalysisModule> lumiweight;
 
   //Selections
   std::unique_ptr<uhh2::Selection> lumi_sel;
@@ -110,45 +105,40 @@ private:
 };
 
 ZPrimeTotTPrimePreSelectionModule::ZPrimeTotTPrimePreSelectionModule(uhh2::Context& ctx){
-  std::cout << "Hallo" <<std::endl;
-  const std::string ttbar_gen_label ("ttbargen");
 
- 
+  //TTbar MassSelection 
+  const std::string ttbar_gen_label ("ttbargen");
   if(ctx.get("dataset_version") == "TTbarAll"){ genmttbar_sel.reset(new GenMttbarCut(ctx, 0., 700., ttbar_gen_label));}
  
 
-
+  //choose channel from .xml file
   const bool isMC = (ctx.get("dataset_type") == "MC");
   channel_ = ctx.get("channel", "lepton");
   if(channel_!="muon" && channel_!="electron" && channel_!="lepton")
     throw std::runtime_error("undefined argument for 'channel' key in xml file (must be 'muon', 'electron' or 'lepton'): "+channel_);
 
-  // //// COMMON MODULES
-  // if(isMC){ pileup_SF.reset(new MCPileupReweight(ctx)); lumiweight.reset(new MCLumiWeight(ctx));}
-  // else     lumi_sel.reset(new LumiSelection(ctx));
 
   // set up object cleaners
   muo_cleaner.reset(new MuonCleaner (AndId<Muon> (PtEtaCut (50, 2.5), MuonIDMedium())));
-  // ele_cleaner.reset(new ElectronCleaner(AndId<Electron>(PtEtaSCCut(20., 2.5), ElectronID_MVAnotrig_Spring15_25ns_loose)));
+  ele_cleaner.reset(new ElectronCleaner(AndId<Electron>(PtEtaSCCut(20., 2.5),ElectronID_Spring16_medium  )));
 
   std::vector<std::string> JEC_AK4, JEC_AK8;
   if(isMC){
-
-    JEC_AK4 = JERFiles::Summer15_25ns_L123_AK4PFchs_MC;
-    JEC_AK8 = JERFiles::Summer15_25ns_L123_AK8PFchs_MC;
+    JEC_AK4 = JERFiles::Spring16_25ns_L123_AK4PFchs_MC;
+    JEC_AK8 = JERFiles::Spring16_25ns_L123_AK8PFchs_MC;
   }
   else {
-
-    JEC_AK4 = JERFiles::Summer15_25ns_L123_AK4PFchs_DATA;
-    JEC_AK8 = JERFiles::Summer15_25ns_L123_AK8PFchs_DATA;
+    JEC_AK4 = JERFiles::Spring16_25ns_L123_AK4PFchs_DATA;
+    JEC_AK8 = JERFiles::Spring16_25ns_L123_AK8PFchs_DATA;
   }
-  if(isMC) subjetcorrector.reset(new SubJetCorrector(ctx,JERFiles::Fall15_25ns_L123_AK4PFchs_MC));
-  else subjetcorrector.reset(new SubJetCorrector(ctx,JERFiles::Fall15_25ns_L123_AK4PFchs_DATA));
+
+  if(isMC) subjetcorrector.reset(new SubJetCorrector(ctx,JERFiles::Spring16_25ns_L123_AK4PFchs_MC));
+  else subjetcorrector.reset(new SubJetCorrector(ctx,JERFiles::Spring16_25ns_L123_AK4PFchs_DATA));
 
   jet_corrector.reset(new JetCorrector(ctx, JEC_AK4));
   jetlepton_cleaner.reset(new JetLeptonCleaner(ctx,JEC_AK4));
-  jetER_smearer.reset(new JetResolutionSmearer(ctx));
   jetlepton_cleaner->set_drmax(.4);
+  jetER_smearer.reset(new JetResolutionSmearer(ctx));
   jet_cleaner.reset(new JetCleaner(ctx,30., 2.5));
 
   topjet_corrector.reset(new TopJetCorrector(ctx, JEC_AK8));
@@ -164,8 +154,8 @@ ZPrimeTotTPrimePreSelectionModule::ZPrimeTotTPrimePreSelectionModule(uhh2::Conte
   ele1_sel.reset(new NElectronSelection(1)); // at least 1 electron
   jet2_sel.reset(new NJetSelection(2)); // at least 2 jets
   jet1_sel.reset(new NJetSelection(1)); // at least 1 jets
- topjet1_sel.reset(new NTopJetSelection(1)); // at least 1 jets
- topjet2_sel.reset(new NTopJetSelection(2)); // at least 2 jets
+  topjet1_sel.reset(new NTopJetSelection(1)); // at least 1 jets
+  topjet2_sel.reset(new NTopJetSelection(2)); // at least 2 jets
 
   // set up histograms
   input_h_event.reset(new EventHists   (ctx, "input_Event"));
@@ -198,7 +188,7 @@ ZPrimeTotTPrimePreSelectionModule::ZPrimeTotTPrimePreSelectionModule(uhh2::Conte
   
   filename =  ctx.get("dataset_version");
   const std::string ZprimeTotTPrime_gen_label ("zprimegen");
- ZprimeTotTPrimeprod.reset(new ZPrimeGenProducer(ctx, ZprimeTotTPrime_gen_label, false));
+  ZprimeTotTPrimeprod.reset(new ZPrimeGenProducer(ctx, ZprimeTotTPrime_gen_label, false));
 
 
 
@@ -206,26 +196,19 @@ ZPrimeTotTPrimePreSelectionModule::ZPrimeTotTPrimePreSelectionModule(uhh2::Conte
 
 bool ZPrimeTotTPrimePreSelectionModule::process(Event & event) {
 
- for (auto & mod : htcalc) {
-      mod->process(event);
-    }
+  for (auto & mod : htcalc) {
+    mod->process(event);
+  }
 
   if(filename == "TTBarAll"){
     ttgenprod->process(event);
     if(!genmttbar_sel->passes(event)) return false;
   }
 
- //ZPrime Genrator Level
+  //ZPrime Genrator Level
   if(filename.find("MC_ZPrime")!=std::string::npos){
     ZprimeTotTPrimeprod->process(event); 
   }
-
- // //common Modules
- //  /* luminosity sections from CMS golden-JSON file */
- //  if(event.isRealData && !lumi_sel->passes(event)) return false;
- //  /* pileup SF */
- //  if(!event.isRealData){ pileup_SF->process(event);lumiweight->process(event);}
- //  ////
 
   // dump input content
   input_h_event ->fill(event);
@@ -237,7 +220,7 @@ bool ZPrimeTotTPrimePreSelectionModule::process(Event & event) {
 
   // LEPTON CLEANING
   muo_cleaner->process(event);
-  // ele_cleaner->process(event);
+  ele_cleaner->process(event);
 
   // keep Jets *before cleaning* to store them in the ntuple if event is accepted
   std::unique_ptr< std::vector<Jet> >    uncleaned_jets   (new std::vector<Jet>   (*event.jets));
@@ -249,7 +232,6 @@ bool ZPrimeTotTPrimePreSelectionModule::process(Event & event) {
   jet_cleaner->process(event);
   subjetcorrector->process(event);
   topjet_corrector->process(event);
-  //topjetlepton_cleaner->process(event);
   topjet_cleaner->process(event);
 
   //Lepton Pre-Selection
@@ -279,14 +261,14 @@ bool ZPrimeTotTPrimePreSelectionModule::process(Event & event) {
   lepton_h_eff   ->fill(event);
   lepton_h_topjet   ->fill(event);
 
- // JET PRE-SELECTION
+  // JET PRE-SELECTION
   const bool pass_jet = (jet2_sel->passes(event)&& topjet1_sel->passes(event)) || (topjet2_sel->passes(event)&&jet1_sel->passes(event));
  
   // exit if jet preselection fails
   if(!pass_jet) return false;
 
 
-// dump output content
+  // dump output content
   output_h_event ->fill(event);
   output_h_muo ->fill(event);
   output_h_ele   ->fill(event);
