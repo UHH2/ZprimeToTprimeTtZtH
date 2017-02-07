@@ -90,7 +90,8 @@ private:
 
   //Selections
   std::unique_ptr<AndSelection>  metfilters_selection;
-  //  std::unique_ptr<uhh2::Selection> trigger_sel;
+  std::unique_ptr<uhh2::Selection> triggerMu50_sel;
+  std::unique_ptr<uhh2::Selection> triggerTrkMu50_sel;
   std::unique_ptr<uhh2::Selection> lumi_sel;
   std::unique_ptr<uhh2::AndSelection> lep1_sel;     //  exactly one lepton(muon) 
   std::unique_ptr<uhh2::Selection> twodcut_sel;     // pt 40 rel 0.4
@@ -379,17 +380,17 @@ ZPrimeTotTPrimeSelectionModule::ZPrimeTotTPrimeSelectionModule(uhh2::Context& ct
   std::vector<std::string> JEC_AK4, JEC_AK8;
   if(isMC){
 
-    JEC_AK4 = JERFiles::Summer15_25ns_L123_AK4PFchs_MC;
-    JEC_AK8 = JERFiles::Summer15_25ns_L123_AK8PFchs_MC;
+    JEC_AK4 = JERFiles::Spring16_25ns_L123_AK4PFchs_MC;
+    JEC_AK8 = JERFiles::Spring16_25ns_L123_AK8PFchs_MC;
   }
   else {
 
-    JEC_AK4 = JERFiles::Summer15_25ns_L123_AK4PFchs_DATA;
-    JEC_AK8 = JERFiles::Summer15_25ns_L123_AK8PFchs_DATA;
+    JEC_AK4 = JERFiles::Spring16_25ns_L123_AK4PFchs_DATA;
+    JEC_AK8 = JERFiles::Spring16_25ns_L123_AK8PFchs_DATA;
   }
 
   //// OBJ CLEANING
-  muo_cleaner.reset(new MuonCleaner    (AndId<Muon>    (PtEtaCut  (50., 2.1), MuonIDMedium())));
+  muo_cleaner.reset(new MuonCleaner    (AndId<Muon>    (PtEtaCut  (53., 2.1), MuonIDMedium())));
   // ele_cleaner.reset(new ElectronCleaner(AndId<Electron>(PtEtaSCCut(50., 2.4), ElectronID_MVAnotrig_Spring15_25ns_loose)));
 
   const JetId jetID(JetPFID(JetPFID::WP_LOOSE));
@@ -409,8 +410,8 @@ ZPrimeTotTPrimeSelectionModule::ZPrimeTotTPrimeSelectionModule(uhh2::Context& ct
   htcalc.push_back(std::unique_ptr<AnalysisModule>(new HTlepCalculator(ctx)));
 
   //correctors
-  if(isMC) subjetcorrector.reset(new SubJetCorrector(ctx,JERFiles::Fall15_25ns_L123_AK4PFchs_MC));
-  else subjetcorrector.reset(new SubJetCorrector(ctx,JERFiles::Fall15_25ns_L123_AK4PFchs_DATA));
+  if(isMC) subjetcorrector.reset(new SubJetCorrector(ctx,JERFiles::Spring16_25ns_L123_AK4PFchs_MC));
+  else subjetcorrector.reset(new SubJetCorrector(ctx,JERFiles::Spring16_25ns_L123_AK4PFchs_DATA));
 
   
   ////////////////////////////////////// Selections /////////////////////////////////////////////////
@@ -694,10 +695,12 @@ ZPrimeTotTPrimeSelectionModule::ZPrimeTotTPrimeSelectionModule(uhh2::Context& ct
   h_zprimegen = ctx.get_handle<ZPrimeGen>("zprimegen");
   h_background = ctx.get_handle<BackgroundGen>("backgroundgen");
   h_ttbargen = ctx.get_handle<TTbarGen>("ttbargen");
-  // //Trigger
-  // const std::string& trigger = ctx.get("trigger", "NULL");
-  // if(trigger != "NULL") trigger_sel = make_unique<TriggerSelection>(trigger);
-  // else                  trigger_sel = make_unique<TriggerSelection>("HLT_Mu45_eta2p1_v*");
+ 
+  //Trigger
+  if (!isMC){
+    triggerMu50_sel.reset(new TriggerSelection("HLT_Mu50_v*"));
+    triggerTrkMu50_sel.reset(new TriggerSelection("HLT_TkMu50_v*"));
+  }
 
 
   h_btag_medium = ctx.declare_event_output< std::vector<Jet> > ("BTag_medium");
@@ -776,8 +779,17 @@ bool ZPrimeTotTPrimeSelectionModule::process(uhh2::Event& event){
   sort_by_pt<TopJet>(*event.topjets);
 
   // ///////Trigger///////
-  // const bool pass_trigger = trigger_sel->passes(event);
-  // if(!pass_trigger) return false;
+  if (!isMC){
+    bool pass_Mu50 = triggerMu50_sel->passes(event);
+    if (event.run<274954) {
+      if (!pass_Mu50) return false;
+    }
+    else {
+      bool pass_TrkMu50 = triggerTrkMu50_sel->passes(event);
+      if (!(pass_Mu50||pass_TrkMu50)) return false;
+    }
+  }
+
 
   /////////////////////////////////////////////////////////// Input Histogramme ///////////////////////////////////////////////////////////////////////////////
  
@@ -1189,7 +1201,9 @@ bool ZPrimeTotTPrimeSelectionModule::process(uhh2::Event& event){
   /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// 
   //////////////////////////////////////////////////////////  reweighting Eff, mistagrate, sideband  ////////////////////////////////////////////////////////
   
-  if(isMC){
+  /***** Scalenfactors not produced yet
+
+	if(isMC){
     
     //higgs mistagrate
     if(pass_higgstag){
@@ -1292,7 +1306,7 @@ bool ZPrimeTotTPrimeSelectionModule::process(uhh2::Event& event){
 
     }
   }
-
+  Scalenfactors not produced yet  ****/
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
   chi2min_chi2cut_h->fill(event);
