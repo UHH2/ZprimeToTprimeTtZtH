@@ -358,8 +358,8 @@ ZPrimeTotTPrimeSelectionModule::ZPrimeTotTPrimeSelectionModule(uhh2::Context& ct
   if(isMC){ 
     pileup_SF.reset(new MCPileupReweight(ctx,ctx.get("puVariation"))); 
     lumiweight.reset(new MCLumiWeight(ctx));
-    btagwAK4.reset(new MCBTagScaleFactor(ctx, CSVBTag::WP_MEDIUM, "jets")); 
-    muonscale.reset(new MCMuonScaleFactor(ctx,data_dir_path + "MuonID_Z_RunCD_Reco76X_Feb15.root","MC_NUM_MediumID_DEN_genTracks_PAR_pt_spliteta_bin1", 1.));
+    // btagwAK4.reset(new MCBTagScaleFactor(ctx, CSVBTag::WP_MEDIUM, "jets")); 
+    // muonscale.reset(new MCMuonScaleFactor(ctx,data_dir_path + "MuonID_Z_RunCD_Reco76X_Feb15.root","MC_NUM_MediumID_DEN_genTracks_PAR_pt_spliteta_bin1", 1.));
     //  eff_zw.reset(new ZPrimeTotTPrimeEff(ctx));
   }
   else     lumi_sel.reset(new LumiSelection(ctx));
@@ -369,11 +369,11 @@ ZPrimeTotTPrimeSelectionModule::ZPrimeTotTPrimeSelectionModule(uhh2::Context& ct
   metfilters_selection.reset(new AndSelection(ctx, "metfilters"));
   metfilters_selection->add<TriggerSelection>("HBHENoiseFilter", "Flag_HBHENoiseFilter");
   metfilters_selection->add<TriggerSelection>("HBHENoiseIsoFilter", "Flag_HBHENoiseIsoFilter");
-  metfilters_selection->add<TriggerSelection>("CSCTightHalo2015Filter", "Flag_CSCTightHalo2015Filter");
+  metfilters_selection->add<TriggerSelection>("globalTightHalo2016Filter", "Flag_globalTightHalo2016Filter");
   metfilters_selection->add<TriggerSelection>("EcalDeadCellTriggerPrimitiveFilter", "Flag_EcalDeadCellTriggerPrimitiveFilter");
   metfilters_selection->add<TriggerSelection>("eeBadScFilter", "Flag_eeBadScFilter");
-  metfilters_selection->add<TriggerSelection>("chargedHadronTrackResolutionFilter", "Flag_chargedHadronTrackResolutionFilter"); 
-  metfilters_selection->add<TriggerSelection>("muonBadTrackFilter", "Flag_muonBadTrackFilter");
+  // metfilters_selection->add<TriggerSelection>("chargedHadronTrackResolutionFilter", "Flag_chargedHadronTrackResolutionFilter"); 
+  // metfilters_selection->add<TriggerSelection>("muonBadTrackFilter", "Flag_muonBadTrackFilter");
   metfilters_selection->add<NPVSelection>("1 good PV",1,-1,pvid);
 
   //JEC
@@ -754,14 +754,15 @@ bool ZPrimeTotTPrimeSelectionModule::process(uhh2::Event& event){
   /* luminosity sections from CMS silver-JSON file */
   if(event.isRealData && !lumi_sel->passes(event)) return false;
   /* pileup SF */
-  if(!event.isRealData){ pileup_SF->process(event);lumiweight->process(event);btagwAK4->process(event);muonscale->process(event);}
+  // if(!event.isRealData){ pileup_SF->process(event);lumiweight->process(event);btagwAK4->process(event);muonscale->process(event);}
+  if(!event.isRealData){ pileup_SF->process(event);lumiweight->process(event);}
   //
   ///correctors
   subjetcorrector->process(event);
 
 
   //systematicen
-  if(do_scale_variation) syst_module->process(event); 
+  //if(do_scale_variation) syst_module->process(event); 
 
   
   // OBJ CLEANING
@@ -1155,32 +1156,6 @@ bool ZPrimeTotTPrimeSelectionModule::process(uhh2::Event& event){
   event.set(h_btag_medium,*jets_btag );
   //// END Set handle on btagged jets
  
-// //////////////////////////////////////////////////////////  dived in tagged and not tagged  ////////////////////////////////////////////////////////
-//  std::vector<TopJet>* AllTopJets(new std::vector<TopJet> (*event.topjets));
-//  std::vector<TopJet>* tagged(new std::vector<TopJet> (*event.topjets));
-//  std::vector<TopJet>* untagged(new std::vector<TopJet> (*event.topjets));
-//  tagged-> clear();
-//  tagged->reserve(event.topjets->size());
-//  untagged-> clear();
-//  untagged->reserve(event.topjets->size());
-//  event.topjets->clear();
-//  event.topjets->reserve(AllTopJets->size());
-//  for(const auto & topjet: *AllTopJets){
-//    event.topjets->push_back(topjet);
-//    bool b_Htag =  higgstag_sel->passes(event);
-//    bool b_Ztag =  ZWtag_sel->passes(event);
-   
-//    bool b_tagged = b_Htag || b_Ztag ;
-//    if(b_tagged) tagged->push_back(topjet);
-//    else untagged->push_back(topjet);
-
-//    event.topjets->clear();
-//    event.topjets->reserve(AllTopJets->size());
-
-//  }  
-//  event.set(h_tagged, *tagged);
-//  event.set(h_other, *untagged);
-//  for(const auto & j : *AllTopJets) event.topjets->push_back(j); 
 
 
   // //////////////////////////////////////////////////////////  Eventnumber  ////////////////////////////////////////////////////////
