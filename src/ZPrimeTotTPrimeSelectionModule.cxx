@@ -56,7 +56,6 @@ private:
   enum lepton { muon, elec };
   lepton channel_;
   std::unique_ptr<AnalysisModule> printer;
-
   // cleaners
   std::unique_ptr<MuonCleaner>     muo_cleaner;
   // std::unique_ptr<ElectronCleaner> ele_cleaner;
@@ -86,6 +85,7 @@ private:
   std::unique_ptr<uhh2::AnalysisModule> lumiweight;
   std::unique_ptr<uhh2::AnalysisModule> muonscale;
   std::unique_ptr<uhh2::AnalysisModule> btagwAK4;
+  std::unique_ptr<uhh2::AnalysisModule> triggerscale;
   // std::unique_ptr<uhh2::AnalysisModule> eff_zw:
 
   //Selections
@@ -342,6 +342,7 @@ std::unique_ptr<Hists> topjet_tagger_other_h;
 
 
 ZPrimeTotTPrimeSelectionModule::ZPrimeTotTPrimeSelectionModule(uhh2::Context& ctx){
+ 
   //GenParticleprinter
   printer.reset(new GenParticlesPrinter(ctx));
   
@@ -354,12 +355,13 @@ ZPrimeTotTPrimeSelectionModule::ZPrimeTotTPrimeSelectionModule(uhh2::Context& ct
   isMC = (ctx.get("dataset_type") == "MC");
   //// Data/MC scale
   auto data_dir_path = ctx.get("data_dir_path");
-
+  
   if(isMC){ 
     pileup_SF.reset(new MCPileupReweight(ctx,ctx.get("puVariation"))); 
     lumiweight.reset(new MCLumiWeight(ctx));
-    // btagwAK4.reset(new MCBTagScaleFactor(ctx, CSVBTag::WP_MEDIUM, "jets")); 
-    // muonscale.reset(new MCMuonScaleFactor(ctx,data_dir_path + "MuonID_Z_RunCD_Reco76X_Feb15.root","MC_NUM_MediumID_DEN_genTracks_PAR_pt_spliteta_bin1", 1.));
+    //  btagwAK4.reset(new MCBTagScaleFactor(ctx, CSVBTag::WP_MEDIUM, "jets")); 
+    muonscale.reset(new MCMuonScaleFactor(ctx,data_dir_path + "MuonID_EfficienciesAndSF_average_RunBtoH.root","MC_NUM_MediumID2016_DEN_genTracks_PAR_pt_eta", 1.));
+    triggerscale.reset(new MCMuonScaleFactor(ctx,data_dir_path + "MuonTrigger_EfficienciesAndSF_average_RunBtoH.root","IsoMu50_OR_IsoTkMu50_PtEtaBins", 1.));
     //  eff_zw.reset(new ZPrimeTotTPrimeEff(ctx));
   }
   else     lumi_sel.reset(new LumiSelection(ctx));
@@ -413,7 +415,7 @@ ZPrimeTotTPrimeSelectionModule::ZPrimeTotTPrimeSelectionModule(uhh2::Context& ct
   if(isMC) subjetcorrector.reset(new SubJetCorrector(ctx,JERFiles::Spring16_25ns_L123_AK4PFchs_MC));
   else subjetcorrector.reset(new SubJetCorrector(ctx,JERFiles::Spring16_25ns_L123_AK4PFchs_DATA));
 
-  
+ 
   ////////////////////////////////////// Selections /////////////////////////////////////////////////
 
   //LEPTONSELECTION
@@ -485,7 +487,7 @@ ZPrimeTotTPrimeSelectionModule::ZPrimeTotTPrimeSelectionModule(uhh2::Context& ct
   h_other = ctx.declare_event_output< std::vector<TopJet> > ("other");
   h_used = ctx.declare_event_output< std::vector<Jet> > ("used");
  
-
+ 
   ////////////////////////////////////// Hists  /////////////////////////////////////////////////
   // Hists Input
   input_event_h.reset(new EventHists(ctx, "input"));
@@ -685,7 +687,7 @@ ZPrimeTotTPrimeSelectionModule::ZPrimeTotTPrimeSelectionModule(uhh2::Context& ct
   // topjet_top_masswindow_h.reset(new TopJetHists(ctx, "masswindow_top"));
 
 
-
+ 
   //general
   filename =  ctx.get("dataset_version");
   h_toptag = ctx.declare_event_output< std::vector<TopJet> > ("TopTag");
@@ -702,14 +704,14 @@ ZPrimeTotTPrimeSelectionModule::ZPrimeTotTPrimeSelectionModule(uhh2::Context& ct
     triggerTrkMu50_sel.reset(new TriggerSelection("HLT_TkMu50_v*"));
   }
 
-
+  
   h_btag_medium = ctx.declare_event_output< std::vector<Jet> > ("BTag_medium");
   h_btag_used = ctx.declare_event_output< std::vector<Jet> > ("BTag_used");
   
 //systematicen
-  syst_module.reset(new MCScaleVariation(ctx));
+  // syst_module.reset(new MCScaleVariation(ctx));
 
-  do_scale_variation = (ctx.get("ScaleVariationMuR") == "up" || ctx.get("ScaleVariationMuR") == "down") || (ctx.get("ScaleVariationMuF") == "up" || ctx.get("ScaleVariationMuF") == "down");
+  //  do_scale_variation = (ctx.get("ScaleVariationMuR") == "up" || ctx.get("ScaleVariationMuR") == "down") || (ctx.get("ScaleVariationMuF") == "up" || ctx.get("ScaleVariationMuF") == "down");
 
   berror=false;
   unc_name = ctx.get("unc_name");
@@ -732,7 +734,7 @@ bool ZPrimeTotTPrimeSelectionModule::process(uhh2::Event& event){
   //Select of the inclusiv ttbar sample only events from 0 to 700 GeV
   if(filename  == "TTbarAll"){
     ttgenprod->process(event);
-    if(!genmttbar_sel->passes(event)) return false;
+    //  if(!genmttbar_sel->passes(event)) return false;
   }else if (!filename.Contains("MC_ZPrime") && !filename.Contains("Data")){
     backgroundprod->process(event);
   }
@@ -754,8 +756,14 @@ bool ZPrimeTotTPrimeSelectionModule::process(uhh2::Event& event){
   /* luminosity sections from CMS silver-JSON file */
   if(event.isRealData && !lumi_sel->passes(event)) return false;
   /* pileup SF */
-  // if(!event.isRealData){ pileup_SF->process(event);lumiweight->process(event);btagwAK4->process(event);muonscale->process(event);}
-  if(!event.isRealData){ pileup_SF->process(event);lumiweight->process(event);}
+  if(!event.isRealData){ 
+    pileup_SF->process(event);
+    lumiweight->process(event);
+    //  btagwAK4->process(event);
+    muonscale->process(event);
+    triggerscale->process(event);
+  }
+ 
   //
   ///correctors
   subjetcorrector->process(event);
@@ -782,14 +790,17 @@ bool ZPrimeTotTPrimeSelectionModule::process(uhh2::Event& event){
   // ///////Trigger///////
   if (!isMC){
     bool pass_Mu50 = triggerMu50_sel->passes(event);
-    if (event.run<274954) {
-      if (!pass_Mu50) return false;
-    }
-    else {
+    // if (event.run<274954) {
+    //   if (!pass_Mu50) return false;
+    // }
+    // else {
       bool pass_TrkMu50 = triggerTrkMu50_sel->passes(event);
       if (!(pass_Mu50||pass_TrkMu50)) return false;
-    }
+      //}
   }
+
+
+
 
 
   /////////////////////////////////////////////////////////// Input Histogramme ///////////////////////////////////////////////////////////////////////////////
