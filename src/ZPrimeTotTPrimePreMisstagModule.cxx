@@ -128,19 +128,19 @@ ZPrimeTotTPrimePreMisstagModule::ZPrimeTotTPrimePreMisstagModule(uhh2::Context& 
   const bool isMC = (ctx.get("dataset_type") == "MC");
   if(isMC){
 
-    JEC_AK4 = JERFiles::Summer15_25ns_L123_AK4PFchs_MC;
-    JEC_AK8 = JERFiles::Summer15_25ns_L123_AK8PFchs_MC;
+    JEC_AK4 = JERFiles::Spring16_25ns_L123_AK4PFchs_MC;
+    JEC_AK8 = JERFiles::Spring16_25ns_L123_AK8PFchs_MC;
   }
   else {
 
-    JEC_AK4 = JERFiles::Summer15_25ns_L123_AK4PFchs_DATA;
-    JEC_AK8 = JERFiles::Summer15_25ns_L123_AK8PFchs_DATA;
+    JEC_AK4 = JERFiles::Spring16_25ns_L123_AK4PFchs_DATA;
+    JEC_AK8 = JERFiles::Spring16_25ns_L123_AK8PFchs_DATA;
   }
   jet_corrector.reset(new JetCorrector(ctx, JEC_AK4));
   jetER_smearer.reset(new JetResolutionSmearer(ctx));
   topjet_corrector.reset(new TopJetCorrector(ctx, JEC_AK8));
-  if(isMC) subjetcorrector.reset(new SubJetCorrector(ctx,JERFiles::Fall15_25ns_L123_AK4PFchs_MC));
-  else subjetcorrector.reset(new SubJetCorrector(ctx,JERFiles::Fall15_25ns_L123_AK4PFchs_DATA));
+  if(isMC) subjetcorrector.reset(new SubJetCorrector(ctx,JERFiles::Spring16_25ns_L123_AK4PFchs_MC));
+  else subjetcorrector.reset(new SubJetCorrector(ctx,JERFiles::Spring16_25ns_L123_AK4PFchs_DATA));
  
  
   //// Data/MC scale

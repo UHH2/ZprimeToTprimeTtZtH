@@ -81,7 +81,7 @@ private:
   std::vector<std::unique_ptr<AnalysisModule>> metfilters;
 
   //correctors
-  //std::unique_ptr<SubJetCorrector> subjetcorrector;
+  std::unique_ptr<SubJetCorrector> subjetcorrector;
 
   // Data/MC scale factors
   std::unique_ptr<uhh2::AnalysisModule> pileup_SF;
@@ -91,7 +91,8 @@ private:
 
   //Selections
   std::unique_ptr<AndSelection>  metfilters_selection;
-  std::unique_ptr<uhh2::Selection> trigger_sel;
+  std::unique_ptr<uhh2::Selection> triggerMu50_sel;
+  std::unique_ptr<uhh2::Selection> triggerTrkMu50_sel;
   std::unique_ptr<uhh2::Selection> lumi_sel; 
   std::unique_ptr<uhh2::AndSelection> lep1_sel;     //  exactly one lepton(muon) 
   std::unique_ptr<uhh2::Selection> twodcut_sel;     // pt 40 rel 0.4
@@ -306,6 +307,7 @@ private:
   uhh2::Event::Handle<double> h_ht;
   uhh2::Event::Handle<std::vector<ZPrimeTotTPrimeReconstructionHypothesis> > h_ttbar_hyps;
   bool berror;
+  bool isMC;
 };
 
 ZPrimeTotTPrimeEffModule::ZPrimeTotTPrimeEffModule(uhh2::Context& ctx){ 
@@ -319,15 +321,15 @@ ZPrimeTotTPrimeEffModule::ZPrimeTotTPrimeEffModule(uhh2::Context& ctx){
   else if(channel == "elec") channel_ = elec;
   else throw std::runtime_error("ZprimeSelectionModule -- undefined argument for 'channel' key in xml file (must be 'muon' or 'elec'): "+channel);
 
-  const bool isMC = (ctx.get("dataset_type") == "MC");
+  isMC = (ctx.get("dataset_type") == "MC");
   //// Data/MC scale
  auto data_dir_path = ctx.get("data_dir_path");
 
   if(isMC){ 
     pileup_SF.reset(new MCPileupReweight(ctx,ctx.get("puVariation"))); 
     lumiweight.reset(new MCLumiWeight(ctx)); 
-    btagwAK4.reset(new MCBTagScaleFactor(ctx, CSVBTag::WP_MEDIUM, "jets")); 
-    muonscale.reset(new MCMuonScaleFactor(ctx,data_dir_path + "MuonID_Z_RunCD_Reco76X_Feb15.root","MC_NUM_MediumID_DEN_genTracks_PAR_pt_spliteta_bin1", 1.));
+    //  btagwAK4.reset(new MCBTagScaleFactor(ctx, CSVBTag::WP_MEDIUM, "jets")); 
+    // muonscale.reset(new MCMuonScaleFactor(ctx,data_dir_path + "MuonID_Z_RunCD_Reco76X_Feb15.root","MC_NUM_MediumID_DEN_genTracks_PAR_pt_spliteta_bin1", 1.));
   }else     lumi_sel.reset(new LumiSelection(ctx));
 
   PrimaryVertexId pvid=StandardPrimaryVertexId();
@@ -335,28 +337,28 @@ ZPrimeTotTPrimeEffModule::ZPrimeTotTPrimeEffModule(uhh2::Context& ctx){
   metfilters_selection.reset(new AndSelection(ctx, "metfilters"));
   metfilters_selection->add<TriggerSelection>("HBHENoiseFilter", "Flag_HBHENoiseFilter");
   metfilters_selection->add<TriggerSelection>("HBHENoiseIsoFilter", "Flag_HBHENoiseIsoFilter");
-  metfilters_selection->add<TriggerSelection>("CSCTightHalo2015Filter", "Flag_CSCTightHalo2015Filter");
+  metfilters_selection->add<TriggerSelection>("globalTightHalo2016Filter", "Flag_globalTightHalo2016Filter");
   metfilters_selection->add<TriggerSelection>("EcalDeadCellTriggerPrimitiveFilter", "Flag_EcalDeadCellTriggerPrimitiveFilter");
   metfilters_selection->add<TriggerSelection>("eeBadScFilter", "Flag_eeBadScFilter");
-  metfilters_selection->add<TriggerSelection>("chargedHadronTrackResolutionFilter", "Flag_chargedHadronTrackResolutionFilter"); 
-  metfilters_selection->add<TriggerSelection>("muonBadTrackFilter", "Flag_muonBadTrackFilter");
+  //  metfilters_selection->add<TriggerSelection>("chargedHadronTrackResolutionFilter", "Flag_chargedHadronTrackResolutionFilter"); 
+  //  metfilters_selection->add<TriggerSelection>("muonBadTrackFilter", "Flag_muonBadTrackFilter");
   metfilters_selection->add<NPVSelection>("1 good PV",1,-1,pvid);
 
   //JEC
   std::vector<std::string> JEC_AK4, JEC_AK8;
   if(isMC){
 
-    JEC_AK4 = JERFiles::Summer15_25ns_L123_AK4PFchs_MC;
-    JEC_AK8 = JERFiles::Summer15_25ns_L123_AK8PFchs_MC;
+    JEC_AK4 = JERFiles::Spring16_25ns_L123_AK4PFchs_MC;
+    JEC_AK8 = JERFiles::Spring16_25ns_L123_AK8PFchs_MC;
   }
   else {
 
-    JEC_AK4 = JERFiles::Summer15_25ns_L123_AK4PFchs_DATA;
-    JEC_AK8 = JERFiles::Summer15_25ns_L123_AK8PFchs_DATA;
+    JEC_AK4 = JERFiles::Spring16_25ns_L123_AK4PFchs_DATA;
+    JEC_AK8 = JERFiles::Spring16_25ns_L123_AK8PFchs_DATA;
   } 
 
   //// OBJ CLEANING
-  muo_cleaner.reset(new MuonCleaner    (AndId<Muon>    (PtEtaCut  (50., 2.1), MuonIDTight())));
+  muo_cleaner.reset(new MuonCleaner    (AndId<Muon>    (PtEtaCut  (53., 2.1), MuonIDTight())));
   //  ele_cleaner.reset(new ElectronCleaner(AndId<Electron>(PtEtaSCCut(50., 2.4), ElectronID_MVAnotrig_Spring15_25ns_loose)));
 
   const JetId jetID(JetPFID(JetPFID::WP_LOOSE));
@@ -377,8 +379,8 @@ ZPrimeTotTPrimeEffModule::ZPrimeTotTPrimeEffModule(uhh2::Context& ctx){
   htcalc.push_back(std::unique_ptr<AnalysisModule>(new HTlepCalculator(ctx)));
 
   // //correctors
-  // if(isMC) subjetcorrector.reset(new SubJetCorrector(ctx,JERFiles::Fall15_25ns_L123_AK4PFchs_MC));
-  // else subjetcorrector.reset(new SubJetCorrector(ctx,JERFiles::Fall15_25ns_L123_AK4PFchs_DATA));
+  if(isMC) subjetcorrector.reset(new SubJetCorrector(ctx,JERFiles::Spring16_25ns_L123_AK4PFchs_MC));
+  else subjetcorrector.reset(new SubJetCorrector(ctx,JERFiles::Spring16_25ns_L123_AK4PFchs_DATA));
 
 
   ////////////////////////////////////// Selections /////////////////////////////////////////////////
@@ -637,11 +639,13 @@ ZPrimeTotTPrimeEffModule::ZPrimeTotTPrimeEffModule(uhh2::Context& ctx){
   h_btag_tight = ctx.declare_event_output< std::vector<Jet> > ("BTag_tight");
   h_ttbargen = ctx.get_handle<TTbarGen>("ttbargen");
 
+ 
   //Trigger
-  //  const std::string& trigger = ctx.get("trigger", "NULL");
-  //if(trigger != "NULL") trigger_sel = make_unique<TriggerSelection>(trigger);
-  //else                  trigger_sel = make_unique<TriggerSelection>("HLT_Mu45_eta2p1_v*");
-
+  if (!isMC){
+    triggerMu50_sel.reset(new TriggerSelection("HLT_Mu50_v*"));
+    triggerTrkMu50_sel.reset(new TriggerSelection("HLT_TkMu50_v*"));
+  }
+  
 
   //systematicen
   syst_module.reset(new MCScaleVariation(ctx));
@@ -682,18 +686,18 @@ bool ZPrimeTotTPrimeEffModule::process(uhh2::Event& event){
   if(!event.isRealData){ 
     pileup_SF->process(event);
     lumiweight->process(event);
-    btagwAK4->process(event);
-    muonscale->process(event);
+    //  btagwAK4->process(event);
+    //  muonscale->process(event);
   }
   ////
 
- //systematicen
- if(do_scale_variation) syst_module->process(event); 
+  //systematicen
+  if(do_scale_variation) syst_module->process(event); 
 
 
 
   //correctors
-  // subjetcorrector->process(event);
+  subjetcorrector->process(event);
 
   // OBJ CLEANING
   muo_cleaner->process(event);
@@ -710,8 +714,16 @@ bool ZPrimeTotTPrimeEffModule::process(uhh2::Event& event){
   sort_by_pt<TopJet>(*event.topjets);
 
   // ///////Trigger///////
-  // const bool pass_trigger = trigger_sel->passes(event);
-  // if(!pass_trigger) return false;
+  if (!isMC){
+    bool pass_Mu50 = triggerMu50_sel->passes(event);
+    if (event.run<274954) {
+      if (!pass_Mu50) return false;
+    }
+    else {
+      bool pass_TrkMu50 = triggerTrkMu50_sel->passes(event);
+      if (!(pass_Mu50||pass_TrkMu50)) return false;
+    }
+  }
 
   if(berror)   std::cout<<"SelectionModule L:232 vor Input Histogrammen"<<std::endl;
   /////////////////////////////////////////////////////////// Input Histogramme ///////////////////////////////////////////////////////////////////////////////
