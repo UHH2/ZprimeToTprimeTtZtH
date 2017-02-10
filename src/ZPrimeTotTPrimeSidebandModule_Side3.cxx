@@ -75,7 +75,8 @@ private:
   std::vector<std::unique_ptr<AnalysisModule>> htcalc;
   std::vector<std::unique_ptr<AnalysisModule>> metfilters;
   std::unique_ptr<TopJetLeptonDeltaRCleaner> topjetlepton_cleaner;
-  std::unique_ptr<uhh2::Selection> trigger_sel;
+  std::unique_ptr<uhh2::Selection> triggerMu50_sel;
+  std::unique_ptr<uhh2::Selection> triggerTrkMu50_sel;
   std::unique_ptr<AndSelection>  metfilters_selection;
 
  //correctors
@@ -392,6 +393,7 @@ std::unique_ptr<Hists> higgs_top_chi2min_btag1_h;
   uhh2::Event::Handle<std::vector<ZPrimeTotTPrimeReconstructionHypothesis> > h_ZprimeTotTPrime_hyps;
   uhh2::Event::Handle<double> h_ht;
   bool berror;
+  bool isMC;
 };
 
 
@@ -404,7 +406,7 @@ ZPrimeTotTPrimeSidebandModuleside3::ZPrimeTotTPrimeSidebandModuleside3(uhh2::Con
   else if(channel == "elec") channel_ = elec;
   else throw std::runtime_error("ZprimeSelectionModule -- undefined argument for 'channel' key in xml file (must be 'muon' or 'elec'): "+channel);
 
-  const bool isMC = (ctx.get("dataset_type") == "MC");
+  isMC = (ctx.get("dataset_type") == "MC");
   //// Data/MC
  auto data_dir_path = ctx.get("data_dir_path");
 
@@ -421,27 +423,27 @@ ZPrimeTotTPrimeSidebandModuleside3::ZPrimeTotTPrimeSidebandModuleside3(uhh2::Con
   metfilters_selection.reset(new AndSelection(ctx, "metfilters"));
   metfilters_selection->add<TriggerSelection>("HBHENoiseFilter", "Flag_HBHENoiseFilter");
   metfilters_selection->add<TriggerSelection>("HBHENoiseIsoFilter", "Flag_HBHENoiseIsoFilter");
-  metfilters_selection->add<TriggerSelection>("CSCTightHalo2015Filter", "Flag_CSCTightHalo2015Filter");
+  metfilters_selection->add<TriggerSelection>("globalTightHalo2016Filter", "Flag_globalTightHalo2016Filter");
   metfilters_selection->add<TriggerSelection>("EcalDeadCellTriggerPrimitiveFilter", "Flag_EcalDeadCellTriggerPrimitiveFilter");
   metfilters_selection->add<TriggerSelection>("eeBadScFilter", "Flag_eeBadScFilter");
-  metfilters_selection->add<TriggerSelection>("chargedHadronTrackResolutionFilter", "Flag_chargedHadronTrackResolutionFilter"); 
-  metfilters_selection->add<TriggerSelection>("muonBadTrackFilter", "Flag_muonBadTrackFilter");
+  //  metfilters_selection->add<TriggerSelection>("chargedHadronTrackResolutionFilter", "Flag_chargedHadronTrackResolutionFilter"); 
+  //  metfilters_selection->add<TriggerSelection>("muonBadTrackFilter", "Flag_muonBadTrackFilter");
   metfilters_selection->add<NPVSelection>("1 good PV",1,-1,pvid);
 
   std::vector<std::string> JEC_AK4, JEC_AK8;
   if(isMC){
 
-    JEC_AK4 = JERFiles::Summer15_25ns_L123_AK4PFchs_MC;
-    JEC_AK8 = JERFiles::Summer15_25ns_L123_AK8PFchs_MC;
+    JEC_AK4 = JERFiles::Spring16_25ns_L123_AK4PFchs_MC;
+    JEC_AK8 = JERFiles::Spring16_25ns_L123_AK8PFchs_MC;
   }
   else {
 
-    JEC_AK4 = JERFiles::Summer15_25ns_L123_AK4PFchs_DATA;
-    JEC_AK8 = JERFiles::Summer15_25ns_L123_AK8PFchs_DATA;
+    JEC_AK4 = JERFiles::Spring16_25ns_L123_AK4PFchs_DATA;
+    JEC_AK8 = JERFiles::Spring16_25ns_L123_AK8PFchs_DATA;
   }
 
   //// OBJ CLEANING
-  muo_cleaner.reset(new MuonCleaner    (AndId<Muon>    (PtEtaCut  (50., 2.1), MuonIDMedium())));
+  muo_cleaner.reset(new MuonCleaner    (AndId<Muon>    (PtEtaCut  (53., 2.1), MuonIDMedium())));
   //  ele_cleaner.reset(new ElectronCleaner(AndId<Electron>(PtEtaSCCut(50., 2.4), ElectronID_MVAnotrig_Spring15_25ns_loose)));
 
   const JetId jetID(JetPFID(JetPFID::WP_LOOSE));
@@ -457,8 +459,8 @@ ZPrimeTotTPrimeSidebandModuleside3::ZPrimeTotTPrimeSidebandModuleside3(uhh2::Con
   topjetlepton_cleaner.reset(new TopJetLeptonDeltaRCleaner(.8));
 
   //  //correctors
-  // if(isMC) subjetcorrector.reset(new SubJetCorrector(ctx,JERFiles::Fall15_25ns_L123_AK4PFchs_MC));
-  // else subjetcorrector.reset(new SubJetCorrector(ctx,JERFiles::Fall15_25ns_L123_AK4PFchs_DATA));
+  // if(isMC) subjetcorrector.reset(new SubJetCorrector(ctx,JERFiles::Spring16_25ns_L123_AK4PFchs_MC));
+  // else subjetcorrector.reset(new SubJetCorrector(ctx,JERFiles::Spring16_25ns_L123_AK4PFchs_DATA));
 
 
   // TOPJET SELECTIONS
@@ -812,11 +814,11 @@ ZPrimeTotTPrimeSidebandModuleside3::ZPrimeTotTPrimeSidebandModuleside3(uhh2::Con
   h_ZWtag = ctx.declare_event_output< std::vector<TopJet> > ("ZWTag");
   h_ht = ctx.get_handle<double>("HT");
 
- //  //Trigger
-//  const std::string& trigger = ctx.get("trigger", "NULL");
-// if(trigger != "NULL") trigger_sel = make_unique<TriggerSelection>(trigger);
-//     else                  trigger_sel = make_unique<TriggerSelection>("HLT_Mu45_eta2p1_v*");
-
+  //Trigger
+  if (!isMC){
+    triggerMu50_sel.reset(new TriggerSelection("HLT_Mu50_v*"));
+    triggerTrkMu50_sel.reset(new TriggerSelection("HLT_TkMu50_v*"));
+  }
   berror=false;
   
 }
@@ -874,13 +876,21 @@ if(!event.isRealData){ pileup_SF->process(event);lumiweight->process(event);}
  sort_by_pt<Jet>(*event.jets);
  sort_by_pt<TopJet>(*event.topjets);
 
-// ///////Trigger///////
-//   const bool pass_trigger = trigger_sel->passes(event);
-//   if(!pass_trigger) return false;
 
-/////////////////////////////////////////////////////////// Input Histogramme ///////////////////////////////////////////////////////////////////////////////
+ // ///////Trigger///////
+ if (!isMC){
+   bool pass_Mu50 = triggerMu50_sel->passes(event);
+   if (event.run<274954) {
+     if (!pass_Mu50) return false;
+   }
+   else {
+     bool pass_TrkMu50 = triggerTrkMu50_sel->passes(event);
+     if (!(pass_Mu50||pass_TrkMu50)) return false;
+   }
+ }
+ /////////////////////////////////////////////////////////// Input Histogramme ///////////////////////////////////////////////////////////////////////////////
  
-  input_eff_h ->fill(event);
+ input_eff_h ->fill(event);
   input_event_h->fill(event);
   input_topjet_h->fill(event);
   input_jet_h->fill(event);
