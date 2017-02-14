@@ -114,8 +114,8 @@
 	  ]>
 
 <!--
-   <ConfigParse NEventsBreak="0" FileSplit="1" />
-   <ConfigSGE RAM ="8" DISK ="2" Mail="anna.benecke@desy.de" Notification="as" Workdir="none_workdir"/>
+   <ConfigParse NEventsBreak="20000" FileSplit="0" />
+   <ConfigSGE RAM ="8" DISK ="2" Mail="anna.benecke@desy.de" Notification="as" Workdir="workdir_none"/>
    -->
 
 <JobConfiguration JobName="ExampleCycleJob" OutputLevel="INFO">
@@ -123,12 +123,14 @@
   <Package Name="SUHH2ZprimeToTprimeTtZtH.par" />
 
   
-  <Cycle Name="uhh2::AnalysisModuleRunner" OutputDirectory="&SELdir;/" PostFix="" TargetLumi="36814.0" > 
+ <Cycle Name="uhh2::AnalysisModuleRunner" OutputDirectory="&SELdir;/" PostFix="" TargetLumi="35867.059983" >
+<!-- <Cycle Name="uhh2::AnalysisModuleRunner" OutputDirectory="&SELdir;/" PostFix="" TargetLumi="15408" >-->
+<!--<Cycle Name="uhh2::AnalysisModuleRunner" OutputDirectory="&SELdir;/" PostFix="" TargetLumi="18844.0" >-->
     <!--  <Cycle Name="uhh2::AnalysisModuleRunner" OutputDirectory="&SELdir;/" PostFix="" TargetLumi="36814.0" RunMode="PROOF" ProofServer="lite://" ProofWorkDir="&PROOFdir;/" ProofNodes="10" > -->
 
     
     <!--                     Data                        -->   
-  <InputData Version= "Data_B" Lumi="1" Type="Data" NEventsMax="&NEVT;" Cacheable="&b_Cacheable;">
+ <InputData Version= "Data_B" Lumi="1" Type="Data" NEventsMax="&NEVT;" Cacheable="&b_Cacheable;">
       <In FileName="&Data_B;" Lumi="0.0"/>  <InputTree Name="AnalysisTree"/>  <OutputTree Name="AnalysisTree"/>  </InputData>
     
     <InputData Version= "Data_C" Lumi="1" Type="Data" NEventsMax="&NEVT;" Cacheable="&b_Cacheable;">
@@ -145,7 +147,7 @@
       <In FileName="&Data_F;" Lumi="0.0"/>  <InputTree Name="AnalysisTree"/>  <OutputTree Name="AnalysisTree"/>  </InputData>
 
 
-    <InputData Version= "Data_G" Lumi="1" Type="Data" NEventsMax="&NEVT;" Cacheable="&b_Cacheable;">
+   <InputData Version= "Data_G" Lumi="1" Type="Data" NEventsMax="&NEVT;" Cacheable="&b_Cacheable;">
       <In FileName="&Data_G;" Lumi="0.0"/>  <InputTree Name="AnalysisTree"/>  <OutputTree Name="AnalysisTree"/>  </InputData>
 
     <InputData Version= "Data_H" Lumi="1" Type="Data" NEventsMax="&NEVT;" Cacheable="&b_Cacheable;">
@@ -177,21 +179,21 @@
 
 
 
- <!--Gitb es noch nciht   <InputData Version= "MC_ZPrime1500ToTPrime700T_TPrimeToZT" Lumi="206615" Type="MC" NEventsMax="&NEVT;" Cacheable="&b_Cacheable;">
+   <InputData Version= "MC_ZPrime1500ToTPrime700T_TPrimeToZT" Lumi="206615" Type="MC" NEventsMax="&NEVT;" Cacheable="&b_Cacheable;">
       <In FileName="&MC_ZPrime1500ToTPrime700T_TPrimeToZT;" Lumi="0.0"/> <InputTree Name="AnalysisTree"/> <OutputTree Name="AnalysisTree"/> </InputData>
     <InputData Version= "MC_ZPrime1500ToTPrime900T_TPrimeToZT" Lumi="205947" Type="MC" NEventsMax="&NEVT;" Cacheable="&b_Cacheable;">
       <In FileName="&MC_ZPrime1500ToTPrime900T_TPrimeToZT;" Lumi="0.0"/> <InputTree Name="AnalysisTree"/> <OutputTree Name="AnalysisTree"/> </InputData>
    <InputData Version= "MC_ZPrime1500ToTPrime1200T_TPrimeToZT" Lumi="201839" Type="MC" NEventsMax="&NEVT;" Cacheable="&b_Cacheable;">
       <In FileName="&MC_ZPrime1500ToTPrime1200T_TPrimeToZT;" Lumi="0.0"/> <InputTree Name="AnalysisTree"/> <OutputTree Name="AnalysisTree"/> </InputData> 
-   Gibt es noch nicht <InputData Version=  "MC_ZPrime2000ToTPrime900T_TPrimeToZT" Lumi="206508" Type="MC" NEventsMax="&NEVT;" Cacheable="&b_Cacheable;">
+   <InputData Version=  "MC_ZPrime2000ToTPrime900T_TPrimeToZT" Lumi="206508" Type="MC" NEventsMax="&NEVT;" Cacheable="&b_Cacheable;">
       <In FileName="&MC_ZPrime2000ToTPrime900T_TPrimeToZT;" Lumi="0.0"/> <InputTree Name="AnalysisTree"/> <OutputTree Name="AnalysisTree"/> </InputData>
-    <InputData Version= "MC_ZPrime2000ToTPrime1200T_TPrimeToZT" Lumi="205497" Type="MC" NEventsMax="&NEVT;" Cacheable="&b_Cacheable;">
-      <In FileName="&MC_ZPrime2000ToTPrime1200T_TPrimeToZT;" Lumi="0.0"/> <InputTree Name="AnalysisTree"/> <OutputTree Name="AnalysisTree"/> </InputData>
+  <!--Gibt es noch nciht  <InputData Version= "MC_ZPrime2000ToTPrime1200T_TPrimeToZT" Lumi="205497" Type="MC" NEventsMax="&NEVT;" Cacheable="&b_Cacheable;">
+      <In FileName="&MC_ZPrime2000ToTPrime1200T_TPrimeToZT;" Lumi="0.0"/> <InputTree Name="AnalysisTree"/> <OutputTree Name="AnalysisTree"/> </InputData>-->
     <InputData Version= "MC_ZPrime2000ToTPrime1500T_TPrimeToZT" Lumi="203441" Type="MC" NEventsMax="&NEVT;" Cacheable="&b_Cacheable;">
       <In FileName="&MC_ZPrime2000ToTPrime1500T_TPrimeToZT;" Lumi="0.0"/> <InputTree Name="AnalysisTree"/> <OutputTree Name="AnalysisTree"/> </InputData>
-    <InputData Version= "MC_ZPrime2500ToTPrime1200T_TPrimeToZT" Lumi="206568" Type="MC" NEventsMax="&NEVT;" Cacheable="&b_Cacheable;"> 
+<!-- Gibt es noch nicht    <InputData Version= "MC_ZPrime2500ToTPrime1200T_TPrimeToZT" Lumi="206568" Type="MC" NEventsMax="&NEVT;" Cacheable="&b_Cacheable;"> 
       <In FileName="&MC_ZPrime2500ToTPrime1200T_TPrimeToZT;" Lumi="0.0"/> <InputTree Name="AnalysisTree"/> <OutputTree Name="AnalysisTree"/> </InputData>-->
-  <InputData Version= "MC_ZPrime2500ToTPrime1500T_TPrimeToZT" Lumi="206117" Type="MC" NEventsMax="&NEVT;" Cacheable="&b_Cacheable;">
+    <InputData Version= "MC_ZPrime2500ToTPrime1500T_TPrimeToZT" Lumi="206117" Type="MC" NEventsMax="&NEVT;" Cacheable="&b_Cacheable;">
       <In FileName="&MC_ZPrime2500ToTPrime1500T_TPrimeToZT;" Lumi="0.0"/> <InputTree Name="AnalysisTree"/> <OutputTree Name="AnalysisTree"/> </InputData> 
     
 
@@ -201,10 +203,10 @@
       <In FileName="&MC_ZPrime1500ToTPrime700T_TPrimeToWB;" Lumi="0.0"/> <InputTree Name="AnalysisTree"/> <OutputTree Name="AnalysisTree"/> </InputData>
     <InputData Version= "MC_ZPrime1500ToTPrime900T_TPrimeToWB" Lumi="233247" Type="MC" NEventsMax="&NEVT;" Cacheable="&b_Cacheable;">
       <In FileName="&MC_ZPrime1500ToTPrime900T_TPrimeToWB;" Lumi="0.0"/> <InputTree Name="AnalysisTree"/> <OutputTree Name="AnalysisTree"/> </InputData>
-  <!--  Gibt es noch nciht  <InputData Version= "MC_ZPrime1500ToTPrime1200T_TPrimeToWB" Lumi="232087" Type="MC" NEventsMax="&NEVT;" Cacheable="&b_Cacheable;">
+    <InputData Version= "MC_ZPrime1500ToTPrime1200T_TPrimeToWB" Lumi="232087" Type="MC" NEventsMax="&NEVT;" Cacheable="&b_Cacheable;">
       <In FileName="&MC_ZPrime1500ToTPrime1200T_TPrimeToWB;" Lumi="0.0"/> <InputTree Name="AnalysisTree"/> <OutputTree Name="AnalysisTree"/> </InputData>
   <InputData Version= "MC_ZPrime2000ToTPrime900T_TPrimeToWB" Lumi="230375" Type="MC" NEventsMax="&NEVT;" Cacheable="&b_Cacheable;">
-      <In FileName="&MC_ZPrime2000ToTPrime900T_TPrimeToWB;" Lumi="0.0"/> <InputTree Name="AnalysisTree"/> <OutputTree Name="AnalysisTree"/> </InputData>-->
+      <In FileName="&MC_ZPrime2000ToTPrime900T_TPrimeToWB;" Lumi="0.0"/> <InputTree Name="AnalysisTree"/> <OutputTree Name="AnalysisTree"/> </InputData>
   <InputData Version= "MC_ZPrime2000ToTPrime1200T_TPrimeToWB" Lumi="197385" Type="MC" NEventsMax="&NEVT;" Cacheable="&b_Cacheable;">
       <In FileName="&MC_ZPrime2000ToTPrime1200T_TPrimeToWB;" Lumi="0.0"/>  <InputTree Name="AnalysisTree"/> <OutputTree Name="AnalysisTree"/> </InputData> 
     <InputData Version= "MC_ZPrime2000ToTPrime1500T_TPrimeToWB" Lumi="229497" Type="MC" NEventsMax="&NEVT;" Cacheable="&b_Cacheable;">
@@ -222,8 +224,8 @@
 	
 <InputData Version="TTbarAll" Lumi="92847.910" Type="MC" NEventsMax="&NEVT;" Cacheable="&b_Cacheable;">
     <In FileName="&TTbarAll;" Lumi="0.0"/> <InputTree Name="AnalysisTree"/> <OutputTree Name="AnalysisTree"/> </InputData>
-<!-- lumi eintragen  <InputData Version="TTbar_Mtt0700to1000" Lumi="" Type="MC" NEventsMax="&NEVT;" Cacheable="&b_Cacheable;">
-    <In FileName="&TTbar_Mtt0700to1000;" Lumi="0.0"/> <InputTree Name="AnalysisTree"/> <OutputTree Name="AnalysisTree"/> </InputData>  -->
+   <InputData Version="TTbar_Mtt0700to1000" Lumi="498911.716" Type="MC" NEventsMax="&NEVT;" Cacheable="&b_Cacheable;">
+    <In FileName="&TTbar_Mtt0700to1000;" Lumi="0.0"/> <InputTree Name="AnalysisTree"/> <OutputTree Name="AnalysisTree"/> </InputData>  
   <InputData Version="TTbar_Mtt1000toINFT" Lumi="1189652.930" Type="MC" NEventsMax="&NEVT;" Cacheable="&b_Cacheable;">
     <In FileName="&TTbar_Mtt1000toINFT;" Lumi="0.0"/> <InputTree Name="AnalysisTree"/> <OutputTree Name="AnalysisTree"/> </InputData> 
 
@@ -276,12 +278,12 @@
 
   <InputData Version="QCD_Pt15to20_MuEnrichedPt5" Lumi="1.084" Type="MC" NEventsMax="&NEVT;" Cacheable="&b_Cacheable;">
     <In FileName="&QCD_Pt15to20_MuEnrichedPt5;" Lumi="0.0"/> <InputTree Name="AnalysisTree"/> <OutputTree Name="AnalysisTree"/> </InputData> 
- <!-- <InputData Version="QCD_Pt20to30_MuEnrichedPt5" Lumi="10.633" Type="MC" NEventsMax="&NEVT;" Cacheable="&b_Cacheable;">
+  <InputData Version="QCD_Pt20to30_MuEnrichedPt5" Lumi="10.633" Type="MC" NEventsMax="&NEVT;" Cacheable="&b_Cacheable;">
     <In FileName="&QCD_Pt20to30_MuEnrichedPt5;" Lumi="0.0"/> <InputTree Name="AnalysisTree"/> <OutputTree Name="AnalysisTree"/> </InputData>
   <InputData Version="QCD_Pt30to50_MuEnrichedPt5" Lumi="18.121" Type="MC" NEventsMax="&NEVT;" Cacheable="&b_Cacheable;">
     <In FileName="&QCD_Pt30to50_MuEnrichedPt5;" Lumi="0.0"/> <InputTree Name="AnalysisTree"/> <OutputTree Name="AnalysisTree"/> </InputData>
   <InputData Version="QCD_Pt50to80_MuEnrichedPt5" Lumi="45.272" Type="MC" NEventsMax="&NEVT;" Cacheable="&b_Cacheable;">
-    <In FileName="&QCD_Pt50to80_MuEnrichedPt5;" Lumi="0.0"/> <InputTree Name="AnalysisTree"/> <OutputTree Name="AnalysisTree"/> </InputData>-->
+    <In FileName="&QCD_Pt50to80_MuEnrichedPt5;" Lumi="0.0"/> <InputTree Name="AnalysisTree"/> <OutputTree Name="AnalysisTree"/> </InputData>
   <InputData Version="QCD_Pt80to120_MuEnrichedPt5" Lumi="129.942" Type="MC" NEventsMax="&NEVT;" Cacheable="&b_Cacheable;">
     <In FileName="&QCD_Pt80to120_MuEnrichedPt5;" Lumi="0.0"/> <InputTree Name="AnalysisTree"/> <OutputTree Name="AnalysisTree"/> </InputData>      
   <InputData Version="QCD_Pt120to170_MuEnrichedPt5" Lumi="319.273" Type="MC" NEventsMax="&NEVT;" Cacheable="&b_Cacheable;">
@@ -330,7 +332,7 @@
   <!-- <Item Name="pileup_directory_data_up" Value="" />
        <Item Name="pileup_directory_data_down" Value="" />-->
   
-  <Item Name="lumihists_lumi_per_bin" Value="1000"/> 
+  <Item Name="lumihists_lumi_per_bin" Value="500"/> 
   <Item Name="trigger" Value="&HLT;"/>
 
 
