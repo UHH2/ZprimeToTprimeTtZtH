@@ -57,11 +57,29 @@ private:
   std::vector<std::unique_ptr<AnalysisModule>> htcalc;
   std::vector<std::unique_ptr<AnalysisModule>> metfilters;
   
-  //correctors
-  std::unique_ptr<SubJetCorrector> subjetcorrector;
-  std::unique_ptr<JetCorrector>     jet_corrector;
-  std::unique_ptr<JetResolutionSmearer> jetER_smearer;
-  std::unique_ptr<TopJetCorrector>           topjet_corrector;
+  std::unique_ptr<JetCorrector> jet_corrector;
+  std::unique_ptr<JetCorrector> jet_corrector_BCD;
+  std::unique_ptr<JetCorrector> jet_corrector_EF;
+  std::unique_ptr<JetCorrector> jet_corrector_G;
+  std::unique_ptr<JetCorrector> jet_corrector_H;
+
+  std::unique_ptr<TopJetCorrector> topjet_corrector;
+  std::unique_ptr<TopJetCorrector> topjet_corrector_BCD;
+  std::unique_ptr<TopJetCorrector> topjet_corrector_EF;
+  std::unique_ptr<TopJetCorrector> topjet_corrector_G;
+  std::unique_ptr<TopJetCorrector> topjet_corrector_H;
+
+  std::unique_ptr<SubJetCorrector> subjet_corrector;
+  std::unique_ptr<SubJetCorrector> subjet_corrector_BCD;
+  std::unique_ptr<SubJetCorrector> subjet_corrector_EF;
+  std::unique_ptr<SubJetCorrector> subjet_corrector_G;
+  std::unique_ptr<SubJetCorrector> subjet_corrector_H;
+
+  std::unique_ptr<JetLeptonCleaner> jetlepton_cleaner;
+  std::unique_ptr<JetLeptonCleaner> jetlepton_cleaner_BCD;
+  std::unique_ptr<JetLeptonCleaner> jetlepton_cleaner_EF;
+  std::unique_ptr<JetLeptonCleaner> jetlepton_cleaner_G;
+  std::unique_ptr<JetLeptonCleaner> jetlepton_cleaner_H;
  
   // Data/MC scale factors
   std::unique_ptr<uhh2::AnalysisModule> pileup_SF;
@@ -115,6 +133,10 @@ private:
   // Reconstruction TTBar for Background
   std::unique_ptr<uhh2::Selection> genmttbar_sel;
   std::unique_ptr<uhh2::AnalysisModule> ttgenprod;
+  bool isMC;
+  const int runnr_BCD = 276811;
+  const int runnr_EF = 278802;
+  const int runnr_G = 280385;
 
 };
 
@@ -122,26 +144,59 @@ ZPrimeTotTPrimePreMisstagModule::ZPrimeTotTPrimePreMisstagModule(uhh2::Context& 
 
   //GenParticleprinter
   printer.reset(new GenParticlesPrinter(ctx));
-
+ 
+  isMC = (ctx.get("dataset_type") == "MC");
   //corrector
-  std::vector<std::string> JEC_AK4, JEC_AK8;
-  const bool isMC = (ctx.get("dataset_type") == "MC");
+ //JEC
+  std::vector<std::string> JEC_AK4, JEC_AK8,JEC_AK4_BCD,JEC_AK4_EF,JEC_AK4_G,JEC_AK4_H,JEC_AK8_BCD,JEC_AK8_EF,JEC_AK8_G,JEC_AK8_H;
   if(isMC){
 
-    JEC_AK4 = JERFiles::Spring16_25ns_L123_AK4PFchs_MC;
-    JEC_AK8 = JERFiles::Spring16_25ns_L123_AK8PFchs_MC;
+    JEC_AK4 = JERFiles::Summer16_23Sep2016_V4_L123_AK4PFchs_MC;
+    JEC_AK8 = JERFiles::Summer16_23Sep2016_V4_L123_AK8PFchs_MC;
   }
   else {
 
-    JEC_AK4 = JERFiles::Spring16_25ns_L123_AK4PFchs_DATA;
-    JEC_AK8 = JERFiles::Spring16_25ns_L123_AK8PFchs_DATA;
+    JEC_AK4_BCD =  JERFiles::Summer16_23Sep2016_V4_BCD_L123_AK4PFchs_DATA;
+    JEC_AK4_EF = JERFiles::Summer16_23Sep2016_V4_EF_L123_AK4PFchs_DATA;
+    JEC_AK4_G =  JERFiles::Summer16_23Sep2016_V4_G_L123_AK4PFchs_DATA;
+    JEC_AK4_H =  JERFiles::Summer16_23Sep2016_V4_H_L123_AK4PFchs_DATA;
+    
+    JEC_AK8_BCD =  JERFiles::Summer16_23Sep2016_V4_BCD_L123_AK4PFchs_DATA;
+    JEC_AK8_EF =  JERFiles::Summer16_23Sep2016_V4_EF_L123_AK4PFchs_DATA;
+    JEC_AK8_G =  JERFiles::Summer16_23Sep2016_V4_G_L123_AK4PFchs_DATA;
+    JEC_AK8_H =  JERFiles::Summer16_23Sep2016_V4_H_L123_AK4PFchs_DATA;
+   
   }
-  jet_corrector.reset(new JetCorrector(ctx, JEC_AK4));
-  jetER_smearer.reset(new JetResolutionSmearer(ctx));
-  topjet_corrector.reset(new TopJetCorrector(ctx, JEC_AK8));
-  if(isMC) subjetcorrector.reset(new SubJetCorrector(ctx,JERFiles::Spring16_25ns_L123_AK4PFchs_MC));
-  else subjetcorrector.reset(new SubJetCorrector(ctx,JERFiles::Spring16_25ns_L123_AK4PFchs_DATA));
- 
+
+ if(isMC){ 
+    jet_corrector.reset(new JetCorrector(ctx, JEC_AK4));
+    topjet_corrector.reset(new TopJetCorrector(ctx, JEC_AK4));
+    subjet_corrector.reset(new SubJetCorrector(ctx,JEC_AK4));
+    jetlepton_cleaner.reset(new JetLeptonCleaner(ctx,JEC_AK4));
+  }
+  else {
+   
+    jet_corrector_BCD.reset(new JetCorrector(ctx, JEC_AK4_BCD));
+    jet_corrector_EF.reset(new JetCorrector(ctx, JEC_AK4_EF));
+    jet_corrector_G.reset(new JetCorrector(ctx,JEC_AK4_G ));
+    jet_corrector_H.reset(new JetCorrector(ctx,JEC_AK4_H ));
+
+    topjet_corrector_BCD.reset(new TopJetCorrector(ctx, JEC_AK8_BCD));
+    topjet_corrector_EF.reset(new TopJetCorrector(ctx, JEC_AK8_EF));
+    topjet_corrector_G.reset(new TopJetCorrector(ctx,JEC_AK8_G ));
+    topjet_corrector_H.reset(new TopJetCorrector(ctx,JEC_AK8_H ));
+
+    subjet_corrector_BCD.reset(new SubJetCorrector(ctx, JEC_AK4_BCD));
+    subjet_corrector_EF.reset(new SubJetCorrector(ctx, JEC_AK4_EF));
+    subjet_corrector_G.reset(new SubJetCorrector(ctx,JEC_AK4_G ));
+    subjet_corrector_H.reset(new SubJetCorrector(ctx,JEC_AK4_H ));
+
+    jetlepton_cleaner_BCD.reset(new JetLeptonCleaner(ctx, JEC_AK4_BCD));
+    jetlepton_cleaner_EF.reset(new JetLeptonCleaner(ctx, JEC_AK4_EF));
+    jetlepton_cleaner_G.reset(new JetLeptonCleaner(ctx,JEC_AK4_G ));
+    jetlepton_cleaner_H.reset(new JetLeptonCleaner(ctx,JEC_AK4_H ));
+
+  }
  
   //// Data/MC scale
    if(isMC){ 
@@ -212,10 +267,38 @@ bool ZPrimeTotTPrimePreMisstagModule::process(Event & event) {
     mod->process(event);
   }
 
-  //correctors
-  topjet_corrector->process(event);
-  jet_corrector->process(event);
-  subjetcorrector->process(event);
+///correctors
+  if(isMC){
+    jet_corrector->process(event);
+    topjet_corrector->process(event);
+    subjet_corrector->process(event);
+    jetlepton_cleaner->process(event);
+  }else{
+    if(event.run <= runnr_BCD)  {       
+      jet_corrector_BCD->process(event);
+      topjet_corrector_BCD->process(event);
+      subjet_corrector_BCD->process(event);
+      jetlepton_cleaner_BCD->process(event);
+    }
+    else if(event.run < runnr_EF){       
+      jet_corrector_EF->process(event);
+      topjet_corrector_EF->process(event);
+      subjet_corrector_EF->process(event);
+      jetlepton_cleaner_EF->process(event);
+    } 
+    else if(event.run <= runnr_G) {       
+      jet_corrector_G->process(event);
+      topjet_corrector_G->process(event);
+      subjet_corrector_G->process(event);
+      jetlepton_cleaner_G->process(event);
+    } 
+    else if(event.run > runnr_G) {       
+      jet_corrector_H->process(event);
+      topjet_corrector_H->process(event);
+      subjet_corrector_H->process(event);
+      jetlepton_cleaner_H->process(event);
+    } 
+  }
 
   if(event.isRealData && !lumi_sel->passes(event)) return false;
   /* pileup SF */
