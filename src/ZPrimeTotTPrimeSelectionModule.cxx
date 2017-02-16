@@ -108,6 +108,8 @@ private:
   std::unique_ptr<uhh2::AnalysisModule> muonscale;
   std::unique_ptr<uhh2::AnalysisModule> btagwAK4;
   std::unique_ptr<uhh2::AnalysisModule> triggerscale;
+  std::unique_ptr<uhh2::AnalysisModule> triggerscale_data;
+  std::unique_ptr<uhh2::AnalysisModule> muonIDscale_data;
   // std::unique_ptr<uhh2::AnalysisModule> eff_zw:
 
   //Selections
@@ -394,7 +396,11 @@ ZPrimeTotTPrimeSelectionModule::ZPrimeTotTPrimeSelectionModule(uhh2::Context& ct
     triggerscale.reset(new MCMuonScaleFactor(ctx,data_dir_path + "MuonTrigger_EfficienciesAndSF_average_RunBtoH.root","IsoMu50_OR_IsoTkMu50_PtEtaBins", 1.));
     //  eff_zw.reset(new ZPrimeTotTPrimeEff(ctx));
   }
-  else     lumi_sel.reset(new LumiSelection(ctx));
+  else  {   
+    lumi_sel.reset(new LumiSelection(ctx)); 
+    // triggerscale_data.reset(new MCMuonScaleFactor(ctx,"/nfs/dust/cms/user/abenecke/scripts/hists_weighted/trigger/Diff_MuonTrigger_EfficienciesAndSF_average_RunBtoH.root","Mu50_OR_TkMu50_PtEtaBins", 1.));
+    //  muonIDscale_data.reset(new MCMuonScaleFactor(ctx,"/nfs/dust/cms/user/abenecke/scripts/hists_weighted/muonID/Diff_MuonID_EfficienciesAndSF_average_RunBtoH.root","MC_NUM_MediumID2016_DEN_genTracks_PAR_pt_eta", 1.));
+  }
 
   PrimaryVertexId pvid=StandardPrimaryVertexId();
   metfilters.emplace_back(new PrimaryVertexCleaner(pvid));
@@ -467,7 +473,7 @@ ZPrimeTotTPrimeSelectionModule::ZPrimeTotTPrimeSelectionModule(uhh2::Context& ct
 
 
   //// OBJ CLEANING
-  muo_cleaner.reset(new MuonCleaner    (AndId<Muon>    (PtEtaCut  (53., 2.1), MuonIDMedium())));
+  muo_cleaner.reset(new MuonCleaner    (AndId<Muon>    (PtEtaCut  (53., 2.1), MuonIDMedium_ICHEP())));
   // ele_cleaner.reset(new ElectronCleaner(AndId<Electron>(PtEtaSCCut(50., 2.4), ElectronID_MVAnotrig_Spring15_25ns_loose)));
 
   const JetId jetID(JetPFID(JetPFID::WP_LOOSE));
@@ -841,7 +847,14 @@ bool ZPrimeTotTPrimeSelectionModule::process(uhh2::Event& event){
     muonscale->process(event);
     triggerscale->process(event);
   }
- 
+
+  
+  // if(event.isRealData&& event.run>=runnr_EF){ 
+  //   triggerscale_data->process(event);
+  //   muonIDscale_data->process(event);
+  // }
+
+
   //
   ///correctors
   if(isMC){
