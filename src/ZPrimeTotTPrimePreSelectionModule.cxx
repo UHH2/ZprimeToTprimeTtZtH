@@ -323,6 +323,7 @@ bool ZPrimeTotTPrimePreSelectionModule::process(Event & event) {
   }
 
   jet_cleaner->process(event);
+  jetER_smearer->process(event);
   topjet_cleaner->process(event);
 
   //Lepton Pre-Selection
