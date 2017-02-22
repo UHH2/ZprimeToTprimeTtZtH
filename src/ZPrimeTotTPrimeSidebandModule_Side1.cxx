@@ -47,10 +47,10 @@
 using namespace uhh2examples;
 using namespace uhh2;
 
-class ZPrimeTotTPrimeSidebandModule : public uhh2::AnalysisModule {
+class ZPrimeTotTPrimeSidebandModule_Side1 : public uhh2::AnalysisModule {
 
  public:
-  explicit ZPrimeTotTPrimeSidebandModule(uhh2::Context&);
+  explicit ZPrimeTotTPrimeSidebandModule_Side1(uhh2::Context&);
   virtual bool process(uhh2::Event&) override;
 
 private:
@@ -108,6 +108,7 @@ private:
   std::unique_ptr<uhh2::AnalysisModule> pileup_SF;
   std::unique_ptr<uhh2::AnalysisModule> lumiweight;
   std::unique_ptr<uhh2::AnalysisModule> muonscale;
+  std::unique_ptr<uhh2::AnalysisModule> triggerscale;
   std::unique_ptr<uhh2::AnalysisModule> btagwAK4;
 
   //Selections
@@ -121,9 +122,6 @@ private:
  std::unique_ptr<uhh2::Selection> btag0_sel;
 
   std::unique_ptr<uhh2::Selection> twodcut_sel;// pt 40 rel 0.4
-  std::unique_ptr<uhh2::Selection> met_sel;
-  std::unique_ptr<uhh2::Selection> ht_sel;
-  std::unique_ptr<uhh2::Selection> muonpt_sel;
 
   //TOP TAGGER
   std::unique_ptr<Selection> toptag_sel; // at least one toptag
@@ -172,39 +170,30 @@ private:
   std::unique_ptr<Hists> muon_topjet2_h;
   std::unique_ptr<Hists> event_topjet2_h;
   std::unique_ptr<Hists> topjet_topjet2_h;
- //Hist Btag1
+  //Hist Btag1
   std::unique_ptr<Hists> eff_btag1_h;
   std::unique_ptr<Hists> jet_btag1_h;
   std::unique_ptr<Hists> muon_btag1_h;
   std::unique_ptr<Hists> event_btag1_h;
   std::unique_ptr<Hists> topjet_btag1_h;
- std::unique_ptr<Hists> chi2min_btag1_h;
+  std::unique_ptr<Hists> chi2min_btag1_h;
 
-
- //Hist Btag0
+  //Hist Btag0
   std::unique_ptr<Hists> eff_btag0_h;
   std::unique_ptr<Hists> jet_btag0_h;
   std::unique_ptr<Hists> muon_btag0_h;
   std::unique_ptr<Hists> event_btag0_h;
   std::unique_ptr<Hists> topjet_btag0_h;
- std::unique_ptr<Hists> chi2min_btag0_h;
-
-
- //  //reliso Hists
- //  std::unique_ptr<Hists> eff_reliso_h;
- //  std::unique_ptr<Hists> jet_reliso_h;
- //  std::unique_ptr<Hists> topjet_reliso_h;
- //  std::unique_ptr<Hists> muon_reliso_h;
- // std::unique_ptr<Hists> event_reliso_h;
+  std::unique_ptr<Hists> chi2min_btag0_h;
 
   //2DCut Hists
   std::unique_ptr<Hists> eff_twodcut_h;
   std::unique_ptr<Hists> jet_twodcut_h;
   std::unique_ptr<Hists> topjet_twodcut_h;
   std::unique_ptr<Hists> muon_twodcut_h;
- std::unique_ptr<Hists> event_twodcut_h;
+  std::unique_ptr<Hists> event_twodcut_h;
    
-//Higgstag Hists
+  //Higgstag Hists
   std::unique_ptr<TopJetHists> input_higgstag_h;
   std::unique_ptr<TopJetHists> output_higgstag_h;
 
@@ -269,14 +258,6 @@ private:
   std::unique_ptr<EventHists> higgs_notop_event_tagger_h;
   std::unique_ptr<EventHists> zw_notop_event_tagger_h;
 
-// //Hist Clean
-//   std::unique_ptr<Hists> chi2min_clean_h;
-//   std::unique_ptr<Hists> eff_clean_h;
-//   std::unique_ptr<Hists> jet_clean_h;
-//   std::unique_ptr<Hists> muon_clean_h;
-//   std::unique_ptr<Hists> topjet_clean_h;
-//   std::unique_ptr<Hists> event_clean_h;
-
   // //Hist Reco
   // std::unique_ptr<Hists> chi2min_reco_h;
   // std::unique_ptr<Hists> eff_reco_h;
@@ -338,102 +319,11 @@ std::unique_ptr<Hists> notop_chi2min_reco_h;
   std::unique_ptr<Hists> topjet_selection_h;
   std::unique_ptr<Hists> event_selection_h;
 
-  // std::unique_ptr<TopJetHists> higgs_top_topjet_chi2cut_h;
- //  std::unique_ptr<TopJetHists> zw_top_topjet_chi2cut_h;
- //  std::unique_ptr<TopJetHists> higgs_notop_topjet_chi2cut_h;
- //  std::unique_ptr<TopJetHists> zw_notop_topjet_chi2cut_h;
-
- //  std::unique_ptr<Hists> higgs_top_chi2min_chi2cut_h;
- //  std::unique_ptr<Hists> zw_top_chi2min_chi2cut_h;
- //  std::unique_ptr<Hists> higgs_notop_chi2min_chi2cut_h;
- //  std::unique_ptr<Hists> zw_notop_chi2min_chi2cut_h;
-
- // std::unique_ptr<JetHists> higgs_top_jet_chi2cut_h;
- //  std::unique_ptr<JetHists> zw_top_jet_chi2cut_h;
- //  std::unique_ptr<JetHists> higgs_notop_jet_chi2cut_h;
- //  std::unique_ptr<JetHists> zw_notop_jet_chi2cut_h;
-  
- //  std::unique_ptr<MuonHists> higgs_top_muon_chi2cut_h;
- //  std::unique_ptr<MuonHists> zw_top_muon_chi2cut_h;
- //  std::unique_ptr<MuonHists> higgs_notop_muon_chi2cut_h;
- //  std::unique_ptr<MuonHists> zw_notop_muon_chi2cut_h;
-
- //  std::unique_ptr<EventHists> higgs_top_event_chi2cut_h;
- //  std::unique_ptr<EventHists> zw_top_event_chi2cut_h;
- //  std::unique_ptr<EventHists> higgs_notop_event_chi2cut_h;
- //  std::unique_ptr<EventHists> zw_notop_event_chi2cut_h;
-
-  // //met
-  // std::unique_ptr<Hists> topjet_met_h;
-  // std::unique_ptr<Hists>   eff_met_h;
-  // std::unique_ptr<Hists>   jet_met_h;
-  // std::unique_ptr<Hists>   muon_met_h;
-  // std::unique_ptr<Hists>   chi2min_met_h;
-  // std::unique_ptr<Hists> event_met_h;
-
-  // std::unique_ptr<TopJetHists> higgs_top_topjet_met_h;
-  // std::unique_ptr<TopJetHists> zw_top_topjet_met_h;
-  // std::unique_ptr<TopJetHists> higgs_notop_topjet_met_h;
-  // std::unique_ptr<TopJetHists> zw_notop_topjet_met_h;
-
-  // std::unique_ptr<Hists> higgs_top_chi2min_met_h;
-  // std::unique_ptr<Hists> zw_top_chi2min_met_h;
-  // std::unique_ptr<Hists> higgs_notop_chi2min_met_h;
-  // std::unique_ptr<Hists> zw_notop_chi2min_met_h;
-
-  // std::unique_ptr<JetHists> higgs_top_jet_met_h;
-  // std::unique_ptr<JetHists> zw_top_jet_met_h;
-  // std::unique_ptr<JetHists> higgs_notop_jet_met_h;
-  // std::unique_ptr<JetHists> zw_notop_jet_met_h;
-  
-  // std::unique_ptr<MuonHists> higgs_top_muon_met_h;
-  // std::unique_ptr<MuonHists> zw_top_muon_met_h;
-  // std::unique_ptr<MuonHists> higgs_notop_muon_met_h;
-  // std::unique_ptr<MuonHists> zw_notop_muon_met_h;
-
-  // std::unique_ptr<EventHists> higgs_top_event_met_h;
-  // std::unique_ptr<EventHists> zw_top_event_met_h;
-  // std::unique_ptr<EventHists> higgs_notop_event_met_h;
-  // std::unique_ptr<EventHists> zw_notop_event_met_h;
-
-
- // //ht
- //  std::unique_ptr<Hists> topjet_ht_h;
- //  std::unique_ptr<Hists>   eff_ht_h;
- //  std::unique_ptr<Hists>   jet_ht_h;
- //  std::unique_ptr<Hists>   muon_ht_h;
- //  std::unique_ptr<Hists>   chi2min_ht_h;
- //  std::unique_ptr<Hists> event_ht_h;
-
-  // std::unique_ptr<TopJetHists> higgs_top_topjet_ht_h;
-  // std::unique_ptr<TopJetHists> zw_top_topjet_ht_h;
-  // std::unique_ptr<TopJetHists> higgs_notop_topjet_ht_h;
-  // std::unique_ptr<TopJetHists> zw_notop_topjet_ht_h;
-
-  // std::unique_ptr<Hists> higgs_top_chi2min_ht_h;
-  // std::unique_ptr<Hists> zw_top_chi2min_ht_h;
-  // std::unique_ptr<Hists> higgs_notop_chi2min_ht_h;
-  // std::unique_ptr<Hists> zw_notop_chi2min_ht_h;
-
-  // std::unique_ptr<JetHists> higgs_top_jet_ht_h;
-  // std::unique_ptr<JetHists> zw_top_jet_ht_h;
-  // std::unique_ptr<JetHists> higgs_notop_jet_ht_h;
-  // std::unique_ptr<JetHists> zw_notop_jet_ht_h;
-  
-  // std::unique_ptr<MuonHists> higgs_top_muon_ht_h;
-  // std::unique_ptr<MuonHists> zw_top_muon_ht_h;
-  // std::unique_ptr<MuonHists> higgs_notop_muon_ht_h;
-  // std::unique_ptr<MuonHists> zw_notop_muon_ht_h;
-
-  // std::unique_ptr<EventHists> higgs_top_event_ht_h;
-  // std::unique_ptr<EventHists> zw_top_event_ht_h;
-  // std::unique_ptr<EventHists> higgs_notop_event_ht_h;
-  // std::unique_ptr<EventHists> zw_notop_event_ht_h;
 
   // std::unique_ptr<Hists> topjet_top_masswindow_h;
   //std::unique_ptr<Hists> topjet_higgs_masswindow_h;
   //std::unique_ptr<Hists> topjet_zw_masswindow_h;
- std::unique_ptr<Hists> lumi_h;
+  std::unique_ptr<Hists> lumi_h;
   //general
   std::string filename;
   uhh2::Event::Handle<std::vector<ZPrimeTotTPrimeReconstructionHypothesis> > h_ZprimeTotTPrime_hyps;
@@ -451,7 +341,7 @@ std::unique_ptr<Hists> notop_chi2min_reco_h;
 };
 
 
-ZPrimeTotTPrimeSidebandModule::ZPrimeTotTPrimeSidebandModule(uhh2::Context& ctx){
+ZPrimeTotTPrimeSidebandModule_Side1::ZPrimeTotTPrimeSidebandModule_Side1(uhh2::Context& ctx){
 
 
   //choose channel
@@ -461,13 +351,15 @@ ZPrimeTotTPrimeSidebandModule::ZPrimeTotTPrimeSidebandModule(uhh2::Context& ctx)
   else throw std::runtime_error("ZprimeSelectionModule -- undefined argument for 'channel' key in xml file (must be 'muon' or 'elec'): "+channel);
 
   isMC = (ctx.get("dataset_type") == "MC");
+ string sysAK4=ctx.get("btagging_sys", "central");
   //// Data/MC scale
   auto data_dir_path = ctx.get("data_dir_path");
   if(isMC){ 
     pileup_SF.reset(new MCPileupReweight(ctx)); 
-    lumiweight.reset(new MCLumiWeight(ctx));
-    //  btagwAK4.reset(new MCBTagScaleFactor(ctx, CSVBTag::WP_MEDIUM, "jets")); 
-    //    muonscale.reset(new MCMuonScaleFactor(ctx,data_dir_path + "MuonID_Z_RunCD_Reco76X_Feb15.root","MC_NUM_MediumID_DEN_genTracks_PAR_pt_spliteta_bin1", 1.));
+    lumiweight.reset(new MCLumiWeight(ctx));    
+   btagwAK4.reset(new MCBTagScaleFactor(ctx, CSVBTag::WP_MEDIUM,"jets",sysAK4,"mujets","incl","MCBtagEfficienciesAK4","_AK4","BTagCalibration")); 
+    muonscale.reset(new MCMuonScaleFactor(ctx,data_dir_path + "MuonID_EfficienciesAndSF_average_RunBtoH.root","MC_NUM_MediumID2016_DEN_genTracks_PAR_pt_eta", 1.));
+    triggerscale.reset(new MCMuonScaleFactor(ctx,data_dir_path + "MuonTrigger_EfficienciesAndSF_average_RunBtoH.root","IsoMu50_OR_IsoTkMu50_PtEtaBins", 1.));
   }
   else     lumi_sel.reset(new LumiSelection(ctx));
 
@@ -482,8 +374,6 @@ ZPrimeTotTPrimeSidebandModule::ZPrimeTotTPrimeSidebandModule(uhh2::Context& ctx)
   metfilters_selection->add<TriggerSelection>("globalTightHalo2016Filter", "Flag_globalTightHalo2016Filter");
   metfilters_selection->add<TriggerSelection>("EcalDeadCellTriggerPrimitiveFilter", "Flag_EcalDeadCellTriggerPrimitiveFilter");
   metfilters_selection->add<TriggerSelection>("eeBadScFilter", "Flag_eeBadScFilter");
-  //  metfilters_selection->add<TriggerSelection>("chargedHadronTrackResolutionFilter", "Flag_chargedHadronTrackResolutionFilter"); 
-  //  metfilters_selection->add<TriggerSelection>("muonBadTrackFilter", "Flag_muonBadTrackFilter");
   metfilters_selection->add<NPVSelection>("1 good PV",1,-1,pvid);
 
 
@@ -513,6 +403,7 @@ ZPrimeTotTPrimeSidebandModule::ZPrimeTotTPrimeSidebandModule(uhh2::Context& ctx)
     topjet_corrector.reset(new TopJetCorrector(ctx, JEC_AK4));
     subjet_corrector.reset(new SubJetCorrector(ctx,JEC_AK4));
     jetlepton_cleaner.reset(new JetLeptonCleaner(ctx,JEC_AK4));
+    jetlepton_cleaner->set_drmax(.4);
   }
   else {
    
@@ -536,6 +427,11 @@ ZPrimeTotTPrimeSidebandModule::ZPrimeTotTPrimeSidebandModule(uhh2::Context& ctx)
     jetlepton_cleaner_G.reset(new JetLeptonCleaner(ctx,JEC_AK4_G ));
     jetlepton_cleaner_H.reset(new JetLeptonCleaner(ctx,JEC_AK4_H ));
 
+    jetlepton_cleaner_BCD->set_drmax(.4);
+    jetlepton_cleaner_EF->set_drmax(.4);
+    jetlepton_cleaner_G->set_drmax(.4);
+    jetlepton_cleaner_H->set_drmax(.4);
+
   }
 
 
@@ -547,7 +443,6 @@ ZPrimeTotTPrimeSidebandModule::ZPrimeTotTPrimeSidebandModule(uhh2::Context& ctx)
   jet_IDcleaner.reset(new JetCleaner(ctx,jetID));
   jet_cleaner2.reset(new JetCleaner(ctx,15., 2.4));
   jet_cleaner1.reset(new JetCleaner(ctx,30., 2.4));
-  jetlepton_cleaner->set_drmax(.4);
   ak4_cleaner.reset(new JetCleaner(ctx,JetId(ZPrimeTotTPrimeAK4cleaner(1.2))));
   // ak4_cleaner.reset(new TopJetCleaner(ctx,TopJetId(ZPrimeTotTPrimeAK4cleaner(1.2))));
   htcalc.push_back(std::unique_ptr<AnalysisModule>(new HTCalculator(ctx)));
@@ -563,7 +458,6 @@ ZPrimeTotTPrimeSidebandModule::ZPrimeTotTPrimeSidebandModule(uhh2::Context& ctx)
   
   // TOPJET SELECTIONS
   TOPjet1_sel.reset(new NTopJetSelection(1, -1, TopJetId(PtEtaCut( 250., 2.4))));
-  //  TOPjet2_sel.reset(new ZPrimeTotTPrimeNTopJetCut(1,-1,400,100, 2.4));
   jet2_sel.reset(new NJetSelection(2, -1));
 
   //BTAG
@@ -572,8 +466,6 @@ ZPrimeTotTPrimeSidebandModule::ZPrimeTotTPrimeSidebandModule(uhh2::Context& ctx)
 
   //2D Cut
    twodcut_sel.reset(new TwoDCut(.4, 20.));
-  // reliso_sel.reset(new ZPrimeTotTPrimeRelIsoCut(0.15));
-   //  muonpt_sel.reset(new ZPrimeTotTPrimeMuonPT(170));
   //TOP TAGGER
   const TopJetId topjetID = AndId<TopJet>(Type2TopTag(150,240,Type2TopTag::MassType::groomed), Tau32(0.6));
   toptag_sel.reset(new NTopJetSelection(1, -1, topjetID));
@@ -632,9 +524,6 @@ ZPrimeTotTPrimeSidebandModule::ZPrimeTotTPrimeSidebandModule(uhh2::Context& ctx)
   else                                                    genmttbar_sel.reset(new uhh2::AndSelection(ctx));
 
 
-  // //MetCut
-  // met_sel.reset(new ZPrimeTotTPrimeMETCut(250,-1));
-  // ht_sel.reset(new HtSelection(400,-1));
 
   // Hists Input
   input_event_h.reset(new EventHists(ctx, "input"));
@@ -672,12 +561,6 @@ ZPrimeTotTPrimeSidebandModule::ZPrimeTotTPrimeSidebandModule(uhh2::Context& ctx)
   muon_btag1_h.reset(new MuonHists(ctx, "muon_btag1"));
   event_btag1_h.reset(new EventHists(ctx, "event_btag1"));
   chi2min_btag1_h.reset(new ZPrimeTotTPrimeHypothesisHists(ctx, "chi2min_btag1",ZprimeTotTPrime_hyps_label,ZprimeTotTPrime_chi2_label ));
-  // //Hist reliso
-  // topjet_reliso_h.reset(new TopJetHists(ctx, "topjet_reliso"));
-  // eff_reliso_h.reset(new ZPrimeTotTPrimeHists(ctx, "eff_reliso"));
-  // jet_reliso_h.reset(new JetHists(ctx, "jet_reliso"));
-  // muon_reliso_h.reset(new MuonHists(ctx, "muon_reliso"));
-  // event_reliso_h.reset(new EventHists(ctx, "event_reliso"));
 
 
   //Hist twodcut
@@ -752,13 +635,6 @@ ZPrimeTotTPrimeSidebandModule::ZPrimeTotTPrimeSidebandModule(uhh2::Context& ctx)
   zw_top_event_tagger_h.reset(new EventHists(ctx, "zw_top_event_tagger"));
   zw_notop_event_tagger_h.reset(new EventHists(ctx, "zw_notop_event_tagger"));
  
- // //Hists Clean
- //  topjet_clean_h.reset(new TopJetHists(ctx, "topjet_clean"));
- //  eff_clean_h.reset(new ZPrimeTotTPrimeHists(ctx, "eff_clean"));
- //  jet_clean_h.reset(new JetHists(ctx, "jet_clean"));
- //  muon_clean_h.reset(new MuonHists(ctx, "muon_clean"));
- //  event_clean_h.reset(new EventHists(ctx, "event_clean"));
- //  chi2min_clean_h.reset(new ZPrimeTotTPrimeHypothesisHists(ctx, "chi2min_clean",ZprimeTotTPrime_hyps_label,ZprimeTotTPrime_chi2_label ));
 
  //  //Hists Reco
  //  topjet_reco_h.reset(new TopJetHists(ctx, "topjet_reco"));
@@ -849,72 +725,6 @@ ZPrimeTotTPrimeSidebandModule::ZPrimeTotTPrimeSidebandModule(uhh2::Context& ctx)
   // zw_top_event_chi2cut_h.reset(new EventHists(ctx, "zw_top_event_chi2cut"));
   // zw_notop_event_chi2cut_h.reset(new EventHists(ctx, "zw_notop_event_chi2cut"));
 
-  // //met
-  // topjet_met_h.reset(new TopJetHists(ctx, "topjet_met"));
-  // eff_met_h.reset(new ZPrimeTotTPrimeHists(ctx, "eff_met"));
-  // jet_met_h.reset(new JetHists(ctx, "jet_met"));
-  // muon_met_h.reset(new MuonHists(ctx, "muon_met"));
-  // event_met_h.reset(new EventHists(ctx, "event_met"));
-  // chi2min_met_h.reset(new ZPrimeTotTPrimeHypothesisHists(ctx, "chi2min_met",ZprimeTotTPrime_hyps_label,ZprimeTotTPrime_chi2_label ));
-
-  // higgs_top_topjet_met_h.reset(new TopJetHists(ctx, "higgs_top_topjet_met"));
-  // higgs_notop_topjet_met_h.reset(new TopJetHists(ctx, "higgs_notop_topjet_met"));
-  // zw_top_topjet_met_h.reset(new TopJetHists(ctx, "zw_top_topjet_met"));
-  // zw_notop_topjet_met_h.reset(new TopJetHists(ctx, "zw_notop_topjet_met"));
-
-  // higgs_top_chi2min_met_h.reset(new ZPrimeTotTPrimeHypothesisHists(ctx, "higgs_top_chi2min_met",ZprimeTotTPrime_hyps_label,ZprimeTotTPrime_chi2_label));
-  // higgs_notop_chi2min_met_h.reset(new ZPrimeTotTPrimeHypothesisHists(ctx, "higgs_notop_chi2min_met",ZprimeTotTPrime_hyps_label,ZprimeTotTPrime_chi2_label));
-  // zw_top_chi2min_met_h.reset(new ZPrimeTotTPrimeHypothesisHists(ctx, "zw_top_chi2min_met",ZprimeTotTPrime_hyps_label,ZprimeTotTPrime_chi2_label));
-  // zw_notop_chi2min_met_h.reset(new ZPrimeTotTPrimeHypothesisHists(ctx, "zw_notop_chi2min_met",ZprimeTotTPrime_hyps_label,ZprimeTotTPrime_chi2_label));
-
-  // higgs_top_jet_met_h.reset(new JetHists(ctx, "higgs_top_jet_met"));
-  // higgs_notop_jet_met_h.reset(new JetHists(ctx, "higgs_notop_jet_met"));
-  // zw_top_jet_met_h.reset(new JetHists(ctx, "zw_top_jet_met"));
-  // zw_notop_jet_met_h.reset(new JetHists(ctx, "zw_notop_jet_met"));
-
-  // higgs_top_muon_met_h.reset(new MuonHists(ctx, "higgs_top_muon_met"));
-  // higgs_notop_muon_met_h.reset(new MuonHists(ctx, "higgs_notop_muon_met"));
-  // zw_top_muon_met_h.reset(new MuonHists(ctx, "zw_top_muon_met"));
-  // zw_notop_muon_met_h.reset(new MuonHists(ctx, "zw_notop_muon_met"));
-
-  // higgs_top_event_met_h.reset(new EventHists(ctx, "higgs_top_event_met"));
-  // higgs_notop_event_met_h.reset(new EventHists(ctx, "higgs_notop_event_met"));
-  // zw_top_event_met_h.reset(new EventHists(ctx, "zw_top_event_met"));
-  // zw_notop_event_met_h.reset(new EventHists(ctx, "zw_notop_event_met"));
-
- // //ht
- //  topjet_ht_h.reset(new TopJetHists(ctx, "topjet_ht"));
- //  eff_ht_h.reset(new ZPrimeTotTPrimeHists(ctx, "eff_ht"));
- //  jet_ht_h.reset(new JetHists(ctx, "jet_ht"));
- //  muon_ht_h.reset(new MuonHists(ctx, "muon_ht"));
- //  event_ht_h.reset(new EventHists(ctx, "event_ht"));
- //  chi2min_ht_h.reset(new ZPrimeTotTPrimeHypothesisHists(ctx, "chi2min_ht",ZprimeTotTPrime_hyps_label,ZprimeTotTPrime_chi2_label ));
-
- //  higgs_top_topjet_ht_h.reset(new TopJetHists(ctx, "higgs_top_topjet_ht"));
- //  higgs_notop_topjet_ht_h.reset(new TopJetHists(ctx, "higgs_notop_topjet_ht"));
- //  zw_top_topjet_ht_h.reset(new TopJetHists(ctx, "zw_top_topjet_ht"));
- //  zw_notop_topjet_ht_h.reset(new TopJetHists(ctx, "zw_notop_topjet_ht"));
-
- //  higgs_top_chi2min_ht_h.reset(new ZPrimeTotTPrimeHypothesisHists(ctx, "higgs_top_chi2min_ht",ZprimeTotTPrime_hyps_label,ZprimeTotTPrime_chi2_label));
- //  higgs_notop_chi2min_ht_h.reset(new ZPrimeTotTPrimeHypothesisHists(ctx, "higgs_notop_chi2min_ht",ZprimeTotTPrime_hyps_label,ZprimeTotTPrime_chi2_label));
- //  zw_top_chi2min_ht_h.reset(new ZPrimeTotTPrimeHypothesisHists(ctx, "zw_top_chi2min_ht",ZprimeTotTPrime_hyps_label,ZprimeTotTPrime_chi2_label));
- //  zw_notop_chi2min_ht_h.reset(new ZPrimeTotTPrimeHypothesisHists(ctx, "zw_notop_chi2min_ht",ZprimeTotTPrime_hyps_label,ZprimeTotTPrime_chi2_label));
-
- //  higgs_top_jet_ht_h.reset(new JetHists(ctx, "higgs_top_jet_ht"));
- //  higgs_notop_jet_ht_h.reset(new JetHists(ctx, "higgs_notop_jet_ht"));
- //  zw_top_jet_ht_h.reset(new JetHists(ctx, "zw_top_jet_ht"));
- //  zw_notop_jet_ht_h.reset(new JetHists(ctx, "zw_notop_jet_ht"));
-
- //  higgs_top_muon_ht_h.reset(new MuonHists(ctx, "higgs_top_muon_ht"));
- //  higgs_notop_muon_ht_h.reset(new MuonHists(ctx, "higgs_notop_muon_ht"));
- //  zw_top_muon_ht_h.reset(new MuonHists(ctx, "zw_top_muon_ht"));
- //  zw_notop_muon_ht_h.reset(new MuonHists(ctx, "zw_notop_muon_ht"));
-
- //  higgs_top_event_ht_h.reset(new EventHists(ctx, "higgs_top_event_ht"));
- //  higgs_notop_event_ht_h.reset(new EventHists(ctx, "higgs_notop_event_ht"));
- //  zw_top_event_ht_h.reset(new EventHists(ctx, "zw_top_event_ht"));
- //  zw_notop_event_ht_h.reset(new EventHists(ctx, "zw_notop_event_ht"));
-
 
  //  //Higgstag || ZWTag
  //  output_combined_h.reset(new ZPrimeTotTPrimeHists(ctx, "output_combined"));
@@ -933,16 +743,15 @@ ZPrimeTotTPrimeSidebandModule::ZPrimeTotTPrimeSidebandModule(uhh2::Context& ctx)
   h_AK4 = ctx.get_handle<std::vector<Jet>>("AK4");
 
   //Trigger
-  if (!isMC){
-    triggerMu50_sel.reset(new TriggerSelection("HLT_Mu50_v*"));
-    triggerTrkMu50_sel.reset(new TriggerSelection("HLT_TkMu50_v*"));
-  }
+  triggerMu50_sel.reset(new TriggerSelection("HLT_Mu50_v*"));
+  triggerTrkMu50_sel.reset(new TriggerSelection("HLT_TkMu50_v*"));
+  
 
 
   
 }
 
-bool ZPrimeTotTPrimeSidebandModule::process(uhh2::Event& event){
+bool ZPrimeTotTPrimeSidebandModule_Side1::process(uhh2::Event& event){
   
   if(berror)  std::cout<<"/////////////////////////////////////SelectionModule L:218 Am Anfang///////////////////////////////////////////////////////////////////////////////"<<std::endl;
 
@@ -977,8 +786,8 @@ bool ZPrimeTotTPrimeSidebandModule::process(uhh2::Event& event){
   if(!event.isRealData){ 
     pileup_SF->process(event);
     lumiweight->process(event);
-    //  btagwAK4->process(event);
-    //   muonscale->process(event);
+    muonscale->process(event);
+    triggerscale->process(event);
   }
   ////
 
@@ -1038,7 +847,12 @@ bool ZPrimeTotTPrimeSidebandModule::process(uhh2::Event& event){
       bool pass_TrkMu50 = triggerTrkMu50_sel->passes(event);
       if (!(pass_Mu50||pass_TrkMu50)) return false;
     }
+  }else{
+    bool pass_Mu50 = triggerMu50_sel->passes(event);
+    bool pass_TrkMu50 = triggerTrkMu50_sel->passes(event);
+    if (!(pass_Mu50||pass_TrkMu50)) return false;
   }
+
   /////////////////////////////////////////////////////////// Input Histogramme ///////////////////////////////////////////////////////////////////////////////
  
   input_eff_h ->fill(event);
@@ -1070,10 +884,7 @@ bool ZPrimeTotTPrimeSidebandModule::process(uhh2::Event& event){
   const bool pass_Topjet1 = TOPjet1_sel->passes(event);
   if(!pass_Topjet1) return false;
 
- 
-  // PT Cuts 
-  // const bool pass_Topjet2 = TOPjet2_sel->passes(event);
-  // if(!pass_Topjet2) return false;
+
   topjet_topjet2_h->fill(event);
   eff_topjet2_h->fill(event);
   jet_topjet2_h->fill(event);
@@ -1140,12 +951,6 @@ const bool pass_jet2 = jet2_sel->passes(event);
  if(!hyp) std::runtime_error("ZprimeTotTPrimeSelectionModule::process -- best hypothesis for reconstruction not found");
  const ZPrimeTotTPrimeReconstructionHypothesis hyp_obj(*hyp);
 
-// chi2min_clean_h->fill(event);
-//  topjet_clean_h->fill(event);
-//  eff_clean_h->fill(event);
-//  jet_clean_h->fill(event);
-//  muon_clean_h->fill(event);
-//  event_clean_h->fill(event);
   ////////////////////////////////////////////////////////////////
  std::vector<Jet>* usedak4(new std::vector<Jet> (*event.jets));
  usedak4->clear();
@@ -1218,6 +1023,7 @@ bool pass_btag1 = btag1_sel->passes(event);
  bool pass_btag0 = btag0_sel->passes(event);
 
  if(pass_btag1){
+   btagwAK4->process(event);
    topjet_btag1_h->fill(event);
    eff_btag1_h->fill(event);
    jet_btag1_h->fill(event);
@@ -1227,6 +1033,7 @@ bool pass_btag1 = btag1_sel->passes(event);
  }
 
  if(pass_btag0){
+   btagwAK4->process(event);
    topjet_btag0_h->fill(event);
    eff_btag0_h->fill(event);
    jet_btag0_h->fill(event);
@@ -1567,87 +1374,10 @@ std::unique_ptr< std::vector<TopJet> > higgsjets_all (new std::vector<TopJet> (*
   // if(pass_zwtag && pass_toptag)zw_top_event_chi2cut_h->fill(event);
   // if(pass_zwtag && !pass_toptag)zw_notop_event_chi2cut_h->fill(event);
 
- 
-
-
- // if(berror)  std::cout << "SelectionModule L:877 vor TestSection"<<std::endl;
- //  ////////////////////////////////////////////////////////Met Selection////////////////////////////////////////////////////////////////////////////////////////
-  
- //  bool pass_met = met_sel->passes(event);
- //  if(!pass_met) return false;
- //    chi2min_met_h->fill(event);
- //    topjet_met_h->fill(event);
- //    eff_met_h->fill(event);
- //    jet_met_h->fill(event);
- //    muon_met_h->fill(event);
- //    event_met_h->fill(event);
- 
-   //  if(pass_higgstag && pass_toptag) higgs_top_topjet_met_h->fill(event);
-//     if(pass_higgstag && !pass_toptag) higgs_notop_topjet_met_h->fill(event);
-//     if(pass_zwtag && pass_toptag)zw_top_topjet_met_h->fill(event);
-//     if(pass_zwtag && !pass_toptag)zw_notop_topjet_met_h->fill(event);
-
-//     if(pass_higgstag && pass_toptag) higgs_top_chi2min_met_h->fill(event);
-//     if(pass_higgstag && !pass_toptag) higgs_notop_chi2min_met_h->fill(event);
-//     if(pass_zwtag && pass_toptag)zw_top_chi2min_met_h->fill(event);
-//     if(pass_zwtag && !pass_toptag)zw_notop_chi2min_met_h->fill(event);
-
-// if(pass_higgstag && pass_toptag) higgs_top_jet_met_h->fill(event);
-//   if(pass_higgstag && !pass_toptag) higgs_notop_jet_met_h->fill(event);
-//   if(pass_zwtag && pass_toptag)zw_top_jet_met_h->fill(event);
-//   if(pass_zwtag && !pass_toptag)zw_notop_jet_met_h->fill(event);
-
-//   if(pass_higgstag && pass_toptag) higgs_top_muon_met_h->fill(event);
-//   if(pass_higgstag && !pass_toptag) higgs_notop_muon_met_h->fill(event);
-//   if(pass_zwtag && pass_toptag)zw_top_muon_met_h->fill(event);
-//   if(pass_zwtag && !pass_toptag)zw_notop_muon_met_h->fill(event);
-
-//   if(pass_higgstag && pass_toptag) higgs_top_event_met_h->fill(event);
-//   if(pass_higgstag && !pass_toptag) higgs_notop_event_met_h->fill(event);
-//   if(pass_zwtag && pass_toptag)zw_top_event_met_h->fill(event);
-//   if(pass_zwtag && !pass_toptag)zw_notop_event_met_h->fill(event);    
-  
-
-
- // ////////////////////////////////////////////////////////HT Selection////////////////////////////////////////////////////////////////////////////////////////
- //  bool pass_ht = ht_sel->passes(event); 
-
- //  if(!pass_ht)return false;
- //  chi2min_ht_h->fill(event);
- //  topjet_ht_h->fill(event);
- //  eff_ht_h->fill(event);
- //  jet_ht_h->fill(event);
- //  muon_ht_h->fill(event);
- //  event_ht_h->fill(event);
- 
-  // if(pass_higgstag && pass_toptag) higgs_top_topjet_ht_h->fill(event);
-  // if(pass_higgstag && !pass_toptag) higgs_notop_topjet_ht_h->fill(event);
-  // if(pass_zwtag && pass_toptag)zw_top_topjet_ht_h->fill(event);
-  // if(pass_zwtag && !pass_toptag)zw_notop_topjet_ht_h->fill(event);
-
-  // if(pass_higgstag && pass_toptag) higgs_top_chi2min_ht_h->fill(event);
-  // if(pass_higgstag && !pass_toptag) higgs_notop_chi2min_ht_h->fill(event);
-  // if(pass_zwtag && pass_toptag)zw_top_chi2min_ht_h->fill(event);
-  // if(pass_zwtag && !pass_toptag)zw_notop_chi2min_ht_h->fill(event);
-
-  // if(pass_higgstag && pass_toptag) higgs_top_jet_ht_h->fill(event);
-  // if(pass_higgstag && !pass_toptag) higgs_notop_jet_ht_h->fill(event);
-  // if(pass_zwtag && pass_toptag)zw_top_jet_ht_h->fill(event);
-  // if(pass_zwtag && !pass_toptag)zw_notop_jet_ht_h->fill(event);
-
-  // if(pass_higgstag && pass_toptag) higgs_top_muon_ht_h->fill(event);
-  // if(pass_higgstag && !pass_toptag) higgs_notop_muon_ht_h->fill(event);
-  // if(pass_zwtag && pass_toptag)zw_top_muon_ht_h->fill(event);
-  // if(pass_zwtag && !pass_toptag)zw_notop_muon_ht_h->fill(event);
-
-  // if(pass_higgstag && pass_toptag) higgs_top_event_ht_h->fill(event);
-  // if(pass_higgstag && !pass_toptag) higgs_notop_event_ht_h->fill(event);
-  // if(pass_zwtag && pass_toptag)zw_top_event_ht_h->fill(event);
-  // if(pass_zwtag && !pass_toptag)zw_notop_event_ht_h->fill(event);
 
    
   return true;
 }
 
 
-UHH2_REGISTER_ANALYSIS_MODULE(ZPrimeTotTPrimeSidebandModule)
+UHH2_REGISTER_ANALYSIS_MODULE(ZPrimeTotTPrimeSidebandModule_Side1)

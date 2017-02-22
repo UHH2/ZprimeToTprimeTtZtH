@@ -84,6 +84,7 @@ private:
   std::unique_ptr<JetLeptonCleaner> jetlepton_cleaner_G;
   std::unique_ptr<JetLeptonCleaner> jetlepton_cleaner_H;
 
+  std::unique_ptr<JetResolutionSmearer> jet_resolution_smearer;
 
   std::unique_ptr<JetCleaner>      jet_IDcleaner;
   std::unique_ptr<JetCleaner>      jet_cleaner2;
@@ -107,6 +108,7 @@ private:
   std::unique_ptr<uhh2::AnalysisModule> lumiweight;
   std::unique_ptr<uhh2::AnalysisModule> muonscale;
   std::unique_ptr<uhh2::AnalysisModule> btagwAK4;
+  std::unique_ptr<uhh2::AnalysisModule> btagwAK8;
   std::unique_ptr<uhh2::AnalysisModule> triggerscale;
   std::unique_ptr<uhh2::AnalysisModule> triggerscale_data;
   std::unique_ptr<uhh2::AnalysisModule> muonIDscale_data;
@@ -387,11 +389,13 @@ ZPrimeTotTPrimeSelectionModule::ZPrimeTotTPrimeSelectionModule(uhh2::Context& ct
   isMC = (ctx.get("dataset_type") == "MC");
   //// Data/MC scale
   auto data_dir_path = ctx.get("data_dir_path");
-  
+  string sysAK4=ctx.get("btagging_sys", "central");
+  string sysAK8=ctx.get("subjetbtag_sys", "central");
   if(isMC){ 
     pileup_SF.reset(new MCPileupReweight(ctx,ctx.get("puVariation"))); 
     lumiweight.reset(new MCLumiWeight(ctx));
-    //  btagwAK4.reset(new MCBTagScaleFactor(ctx, CSVBTag::WP_MEDIUM, "jets")); 
+    btagwAK4.reset(new MCBTagScaleFactor(ctx, CSVBTag::WP_MEDIUM,"jets",sysAK4,"mujets","incl","MCBtagEfficienciesAK4","_AK4","BTagCalibration")); 
+    btagwAK8.reset(new MCBTagScaleFactor(ctx, CSVBTag::WP_MEDIUM, "topjets","central","lt","incl","MCBtagEfficienciesAK8","_AK8","BTagCalibrationAK8"));
     muonscale.reset(new MCMuonScaleFactor(ctx,data_dir_path + "MuonID_EfficienciesAndSF_average_RunBtoH.root","MC_NUM_MediumID2016_DEN_genTracks_PAR_pt_eta", 1.));
     triggerscale.reset(new MCMuonScaleFactor(ctx,data_dir_path + "MuonTrigger_EfficienciesAndSF_average_RunBtoH.root","IsoMu50_OR_IsoTkMu50_PtEtaBins", 1.));
     //  eff_zw.reset(new ZPrimeTotTPrimeEff(ctx));
@@ -441,6 +445,7 @@ ZPrimeTotTPrimeSelectionModule::ZPrimeTotTPrimeSelectionModule(uhh2::Context& ct
     subjet_corrector.reset(new SubJetCorrector(ctx,JEC_AK4));
     jetlepton_cleaner.reset(new JetLeptonCleaner(ctx,JEC_AK4));
     jetlepton_cleaner->set_drmax(.4);
+    //  jet_resolution_smearer.reset(new JetResolutionSmearer(ctx));
   }
   else {
    
@@ -480,7 +485,6 @@ ZPrimeTotTPrimeSelectionModule::ZPrimeTotTPrimeSelectionModule(uhh2::Context& ct
   jet_IDcleaner.reset(new JetCleaner(ctx,jetID));
   jet_cleaner2.reset(new JetCleaner(ctx,15., 2.4));
   jet_cleaner1.reset(new JetCleaner(ctx,30., 2.4));
-
  
   ak4_cleaner.reset(new JetCleaner(ctx,JetId(ZPrimeTotTPrimeAK4cleaner(1.2))));
   topjetlepton_cleaner.reset(new TopJetLeptonDeltaRCleaner(.8));
@@ -843,7 +847,6 @@ bool ZPrimeTotTPrimeSelectionModule::process(uhh2::Event& event){
   if(!event.isRealData){ 
     pileup_SF->process(event);
     lumiweight->process(event);
-    //  btagwAK4->process(event);
     muonscale->process(event);
     triggerscale->process(event);
   }
@@ -862,6 +865,7 @@ bool ZPrimeTotTPrimeSelectionModule::process(uhh2::Event& event){
     topjet_corrector->process(event);
     subjet_corrector->process(event);
     jetlepton_cleaner->process(event);
+    // jet_resolution_smearer->process(event);
   }else{
     if(event.run <= runnr_BCD)  {       
       jet_corrector_BCD->process(event);
@@ -987,7 +991,7 @@ bool ZPrimeTotTPrimeSelectionModule::process(uhh2::Event& event){
   lumi_twodcut_h->fill(event);
   if(berror)  std::cout<<"SelectionModule L:338 vor HiggsTAGGER"<<std::endl;
   /////////////////////////////////////////////////////////// Higgs TAGGER //////////////////////////////////////////////////////////////////////////////////
- 
+  btagwAK8->process(event);
   std::unique_ptr< std::vector<TopJet> > higgsjets_all (new std::vector<TopJet> (*event.topjets));
 
   //cleanen der topjets um sie in einen neuen Vektor zu speichern
@@ -1460,6 +1464,7 @@ bool ZPrimeTotTPrimeSelectionModule::process(uhh2::Event& event){
 
   bool pass_btag1 = btag1_sel->passes(event);
   if(pass_btag1){
+    if(!event.isRealData) btagwAK4->process(event);
     topjet_btag1_h->fill(event);
     eff_btag1_h->fill(event);
     jet_btag1_comb_h->fill(event);
@@ -1478,6 +1483,7 @@ bool ZPrimeTotTPrimeSelectionModule::process(uhh2::Event& event){
  
   bool pass_btag0 = btag0_sel->passes(event);
   if(pass_btag0){
+    if(!event.isRealData) btagwAK4->process(event);
     topjet_btag0_h->fill(event);
     eff_btag0_h->fill(event);
     jet_btag0_h->fill(event);
