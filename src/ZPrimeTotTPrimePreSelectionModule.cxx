@@ -201,7 +201,6 @@ ZPrimeTotTPrimePreSelectionModule::ZPrimeTotTPrimePreSelectionModule(uhh2::Conte
   }
 
 
-
   jet_cleaner.reset(new JetCleaner(ctx,30., 2.4));
 
   topjet_cleaner.reset(new TopJetCleaner(ctx,TopJetId(PtEtaCut(200., 2.5))));
