@@ -1179,9 +1179,10 @@ bool ZPrimeTotTPrimeSelectionModule::process(uhh2::Event& event){
  for(const auto & topjet: *AllTopJets){
    event.topjets->push_back(topjet);
    bool b_Htag =  higgstag_sel->passes(event);
+   bool b_Htag_one_btag =  higgstag_one_btag_sel->passes(event);
    bool b_Ztag =  ZWtag_sel->passes(event);
    
-   bool b_tagged = b_Htag || b_Ztag ;
+   bool b_tagged = b_Htag || b_Ztag || b_Htag_one_btag;
    if(b_tagged) tagged->push_back(topjet);
    else untagged->push_back(topjet);
 
