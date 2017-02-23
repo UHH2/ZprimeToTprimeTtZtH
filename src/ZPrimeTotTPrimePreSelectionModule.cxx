@@ -170,6 +170,7 @@ ZPrimeTotTPrimePreSelectionModule::ZPrimeTotTPrimePreSelectionModule(uhh2::Conte
     subjet_corrector.reset(new SubJetCorrector(ctx,JEC_AK4));
     jetlepton_cleaner.reset(new JetLeptonCleaner(ctx,JEC_AK4));
     jetlepton_cleaner->set_drmax(.4);
+    jetER_smearer.reset(new JetResolutionSmearer(ctx));
   }
   else {
    
@@ -200,7 +201,7 @@ ZPrimeTotTPrimePreSelectionModule::ZPrimeTotTPrimePreSelectionModule(uhh2::Conte
   }
 
 
-  jetER_smearer.reset(new JetResolutionSmearer(ctx));
+
   jet_cleaner.reset(new JetCleaner(ctx,30., 2.4));
 
   topjet_cleaner.reset(new TopJetCleaner(ctx,TopJetId(PtEtaCut(200., 2.5))));
@@ -295,6 +296,7 @@ bool ZPrimeTotTPrimePreSelectionModule::process(Event & event) {
     topjet_corrector->process(event);
     subjet_corrector->process(event);
     jetlepton_cleaner->process(event);
+    jetER_smearer->process(event);
   }else{
     if(event.run <= runnr_BCD)  {       
       jet_corrector_BCD->process(event);
@@ -323,7 +325,6 @@ bool ZPrimeTotTPrimePreSelectionModule::process(Event & event) {
   }
 
   jet_cleaner->process(event);
-  jetER_smearer->process(event);
   topjet_cleaner->process(event);
 
   //Lepton Pre-Selection

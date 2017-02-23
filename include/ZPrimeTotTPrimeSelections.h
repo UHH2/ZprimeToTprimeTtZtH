@@ -358,3 +358,17 @@ public:
 /*   double SF; */
 /* }; */
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+class ZPrimeTotTPrimeHiggsTag {
+public:
+    explicit ZPrimeTotTPrimeHiggsTag(float minmass = 60.f, float maxmass = std::numeric_limits<float>::infinity(), JetId const & id = CSVBTag(CSVBTag::WP_MEDIUM)) :
+        minmass_(minmass), maxmass_(maxmass), btagid_(id) {}
+
+    bool operator()(TopJet const & topjet, uhh2::Event const & event) const;
+
+private:
+    float minmass_, maxmass_;
+    JetId btagid_;
+
+};

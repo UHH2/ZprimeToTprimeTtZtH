@@ -430,3 +430,21 @@ UnType2TopTag::UnType2TopTag(MassType typeOfMass): m_mjetLower(60.), m_mjetUpper
 //   event.weight = event.weight * SF;
 //   cout <<"weight "<<event.weight<<endl;
 // }
+
+
+bool ZPrimeTotTPrimeHiggsTag::operator()(TopJet const & topjet, uhh2::Event const & event) const {
+    auto subjets = topjet.subjets();
+    if(subjets.size() < 2) return false;
+    clean_collection(subjets, event, btagid_);
+    if (!(subjets.size() ==1)) return false;
+    sort_by_pt(subjets);
+
+    LorentzVector firsttwosubjets = subjets[0].v4() + subjets[1].v4();
+    if(!firsttwosubjets.isTimelike()) {
+        return false;
+    }
+    auto mjet = firsttwosubjets.M();
+    if(mjet < minmass_) return false;
+    if(mjet > maxmass_) return false;
+    return true;
+}

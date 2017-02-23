@@ -31,6 +31,7 @@ private:
     uhh2::Event::Handle<ZPrimeGen> h_zprimegen;
     uhh2::Event::Handle<std::vector<TopJet> > h_toptag;
     uhh2::Event::Handle<std::vector<TopJet> > h_higgstag;
+    uhh2::Event::Handle<std::vector<TopJet> > h_higgstag_one_btag;
     uhh2::Event::Handle<std::vector<TopJet> > h_ZWtag;
     std::string btopjet;
     // std::unique_ptr<std::vector<Jet> > ak4jets;
