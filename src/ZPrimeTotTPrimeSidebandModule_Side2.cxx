@@ -1248,7 +1248,7 @@ bool pass_btag1 = btag1_sel->passes(event);
 bool pass_btag0 = btag0_sel->passes(event);
 
  if(pass_btag1){
-    btagwAK4->process(event);
+   if(isMC)  btagwAK4->process(event);
    topjet_btag1_h->fill(event);
    eff_btag1_h->fill(event);
    jet_btag1_h->fill(event);
@@ -1258,7 +1258,7 @@ bool pass_btag0 = btag0_sel->passes(event);
  }
 
  if(pass_btag0){
-    btagwAK4->process(event);
+ if(isMC)   btagwAK4->process(event);
    topjet_btag0_h->fill(event);
    eff_btag0_h->fill(event);
    jet_btag0_h->fill(event);

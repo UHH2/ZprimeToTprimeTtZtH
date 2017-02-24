@@ -357,7 +357,7 @@ ZPrimeTotTPrimeSidebandModule_Side1::ZPrimeTotTPrimeSidebandModule_Side1(uhh2::C
   if(isMC){ 
     pileup_SF.reset(new MCPileupReweight(ctx)); 
     lumiweight.reset(new MCLumiWeight(ctx));    
-   btagwAK4.reset(new MCBTagScaleFactor(ctx, CSVBTag::WP_MEDIUM,"jets",sysAK4,"mujets","incl","MCBtagEfficienciesAK4","_AK4","BTagCalibration")); 
+    btagwAK4.reset(new MCBTagScaleFactor(ctx, CSVBTag::WP_MEDIUM,"jets")); 
     muonscale.reset(new MCMuonScaleFactor(ctx,data_dir_path + "MuonID_EfficienciesAndSF_average_RunBtoH.root","MC_NUM_MediumID2016_DEN_genTracks_PAR_pt_eta", 1.));
     triggerscale.reset(new MCMuonScaleFactor(ctx,data_dir_path + "MuonTrigger_EfficienciesAndSF_average_RunBtoH.root","IsoMu50_OR_IsoTkMu50_PtEtaBins", 1.));
   }
@@ -1019,11 +1019,11 @@ if(berror) std::cout<<"SelectionModule L:858 Size topjets Collection "<<event.to
 
 if(berror) std::cout<<"SelectionModule L:338 vor btag"<<std::endl;
 /////////////////////////////////////////////////////////  btag  ////////////////////////////////////////////////////////
-bool pass_btag1 = btag1_sel->passes(event);
+ bool pass_btag1 = btag1_sel->passes(event);
  bool pass_btag0 = btag0_sel->passes(event);
 
  if(pass_btag1){
-   btagwAK4->process(event);
+   if(isMC)  btagwAK4->process(event);
    topjet_btag1_h->fill(event);
    eff_btag1_h->fill(event);
    jet_btag1_h->fill(event);
@@ -1032,8 +1032,9 @@ bool pass_btag1 = btag1_sel->passes(event);
    chi2min_btag1_h->fill(event);
  }
 
- if(pass_btag0){
-   btagwAK4->process(event);
+ 
+ if(pass_btag0){ 
+   if(isMC) btagwAK4->process(event);
    topjet_btag0_h->fill(event);
    eff_btag0_h->fill(event);
    jet_btag0_h->fill(event);

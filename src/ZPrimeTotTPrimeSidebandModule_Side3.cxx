@@ -1073,7 +1073,7 @@ if (!isMC){
   if(berror)  std::cout<<"SelectionModule L:338 vor HiggsTAGGER"<<std::endl;
   /////////////////////////////////////////////////////////// Higgs TAGGER //////////////////////////////////////////////////////////////////////////////////
  
-   btagwAK8->process(event);
+  if(isMC) btagwAK8->process(event);
   std::unique_ptr< std::vector<TopJet> > higgsjets_all (new std::vector<TopJet> (*event.topjets));
 
   //cleanen der topjets um sie in einen neuen Vektor zu speichern
@@ -1387,7 +1387,7 @@ bool pass_btag1 = btag1_sel->passes(event);
 bool pass_btag0 = btag0_sel->passes(event);
 
  if(pass_btag1){
-   btagwAK4->process(event);
+   if(isMC) btagwAK4->process(event);
    topjet_btag1_h->fill(event);
    eff_btag1_h->fill(event);
    jet_btag1_h->fill(event);
@@ -1397,7 +1397,7 @@ bool pass_btag0 = btag0_sel->passes(event);
  }
 
  if(pass_btag0){
-   btagwAK4->process(event);
+   if(isMC) btagwAK4->process(event);
    topjet_btag0_h->fill(event);
    eff_btag0_h->fill(event);
    jet_btag0_h->fill(event);

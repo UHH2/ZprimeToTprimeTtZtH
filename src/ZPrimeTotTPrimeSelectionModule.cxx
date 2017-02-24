@@ -1005,7 +1005,7 @@ bool ZPrimeTotTPrimeSelectionModule::process(uhh2::Event& event){
   lumi_twodcut_h->fill(event);
   if(berror)  std::cout<<"SelectionModule L:338 vor HiggsTAGGER"<<std::endl;
   /////////////////////////////////////////////////////////// Higgs TAGGER //////////////////////////////////////////////////////////////////////////////////
-  btagwAK8->process(event);
+  if(isMC) btagwAK8->process(event);
   std::unique_ptr< std::vector<TopJet> > higgsjets_all (new std::vector<TopJet> (*event.topjets));
 
   //cleanen der topjets um sie in einen neuen Vektor zu speichern
