@@ -249,7 +249,7 @@ void ZPrimeTotTPrimeReconstruction::LepTop(std::vector<Jet>* ak4,  std::vector<L
   //  std::cout << "n_jets "<<n_jets <<std::endl;
 
   //LEP. TOP RECONSTRUCTION
-  if(n_jets>8) n_jets=8;
+  if(n_jets>6) n_jets=6;
   const unsigned int max_j = pow(2, n_jets);// (0)leptonisches Top, (1)nichts
     
   for(const auto & neutrino_p4 : neutrinos){
@@ -310,7 +310,7 @@ void ZPrimeTotTPrimeReconstruction::LepHadTop(std::vector<Jet>* ak4,  std::vecto
 
 
   //LEP. TOP RECONSTRUCTION
-  if(n_jets>8) n_jets=8;
+  if(n_jets>6) n_jets=6;
   const unsigned int max_j = pow(3, n_jets);// (0)leptonisches Top, (1)had Top, (2) nichts
     
   for(const auto & neutrino_p4 : neutrinos){

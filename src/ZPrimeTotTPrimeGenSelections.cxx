@@ -105,7 +105,7 @@ void ZPrimeGen::assign(GenParticle  daughter1, GenParticle  daughter2,const vect
     case 23:Z   =  *TPrime.daughter(&genparticles,1);decaydaughterZ1 = *Z.daughter(&genparticles,1) ; decaydaughterZ2 = *Z.daughter(&genparticles,2);break; 
     case 24:W   =  *TPrime.daughter(&genparticles,1);decaydaughterW1 = *W.daughter(&genparticles,1) ; decaydaughterW2 = *W.daughter(&genparticles,2);break;
     case 25:H   =  *TPrime.daughter(&genparticles,1);if(H.daughter(&genparticles,1)&&H.daughter(&genparticles,2) ){decaydaughterH1 = *H.daughter(&genparticles,1) ; decaydaughterH2 = *H.daughter(&genparticles,2);};break;
-    default : cout << "L106: Zerfall der nicht bedacht wurde" <<endl;
+    default :;// cout << "L106: Zerfall der nicht bedacht wurde" <<endl;
     }
     switch(abs(TPrime.daughter(&genparticles,2)->pdgId())){
     case 5: bottom = *TPrime.daughter(&genparticles,2);break;
@@ -113,7 +113,7 @@ void ZPrimeGen::assign(GenParticle  daughter1, GenParticle  daughter2,const vect
     case 23:Z   =  *TPrime.daughter(&genparticles,2);decaydaughterZ1 = *Z.daughter(&genparticles,1) ; decaydaughterZ2 = *Z.daughter(&genparticles,2);break; 
     case 24:W   =  *TPrime.daughter(&genparticles,2);decaydaughterW1 = *W.daughter(&genparticles,1) ; decaydaughterW2 = *W.daughter(&genparticles,2);break;
     case 25:H   =  *TPrime.daughter(&genparticles,2);if(H.daughter(&genparticles,1)&&H.daughter(&genparticles,2)){decaydaughterH1 = *H.daughter(&genparticles,1) ; decaydaughterH2 = *H.daughter(&genparticles,2);};break;
-    default : cout << "L114: Zerfall der nicht bedacht wurde" <<endl;
+    default :;// cout << "L114: Zerfall der nicht bedacht wurde" <<endl;
     }
   }
 
@@ -126,7 +126,7 @@ void ZPrimeGen::assign(GenParticle  daughter1, GenParticle  daughter2,const vect
     case 23:Z   =  *TPrime.daughter(&genparticles,1);decaydaughterZ1 = *Z.daughter(&genparticles,1) ; decaydaughterZ2 = *Z.daughter(&genparticles,2);break; 
     case 24:W   =  *TPrime.daughter(&genparticles,1);decaydaughterW1 = *W.daughter(&genparticles,1) ; decaydaughterW2 = *W.daughter(&genparticles,2);break;
     case 25:H   =  *TPrime.daughter(&genparticles,1);if(H.daughter(&genparticles,1)&&H.daughter(&genparticles,2)){decaydaughterH1 = *H.daughter(&genparticles,1) ; decaydaughterH2 = *H.daughter(&genparticles,2);};break;
-    default : cout << "L127: Zerfall der nicht bedacht wurde" <<endl;
+    default : ;//cout << "L127: Zerfall der nicht bedacht wurde" <<endl;
     }
     switch(abs(TPrime.daughter(&genparticles,2)->pdgId())){
     case 5: bottom = *TPrime.daughter(&genparticles,2);break;
@@ -134,7 +134,7 @@ void ZPrimeGen::assign(GenParticle  daughter1, GenParticle  daughter2,const vect
     case 23:Z   =  *TPrime.daughter(&genparticles,2);decaydaughterZ1 = *Z.daughter(&genparticles,1) ; decaydaughterZ2 = *Z.daughter(&genparticles,2);break; 
     case 24:W   =  *TPrime.daughter(&genparticles,2);decaydaughterW1 = *W.daughter(&genparticles,1) ; decaydaughterW2 = *W.daughter(&genparticles,2);break;
     case 25:H   =  *TPrime.daughter(&genparticles,2);if(H.daughter(&genparticles,1)&&H.daughter(&genparticles,2)){decaydaughterH1 = *H.daughter(&genparticles,1) ; decaydaughterH2 = *H.daughter(&genparticles,2);};break;
-    default : cout << "L135: Zerfall der nicht bedacht wurde" <<endl;
+    default :;// cout << "L135: Zerfall der nicht bedacht wurde" <<endl;
     }}
 
   //Check if the decay product is a top and collect the decay products of it
@@ -328,7 +328,7 @@ void ZPrimeGen::DecayChannel( const vector<GenParticle> & genparticles ){
 	  case 23: n_TllTllZZ++;n_TllTll++; break;
 	  case 24: n_TllTllWW++;n_TllTll++; break;
 	  case 5: n_TllTllbb++;n_TllTll++; break;
-	  default: cout<<"L461: Zerfall nicht bedacht, pdgID "<< abs(H.daughter(&genparticles,1)->pdgId()) <<endl;break;
+	  default: ;//cout<<"L461: Zerfall nicht bedacht, pdgID "<< abs(H.daughter(&genparticles,1)->pdgId()) <<endl;break;
 	  }
 	}
       }
@@ -352,7 +352,7 @@ void ZPrimeGen::DecayChannel( const vector<GenParticle> & genparticles ){
 	    n_TllTll++;
 
 	  }else{
-	    cout<<"L477: Z Zerfall nicht bedacht"<<endl;
+	    // cout<<"L477: Z Zerfall nicht bedacht"<<endl;
 	  }
 	}
       }
@@ -374,7 +374,7 @@ void ZPrimeGen::DecayChannel( const vector<GenParticle> & genparticles ){
 	  case 23: n_TllThZZ++;	n_TllTh++; break;
 	  case 24: n_TllThWW++;	n_TllTh++;break;
 	  case 5: n_TllThbb++;	n_TllTh++;break;
-	  default: cout<<"L493: Zerfall nicht bedacht, pdgID "<< abs(H.daughter(&genparticles,1)->pdgId())<<endl;break;
+	  default:;// cout<<"L493: Zerfall nicht bedacht, pdgID "<< abs(H.daughter(&genparticles,1)->pdgId())<<endl;break;
 	  }
 	}
       }
@@ -396,7 +396,7 @@ void ZPrimeGen::DecayChannel( const vector<GenParticle> & genparticles ){
 	    n_TllThZll++;
 	    n_TllTh++;
 	  }else{
-	    cout<<"L508: Z Zerfall nicht bedacht"<<endl;
+	    // cout<<"L508: Z Zerfall nicht bedacht"<<endl;
 	  }
 	}
       }
@@ -428,7 +428,7 @@ void ZPrimeGen::DecayChannel( const vector<GenParticle> & genparticles ){
 	  n_TllTh++;n_TllTll++;
 	  
 	}else{
-	  cout<<"L534: W Zerfall nicht bedacht"<<endl;
+	  // cout<<"L534: W Zerfall nicht bedacht"<<endl;
 	}
       }
 
@@ -459,7 +459,7 @@ void ZPrimeGen::DecayChannel( const vector<GenParticle> & genparticles ){
 	  case 23: n_ThTllZZ++;  n_ThTll++; break;
 	  case 24: n_ThTllWW++;  n_ThTll++;break;
 	  case 5: n_ThTllbb++;  n_ThTll++;break;
-	  default: cout<<"L554: Zerfall nicht bedacht, pdgID "<< abs(H.daughter(&genparticles,1)->pdgId())<<endl;break;
+	  default:;// cout<<"L554: Zerfall nicht bedacht, pdgID "<< abs(H.daughter(&genparticles,1)->pdgId())<<endl;break;
 	  }
 	}
       }
@@ -487,7 +487,7 @@ void ZPrimeGen::DecayChannel( const vector<GenParticle> & genparticles ){
 	    n_ThTll++;
 
 	  }else{
-	    cout<<"L570: Z Zerfall nicht bedacht"<<endl;
+	    // cout<<"L570: Z Zerfall nicht bedacht"<<endl;
 	  }
 	}
       }
@@ -500,7 +500,7 @@ void ZPrimeGen::DecayChannel( const vector<GenParticle> & genparticles ){
 	  case 23: n_ThThZZ++;	  n_ThTh++; break;
 	  case 24: n_ThThWW++;	  n_ThTh++;break;
 	  case 5: n_ThThbb++;	  n_ThTh++;break;
-	  default: cout<<"L583: Zerfall nicht bedacht, pdgID "<< abs(H.daughter(&genparticles,1)->pdgId())<<endl;break;
+	  default: ;//cout<<"L583: Zerfall nicht bedacht, pdgID "<< abs(H.daughter(&genparticles,1)->pdgId())<<endl;break;
 	  }
 	}
       }
@@ -516,7 +516,7 @@ void ZPrimeGen::DecayChannel( const vector<GenParticle> & genparticles ){
 	    n_ThTh++;
 
 	  }else{
-	    cout<<"L599: Z Zerfall nicht bedacht"<<endl;
+	    // cout<<"L599: Z Zerfall nicht bedacht"<<endl;
 	  }
 	}
       }
@@ -538,7 +538,7 @@ void ZPrimeGen::DecayChannel( const vector<GenParticle> & genparticles ){
 	  n_ThWll++;
 	  n_ThTh++;n_ThTll++;
 	}else{
-	  cout<<"L617: W Zerfall nicht bedacht"<<endl;
+	  // cout<<"L617: W Zerfall nicht bedacht"<<endl;
 	}
       }
     }
