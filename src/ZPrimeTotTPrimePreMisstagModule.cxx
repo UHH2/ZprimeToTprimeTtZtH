@@ -80,7 +80,8 @@ private:
   std::unique_ptr<JetLeptonCleaner> jetlepton_cleaner_EF;
   std::unique_ptr<JetLeptonCleaner> jetlepton_cleaner_G;
   std::unique_ptr<JetLeptonCleaner> jetlepton_cleaner_H;
- 
+
+ std::unique_ptr<JetResolutionSmearer> jet_resolution_smearer;
   // Data/MC scale factors
   std::unique_ptr<uhh2::AnalysisModule> pileup_SF;
   std::unique_ptr<uhh2::AnalysisModule> lumiweight;
@@ -173,6 +174,7 @@ ZPrimeTotTPrimePreMisstagModule::ZPrimeTotTPrimePreMisstagModule(uhh2::Context& 
     topjet_corrector.reset(new TopJetCorrector(ctx, JEC_AK4));
     subjet_corrector.reset(new SubJetCorrector(ctx,JEC_AK4));
     jetlepton_cleaner.reset(new JetLeptonCleaner(ctx,JEC_AK4));
+    jetlepton_cleaner->set_drmax(.4);
   }
   else {
    
@@ -196,12 +198,18 @@ ZPrimeTotTPrimePreMisstagModule::ZPrimeTotTPrimePreMisstagModule(uhh2::Context& 
     jetlepton_cleaner_G.reset(new JetLeptonCleaner(ctx,JEC_AK4_G ));
     jetlepton_cleaner_H.reset(new JetLeptonCleaner(ctx,JEC_AK4_H ));
 
+    jetlepton_cleaner_BCD->set_drmax(.4);
+    jetlepton_cleaner_EF->set_drmax(.4);
+    jetlepton_cleaner_G->set_drmax(.4);
+    jetlepton_cleaner_H->set_drmax(.4);
+
   }
  
   //// Data/MC scale
    if(isMC){ 
     pileup_SF.reset(new MCPileupReweight(ctx)); 
     lumiweight.reset(new MCLumiWeight(ctx));
+    jet_resolution_smearer.reset(new JetResolutionSmearer(ctx));
    } else     lumi_sel.reset(new LumiSelection(ctx));
 
    filename =  ctx.get("dataset_version");
@@ -267,12 +275,14 @@ bool ZPrimeTotTPrimePreMisstagModule::process(Event & event) {
     mod->process(event);
   }
 
-///correctors
+  ///correctors
   if(isMC){
     jet_corrector->process(event);
     topjet_corrector->process(event);
     subjet_corrector->process(event);
     jetlepton_cleaner->process(event);
+
+    jet_resolution_smearer->process(event);
   }else{
     if(event.run <= runnr_BCD)  {       
       jet_corrector_BCD->process(event);
