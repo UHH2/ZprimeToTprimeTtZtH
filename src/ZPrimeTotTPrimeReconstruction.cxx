@@ -47,25 +47,18 @@ bool ZPrimeTotTPrimeReconstruction::process(uhh2::Event & event) {
   if((event.is_valid(h_higgstag) && event.is_valid(h_toptag)) ||(event.is_valid(h_ZWtag) && event.is_valid(h_toptag)) ||(event.is_valid(h_higgstag_one_btag) && event.is_valid(h_toptag)) ){
     const auto & toptag = event.get(h_toptag);
     if(toptag.size()>0){
- 
-
-      if(event.is_valid(h_higgstag)){
+       if(event.is_valid(h_higgstag)){
 	std::vector<TopJet> higgstag = event.get(h_higgstag);
 	if(berror) 	std::cout<<"in higgstag mit toptag"<<higgstag.size()<<std::endl;
 
 	if(higgstag.size()>0){
 	  hyp.set_HZW_v4(higgstag.at(0).v4());
-	  //  hyp.set_HZW(higgstag.at(0));
-	  // //	  hyp.clear_subjets();
-	  // for(const Jet s:higgstag.at(0).subjets()) hyp.set_subjets(s);
-	  // std::cout<<"higgscleaning"<<std::endl;
 	  //cleaning AK8 higgstag from AK4
 	  std::vector<Jet>* higgsak4jets;
 	  higgsak4jets = AK4cleaning(jets,higgstag.at(0) );
 
-	 
 	  hyp.set_tophad_v4(toptag.at(0).v4());
-	  std::cout<<"topcleaning"<<std::endl;
+	  if(berror)std::cout<<"topcleaning"<<std::endl;
 	  //cleaning AK8 Toptag from AK4
 	  std::vector<Jet>* topak4jets;
 	  topak4jets = AK4cleaning(higgsak4jets,toptag.at(0) );
@@ -78,11 +71,6 @@ bool ZPrimeTotTPrimeReconstruction::process(uhh2::Event & event) {
 	  if(berror) 	std::cout<<"in ZWtag mit toptag  "<< ZWtag.size()<<std::endl;
 	  if(ZWtag.size()>0){
 	    hyp.set_HZW_v4(ZWtag.at(0).v4());
-	    //  hyp.set_HZW(ZWtag.at(0));
-	    //	  hyp.clear_subjets();
-	    // std::cout <<"in REconstrucktion Size der subjets zwtag "<< ZWtag.at(0).subjets().size()<<" v4 des ersten " <<ZWtag.at(0).subjets().at(0).v4() << std::endl;
-	    // 	  for(const Jet s:ZWtag.at(0).subjets()) hyp.set_subjets(s);
-	    // 	  std::cout << "Test in REconstruction " << hyp.HZW_subjets().size()<< std::endl;
 	    //cleaning AK8 ZWtag from AK4
 	    std::vector<Jet>* ZWak4jets;
 	    if(berror) 	   std::cout<<"zwtagcleaning"<<std::endl;
@@ -100,35 +88,32 @@ bool ZPrimeTotTPrimeReconstruction::process(uhh2::Event & event) {
 	    LepTop(topak4jets,neutrinos,lepton,hyp, ZWtag);
 
 	 
-	  }//ZWtag >0
-	}else if(event.is_valid(h_higgstag_one_btag)){
-	  std::vector<TopJet> higgstag_one_btag = event.get(h_higgstag_one_btag);
-	  if(berror) 	std::cout<<"in Higgstag one btag mit toptag  "<< higgstag_one_btag.size()<<std::endl;
-	  if(higgstag_one_btag.size()>0){
-	    hyp.set_HZW_v4(higgstag_one_btag.at(0).v4());
+	  }else if(event.is_valid(h_higgstag_one_btag)){
+	    std::vector<TopJet> higgstag_one_btag = event.get(h_higgstag_one_btag);
+	    if(berror) 	std::cout<<"in Higgstag one btag mit toptag  "<< higgstag_one_btag.size()<<std::endl;
+	    if(higgstag_one_btag.size()>0){
+	      hyp.set_HZW_v4(higgstag_one_btag.at(0).v4());
 
-	    //cleaning AK8 higgstag one btag from AK4
-	    std::vector<Jet>* higgs_one_btag_ak4jets;
-	    if(berror) 	   std::cout<<"higgstag_one_btag_cleaning"<<std::endl;
-	    higgs_one_btag_ak4jets = AK4cleaning(jets,higgstag_one_btag.at(0) );
+	      //cleaning AK8 higgstag one btag from AK4
+	      std::vector<Jet>* higgs_one_btag_ak4jets;
+	      if(berror) 	   std::cout<<"higgstag_one_btag_cleaning"<<std::endl;
+	      higgs_one_btag_ak4jets = AK4cleaning(jets,higgstag_one_btag.at(0) );
 
-	    //set had top hypothesis
-	    hyp.set_tophad_v4(toptag.at(0).v4());
-	    if(berror) 	    std::cout<<"topcleaning"<<std::endl;
-	    //cleaning AK8 Toptag from AK4
-	    std::vector<Jet>* topak4jets;
-	    topak4jets = AK4cleaning(higgs_one_btag_ak4jets,toptag.at(0) );
+	      //set had top hypothesis
+	      hyp.set_tophad_v4(toptag.at(0).v4());
+	      if(berror) 	    std::cout<<"topcleaning"<<std::endl;
+	      //cleaning AK8 Toptag from AK4
+	      std::vector<Jet>* topak4jets;
+	      topak4jets = AK4cleaning(higgs_one_btag_ak4jets,toptag.at(0) );
 
-	    if(topak4jets->size()== 0) return false; 
-	    //all neutrino solutions and top lep
-	    LepTop(topak4jets,neutrinos,lepton,hyp, higgstag_one_btag);
-	  }
-
-	}//valids
-      }
-      event.set(h_recohyps, move(recoHyps));
-   
- 
+	      if(topak4jets->size()== 0) return false; 
+	      //all neutrino solutions and top lep
+	      LepTop(topak4jets,neutrinos,lepton,hyp, higgstag_one_btag);
+	    }
+	  }//valid higgstagonebtag
+	}//valid zwtag
+       }//valid h tag
+       event.set(h_recohyps, move(recoHyps));
     }// at least one toptag
     else if(event.is_valid(h_higgstag) ||event.is_valid(h_ZWtag) || event.is_valid(h_higgstag_one_btag)){
       if(event.is_valid(h_higgstag)){
@@ -137,9 +122,6 @@ bool ZPrimeTotTPrimeReconstruction::process(uhh2::Event & event) {
       
 	if(higgstag.size()>0){
 	  hyp.set_HZW_v4(higgstag.at(0).v4());
-	  // hyp.set_HZW(higgstag.at(0));
-	  //	  hyp.clear_subjets();
-	  // for(const Jet s:higgstag.at(0).subjets()) hyp.set_subjets(s);
 	  //cleaning AK8 higgstag from AK4
 	  std::vector<Jet>*  higgsak4jets;
 	  higgsak4jets = AK4cleaning(jets,higgstag.at(0) );
@@ -153,11 +135,6 @@ bool ZPrimeTotTPrimeReconstruction::process(uhh2::Event & event) {
      
 	  if(ZWtag.size()>0){
 	    hyp.set_HZW_v4(ZWtag.at(0).v4());
-	    //	hyp.set_HZW(ZWtag.at(0));
-	    // 	//	hyp.clear_subjets();
-	    // std::cout <<"in REconstrucktion Size der subjets zwtag "<< ZWtag.at(0).subjets().size()<<" v4 des ersten " <<ZWtag.at(0).subjets().at(0).v4() << std::endl;
-	    // 	for(const Jet s:ZWtag.at(0).subjets()) hyp.set_subjets(s);
-	    //  std::cout << "Test in REconstruction " << hyp.HZW_subjets().size()<< std::endl;
 	    //cleaning AK8 ZWtag from AK4
 	    std::vector<Jet>* ZWak4jets;
 	    ZWak4jets = AK4cleaning(jets,ZWtag.at(0) );
@@ -165,24 +142,23 @@ bool ZPrimeTotTPrimeReconstruction::process(uhh2::Event & event) {
 	    if(ZWak4jets->size() <= 1)return false;
 	    LepHadTop(ZWak4jets,neutrinos,lepton,hyp, ZWtag);
 
-	  }//all ZWtag
-	}else if(event.is_valid(h_higgstag_one_btag)){
-	  std::vector<TopJet> higgstag_one_btag = event.get(h_higgstag_one_btag);
-	  if(berror)      std::cout<<"Reconstruction L:127 in higgstag one btag und kein Toptag"<<higgstag_one_btag.size() << std::endl;
-	  if(higgstag_one_btag.size()>0){
-	    hyp.set_HZW_v4(higgstag_one_btag.at(0).v4());
+	  }else if(event.is_valid(h_higgstag_one_btag)){
+	    std::vector<TopJet> higgstag_one_btag = event.get(h_higgstag_one_btag);
+	    if(berror)      std::cout<<"Reconstruction L:127 in higgstag one btag und kein Toptag"<<higgstag_one_btag.size() << std::endl;
+	    if(higgstag_one_btag.size()>0){
+	      hyp.set_HZW_v4(higgstag_one_btag.at(0).v4());
 
-	    //cleaning AK8 higgstag one btag from AK4
-	    std::vector<Jet>* higgs_one_btag_ak4jets;
-	    higgs_one_btag_ak4jets = AK4cleaning(jets,higgstag_one_btag.at(0) );
+	      //cleaning AK8 higgstag one btag from AK4
+	      std::vector<Jet>* higgs_one_btag_ak4jets;
+	      higgs_one_btag_ak4jets = AK4cleaning(jets,higgstag_one_btag.at(0) );
 	   
-	    //all neutrino solutions and top lep
-	    if(higgs_one_btag_ak4jets->size() <= 1)return false;
-	    LepHadTop(higgs_one_btag_ak4jets,neutrinos,lepton,hyp, higgstag_one_btag);
-	  }
-	}//valid
-
-      }
+	      //all neutrino solutions and top lep
+	      if(higgs_one_btag_ak4jets->size() <= 1)return false;
+	      LepHadTop(higgs_one_btag_ak4jets,neutrinos,lepton,hyp, higgstag_one_btag);
+	    }
+	  }//valid higgsonebtag
+	}//valid zwtag
+      }//valid higgstag
       event.set(h_recohyps, move(recoHyps));
     }//higgs||ZW
   }// higss&&Top || ZW&&Top

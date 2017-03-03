@@ -290,6 +290,8 @@ std::unique_ptr<Hists> topjet_tagger_other_h;
   std::unique_ptr<Hists> muon_chi2cut_h;
   std::unique_ptr<Hists> topjet_chi2cut_comb_h;
   std::unique_ptr<Hists> topjet_chi2cut_tagged_h;
+  std::unique_ptr<Hists> higgs_topjet_chi2cut_tagged_h;
+  std::unique_ptr<Hists> zw_topjet_chi2cut_tagged_h;
   std::unique_ptr<Hists> topjet_chi2cut_other_h;
   std::unique_ptr<Hists> event_chi2cut_h;
   std::unique_ptr<Hists> lumi_chi2cut_h;
@@ -298,6 +300,8 @@ std::unique_ptr<Hists> topjet_tagger_other_h;
   std::unique_ptr<TopJetHists> zw_top_topjet_chi2cut_h;
   std::unique_ptr<TopJetHists> higgs_notop_topjet_chi2cut_h;
   std::unique_ptr<TopJetHists> zw_notop_topjet_chi2cut_h;
+  std::unique_ptr<TopJetHists> zw_topjet_chi2cut_h;
+  std::unique_ptr<TopJetHists> higgs_topjet_chi2cut_h;
 
   std::unique_ptr<Hists> higgs_top_chi2min_chi2cut_h;
   std::unique_ptr<Hists> one_higgs_top_chi2min_chi2cut_h;
@@ -305,21 +309,30 @@ std::unique_ptr<Hists> topjet_tagger_other_h;
   std::unique_ptr<Hists> higgs_notop_chi2min_chi2cut_h;
   std::unique_ptr<Hists> one_higgs_notop_chi2min_chi2cut_h;
   std::unique_ptr<Hists> zw_notop_chi2min_chi2cut_h;
+  std::unique_ptr<Hists> zw_chi2min_chi2cut_h;
+  std::unique_ptr<Hists> higgs_chi2min_chi2cut_h;
+  std::unique_ptr<Hists> one_higgs_chi2min_chi2cut_h;
 
   std::unique_ptr<JetHists> higgs_top_jet_chi2cut_h;
   std::unique_ptr<JetHists> zw_top_jet_chi2cut_h;
   std::unique_ptr<JetHists> higgs_notop_jet_chi2cut_h;
   std::unique_ptr<JetHists> zw_notop_jet_chi2cut_h;
+  std::unique_ptr<JetHists> higgs_jet_chi2cut_h;
+  std::unique_ptr<JetHists> zw_jet_chi2cut_h;
   
   std::unique_ptr<MuonHists> higgs_top_muon_chi2cut_h;
   std::unique_ptr<MuonHists> zw_top_muon_chi2cut_h;
   std::unique_ptr<MuonHists> higgs_notop_muon_chi2cut_h;
   std::unique_ptr<MuonHists> zw_notop_muon_chi2cut_h;
+  std::unique_ptr<MuonHists> higgs_muon_chi2cut_h;
+  std::unique_ptr<MuonHists> zw_muon_chi2cut_h;
 
   std::unique_ptr<EventHists> higgs_top_event_chi2cut_h;
   std::unique_ptr<EventHists> zw_top_event_chi2cut_h;
   std::unique_ptr<EventHists> higgs_notop_event_chi2cut_h;
   std::unique_ptr<EventHists> zw_notop_event_chi2cut_h;
+  std::unique_ptr<EventHists> higgs_event_chi2cut_h;
+  std::unique_ptr<EventHists> zw_event_chi2cut_h;
 
   //Hist Btag1
   std::unique_ptr<Hists> eff_btag1_h;
@@ -710,6 +723,8 @@ ZPrimeTotTPrimeSelectionModule::ZPrimeTotTPrimeSelectionModule(uhh2::Context& ct
   //Hists Chi2cut
   topjet_chi2cut_comb_h.reset(new TopJetHists(ctx, "topjet_chi2cut_comb"));
   topjet_chi2cut_tagged_h.reset(new TopJetHists(ctx, "topjet_chi2cut_tagged",4,"tagged"));
+  higgs_topjet_chi2cut_tagged_h.reset(new TopJetHists(ctx, "higgs_topjet_chi2cut_tagged",4,"HiggsTag"));
+  zw_topjet_chi2cut_tagged_h.reset(new TopJetHists(ctx, "zw_topjet_chi2cut_tagged",4,"ZWTag"));
   topjet_chi2cut_other_h.reset(new TopJetHists(ctx, "topjet_chi2cut_other",4,"other"));
   eff_chi2cut_h.reset(new ZPrimeTotTPrimeHists(ctx, "eff_chi2cut"));
   jet_chi2cut_comb_h.reset(new JetHists(ctx, "jet_chi2cut_comb"));
@@ -723,6 +738,8 @@ ZPrimeTotTPrimeSelectionModule::ZPrimeTotTPrimeSelectionModule(uhh2::Context& ct
   higgs_notop_topjet_chi2cut_h.reset(new TopJetHists(ctx, "higgs_notop_topjet_chi2cut"));
   zw_top_topjet_chi2cut_h.reset(new TopJetHists(ctx, "zw_top_topjet_chi2cut"));
   zw_notop_topjet_chi2cut_h.reset(new TopJetHists(ctx, "zw_notop_topjet_chi2cut"));
+  higgs_topjet_chi2cut_h.reset(new TopJetHists(ctx, "higgs_topjet_chi2cut"));
+  zw_topjet_chi2cut_h.reset(new TopJetHists(ctx, "zw_topjet_chi2cut"));
 
   higgs_top_chi2min_chi2cut_h.reset(new ZPrimeTotTPrimeHypothesisHists(ctx, "higgs_top_chi2min_chi2cut",ZprimeTotTPrime_hyps_label,ZprimeTotTPrime_chi2_label));
   one_higgs_top_chi2min_chi2cut_h.reset(new ZPrimeTotTPrimeHypothesisHists(ctx, "one_higgs_top_chi2min_chi2cut",ZprimeTotTPrime_hyps_label,ZprimeTotTPrime_chi2_label));
@@ -730,21 +747,31 @@ ZPrimeTotTPrimeSelectionModule::ZPrimeTotTPrimeSelectionModule(uhh2::Context& ct
   one_higgs_notop_chi2min_chi2cut_h.reset(new ZPrimeTotTPrimeHypothesisHists(ctx, "one_higgs_notop_chi2min_chi2cut",ZprimeTotTPrime_hyps_label,ZprimeTotTPrime_chi2_label));
   zw_top_chi2min_chi2cut_h.reset(new ZPrimeTotTPrimeHypothesisHists(ctx, "zw_top_chi2min_chi2cut",ZprimeTotTPrime_hyps_label,ZprimeTotTPrime_chi2_label));
   zw_notop_chi2min_chi2cut_h.reset(new ZPrimeTotTPrimeHypothesisHists(ctx, "zw_notop_chi2min_chi2cut",ZprimeTotTPrime_hyps_label,ZprimeTotTPrime_chi2_label));
+  one_higgs_chi2min_chi2cut_h.reset(new ZPrimeTotTPrimeHypothesisHists(ctx, "one_higgs_chi2min_chi2cut",ZprimeTotTPrime_hyps_label,ZprimeTotTPrime_chi2_label));
+  zw_chi2min_chi2cut_h.reset(new ZPrimeTotTPrimeHypothesisHists(ctx, "zw_chi2min_chi2cut",ZprimeTotTPrime_hyps_label,ZprimeTotTPrime_chi2_label));
+  higgs_chi2min_chi2cut_h.reset(new ZPrimeTotTPrimeHypothesisHists(ctx, "higgs_chi2min_chi2cut",ZprimeTotTPrime_hyps_label,ZprimeTotTPrime_chi2_label));
+
 
   higgs_top_jet_chi2cut_h.reset(new JetHists(ctx, "higgs_top_jet_chi2cut"));
   higgs_notop_jet_chi2cut_h.reset(new JetHists(ctx, "higgs_notop_jet_chi2cut"));
   zw_top_jet_chi2cut_h.reset(new JetHists(ctx, "zw_top_jet_chi2cut"));
   zw_notop_jet_chi2cut_h.reset(new JetHists(ctx, "zw_notop_jet_chi2cut"));
+  higgs_jet_chi2cut_h.reset(new JetHists(ctx, "higgs_jet_chi2cut"));
+  zw_jet_chi2cut_h.reset(new JetHists(ctx, "zw_jet_chi2cut"));
 
   higgs_top_muon_chi2cut_h.reset(new MuonHists(ctx, "higgs_top_muon_chi2cut"));
   higgs_notop_muon_chi2cut_h.reset(new MuonHists(ctx, "higgs_notop_muon_chi2cut"));
   zw_top_muon_chi2cut_h.reset(new MuonHists(ctx, "zw_top_muon_chi2cut"));
   zw_notop_muon_chi2cut_h.reset(new MuonHists(ctx, "zw_notop_muon_chi2cut"));
+  higgs_muon_chi2cut_h.reset(new MuonHists(ctx, "higgs_muon_chi2cut"));
+  zw_muon_chi2cut_h.reset(new MuonHists(ctx, "zw_muon_chi2cut"));
 
   higgs_top_event_chi2cut_h.reset(new EventHists(ctx, "higgs_top_event_chi2cut"));
   higgs_notop_event_chi2cut_h.reset(new EventHists(ctx, "higgs_notop_event_chi2cut"));
   zw_top_event_chi2cut_h.reset(new EventHists(ctx, "zw_top_event_chi2cut"));
   zw_notop_event_chi2cut_h.reset(new EventHists(ctx, "zw_notop_event_chi2cut"));
+  higgs_event_chi2cut_h.reset(new EventHists(ctx, "higgs_event_chi2cut"));
+  zw_event_chi2cut_h.reset(new EventHists(ctx, "zw_event_chi2cut"));
 
   eff_selection_h.reset(new ZPrimeTotTPrimeHists(ctx, "eff_selection"));
   topjet_selection_h.reset(new TopJetHists(ctx, "topjet_selection"));
@@ -1052,6 +1079,7 @@ bool ZPrimeTotTPrimeSelectionModule::process(uhh2::Event& event){
 
   //Higgstag
   const bool pass_higgstag = higgstag_sel->passes(event);
+
   input_zwtag_h->fill(event);
   input_higgstag_h->fill(event);
   if(pass_higgstag){
@@ -1069,6 +1097,7 @@ bool ZPrimeTotTPrimeSelectionModule::process(uhh2::Event& event){
   bool pass_higgs_one_btag=false;
   if(!pass_higgstag){
     pass_zwtag = ZWtag_sel->passes(event);
+
     if(!pass_zwtag){
       pass_higgs_one_btag = higgstag_one_btag_sel->passes(event);
       if(!pass_higgs_one_btag)return false;
@@ -1084,7 +1113,8 @@ bool ZPrimeTotTPrimeSelectionModule::process(uhh2::Event& event){
   ///////////////////////////////////////////////////////// ZW TAGGER //////////////////////////////////////////////////////////////////////////////////
 
   std::unique_ptr< std::vector<TopJet> > ZWjets_all(new std::vector<TopJet> (*event.topjets));
-  //cleanen der topjets um sie in einen neuen Vektor zu speichern
+  //cleanen der topjets um sie in einen neuen Vektor zu speichern 
+
   ZWtag_cleaner->process(event);
   sort_by_pt<TopJet>(*event.topjets);
   if(pass_zwtag){
@@ -1112,6 +1142,7 @@ bool ZPrimeTotTPrimeSelectionModule::process(uhh2::Event& event){
 
   std::unique_ptr< std::vector<TopJet> > higgs_one_btag_all(new std::vector<TopJet> (*event.topjets));
   //cleanen der topjets um sie in einen neuen Vektor zu speichern
+
   higgstag_one_btag_cleaner->process(event);
   sort_by_pt<TopJet>(*event.topjets);
   if(pass_higgs_one_btag){
@@ -1465,11 +1496,13 @@ bool ZPrimeTotTPrimeSelectionModule::process(uhh2::Event& event){
     }
   }
   Scalenfactors not produced yet  ****/
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
   chi2min_chi2cut_h->fill(event);
   topjet_chi2cut_comb_h->fill(event);
   topjet_chi2cut_tagged_h->fill(event);
+  if(pass_higgstag ) higgs_topjet_chi2cut_tagged_h->fill(event);
+  if(pass_zwtag )zw_topjet_chi2cut_tagged_h->fill(event);
   topjet_chi2cut_other_h->fill(event);
   eff_chi2cut_h->fill(event);
   jet_chi2cut_comb_h->fill(event);
@@ -1482,6 +1515,8 @@ bool ZPrimeTotTPrimeSelectionModule::process(uhh2::Event& event){
   if(pass_higgstag && !pass_toptag) higgs_notop_topjet_chi2cut_h->fill(event);
   if(pass_zwtag && pass_toptag)zw_top_topjet_chi2cut_h->fill(event);
   if(pass_zwtag && !pass_toptag)zw_notop_topjet_chi2cut_h->fill(event);
+  if(pass_higgstag ) higgs_topjet_chi2cut_h->fill(event);
+  if(pass_zwtag)zw_topjet_chi2cut_h->fill(event);
 
   if(pass_higgstag && pass_toptag) higgs_top_chi2min_chi2cut_h->fill(event);
   if(pass_higgstag && !pass_toptag) higgs_notop_chi2min_chi2cut_h->fill(event);
@@ -1489,21 +1524,30 @@ bool ZPrimeTotTPrimeSelectionModule::process(uhh2::Event& event){
   if(pass_higgs_one_btag && !pass_toptag) one_higgs_notop_chi2min_chi2cut_h->fill(event);
   if(pass_zwtag && pass_toptag)zw_top_chi2min_chi2cut_h->fill(event);
   if(pass_zwtag && !pass_toptag)zw_notop_chi2min_chi2cut_h->fill(event);
+  if(pass_higgstag) higgs_chi2min_chi2cut_h->fill(event);
+  if(pass_higgs_one_btag ) one_higgs_chi2min_chi2cut_h->fill(event);
+  if(pass_zwtag )zw_chi2min_chi2cut_h->fill(event);
 
   if(pass_higgstag && pass_toptag) higgs_top_jet_chi2cut_h->fill(event);
   if(pass_higgstag && !pass_toptag) higgs_notop_jet_chi2cut_h->fill(event);
   if(pass_zwtag && pass_toptag)zw_top_jet_chi2cut_h->fill(event);
   if(pass_zwtag && !pass_toptag)zw_notop_jet_chi2cut_h->fill(event);
+  if(pass_higgstag ) higgs_jet_chi2cut_h->fill(event);
+  if(pass_zwtag )zw_jet_chi2cut_h->fill(event);
 
   if(pass_higgstag && pass_toptag) higgs_top_muon_chi2cut_h->fill(event);
   if(pass_higgstag && !pass_toptag) higgs_notop_muon_chi2cut_h->fill(event);
   if(pass_zwtag && pass_toptag)zw_top_muon_chi2cut_h->fill(event);
   if(pass_zwtag && !pass_toptag)zw_notop_muon_chi2cut_h->fill(event);
+  if(pass_higgstag ) higgs_muon_chi2cut_h->fill(event);
+  if(pass_zwtag )zw_muon_chi2cut_h->fill(event);
 
   if(pass_higgstag && pass_toptag) higgs_top_event_chi2cut_h->fill(event);
   if(pass_higgstag && !pass_toptag) higgs_notop_event_chi2cut_h->fill(event);
   if(pass_zwtag && pass_toptag)zw_top_event_chi2cut_h->fill(event);
   if(pass_zwtag && !pass_toptag)zw_notop_event_chi2cut_h->fill(event);
+  if(pass_higgstag ) higgs_event_chi2cut_h->fill(event);
+  if(pass_zwtag )zw_event_chi2cut_h->fill(event);
 
   bool pass_btag1 = btag1_sel->passes(event);
   if(pass_btag1){

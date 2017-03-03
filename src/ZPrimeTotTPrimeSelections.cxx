@@ -437,6 +437,8 @@ bool ZPrimeTotTPrimeHiggsTag::operator()(TopJet const & topjet, uhh2::Event cons
     if(subjets.size() < 2) return false;
     clean_collection(subjets, event, btagid_);
     if (!(subjets.size() ==1)) return false;
+    subjets = topjet.subjets();
+    // std::cout<<"subjets size == 2 "<< subjets.size() <<std::endl;
     sort_by_pt(subjets);
 
     LorentzVector firsttwosubjets = subjets[0].v4() + subjets[1].v4();
@@ -446,5 +448,6 @@ bool ZPrimeTotTPrimeHiggsTag::operator()(TopJet const & topjet, uhh2::Event cons
     auto mjet = firsttwosubjets.M();
     if(mjet < minmass_) return false;
     if(mjet > maxmass_) return false;
+    // std::cout<<"ZPrimeHiggstag returnes true, mass jet "<< mjet<<std::endl;
     return true;
 }
