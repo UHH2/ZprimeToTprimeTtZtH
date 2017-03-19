@@ -1138,17 +1138,19 @@ bool ZPrimeTotTPrimeSelectionModule::process(uhh2::Event& event){
   bool pass_zwtag=false;
   bool pass_higgs_one_btag=false;
   if(!pass_higgstag){
-    pass_zwtag = ZWtag_sel->passes(event);
+    pass_higgs_one_btag = higgstag_one_btag_sel->passes(event);
+    if(!pass_higgs_one_btag){
+      pass_zwtag = ZWtag_sel->passes(event);
+      if(!pass_zwtag)return false;
+    
 
-    if(!pass_zwtag){
-      pass_higgs_one_btag = higgstag_one_btag_sel->passes(event);
-      if(!pass_higgs_one_btag)return false;
-    }    
-    topjet_zwtag_h->fill(event);
-    eff_zwtag_h->fill(event);
-    jet_zwtag_h->fill(event);
-    muon_zwtag_h->fill(event);
-    event_zwtag_h->fill(event);
+      
+      topjet_zwtag_h->fill(event);
+      eff_zwtag_h->fill(event);
+      jet_zwtag_h->fill(event);
+      muon_zwtag_h->fill(event);
+      event_zwtag_h->fill(event);
+    }
   }
 
   if(berror)  std::cout<<"SelectionModule L:338 vor ZWTAGGER"<<std::endl;  
