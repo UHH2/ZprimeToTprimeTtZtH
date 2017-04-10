@@ -460,20 +460,20 @@ ZPrimeTotTPrimeSelectionModule::ZPrimeTotTPrimeSelectionModule(uhh2::Context& ct
   std::vector<std::string> JEC_AK4, JEC_AK8,JEC_AK4_BCD,JEC_AK4_EF,JEC_AK4_G,JEC_AK4_H,JEC_AK8_BCD,JEC_AK8_EF,JEC_AK8_G,JEC_AK8_H;
   if(isMC){
 
-    JEC_AK4 = JERFiles::Summer16_23Sep2016_V4_L123_AK4PFchs_MC;
-    JEC_AK8 = JERFiles::Summer16_23Sep2016_V4_L123_AK8PFchs_MC;
+    JEC_AK4 = JERFiles::Summer16_23Sep2016_V4_L123_AK4PFPuppi_MC;
+    JEC_AK8 = JERFiles::Summer16_23Sep2016_V4_L123_AK8PFPuppi_MC;
   }
   else {
 
-    JEC_AK4_BCD =  JERFiles::Summer16_23Sep2016_V4_BCD_L123_AK4PFchs_DATA;
-    JEC_AK4_EF = JERFiles::Summer16_23Sep2016_V4_EF_L123_AK4PFchs_DATA;
-    JEC_AK4_G =  JERFiles::Summer16_23Sep2016_V4_G_L123_AK4PFchs_DATA;
-    JEC_AK4_H =  JERFiles::Summer16_23Sep2016_V4_H_L123_AK4PFchs_DATA;
+    JEC_AK4_BCD =  JERFiles::Summer16_23Sep2016_V4_BCD_L123_AK4PFPuppi_DATA;
+    JEC_AK4_EF = JERFiles::Summer16_23Sep2016_V4_EF_L123_AK4PFPuppi_DATA;
+    JEC_AK4_G =  JERFiles::Summer16_23Sep2016_V4_G_L123_AK4PFPuppi_DATA;
+    JEC_AK4_H =  JERFiles::Summer16_23Sep2016_V4_H_L123_AK4PFPuppi_DATA;
     
-    JEC_AK8_BCD =  JERFiles::Summer16_23Sep2016_V4_BCD_L123_AK4PFchs_DATA;
-    JEC_AK8_EF =  JERFiles::Summer16_23Sep2016_V4_EF_L123_AK4PFchs_DATA;
-    JEC_AK8_G =  JERFiles::Summer16_23Sep2016_V4_G_L123_AK4PFchs_DATA;
-    JEC_AK8_H =  JERFiles::Summer16_23Sep2016_V4_H_L123_AK4PFchs_DATA;
+    JEC_AK8_BCD =  JERFiles::Summer16_23Sep2016_V4_BCD_L123_AK4PFPuppi_DATA;
+    JEC_AK8_EF =  JERFiles::Summer16_23Sep2016_V4_EF_L123_AK4PFPuppi_DATA;
+    JEC_AK8_G =  JERFiles::Summer16_23Sep2016_V4_G_L123_AK4PFPuppi_DATA;
+    JEC_AK8_H =  JERFiles::Summer16_23Sep2016_V4_H_L123_AK4PFPuppi_DATA;
    
   }
 
@@ -564,18 +564,18 @@ ZPrimeTotTPrimeSelectionModule::ZPrimeTotTPrimeSelectionModule(uhh2::Context& ct
   toptag_cleaner.reset(new TopJetCleaner(ctx,topjetID));
 
   // Higgs TAGGER
-  const TopJetId higgsjetID = AndId<TopJet>(HiggsTag(100,150), Tau21(1) );
+  const TopJetId higgsjetID = AndId<TopJet>(HiggsTag(100,140), Tau21(1) );
   higgstag_sel.reset(new NTopJetSelection(1, -1, higgsjetID));
   higgstag_cleaner.reset(new TopJetCleaner(ctx,higgsjetID));
 
   // Higgs TAGGER
-  const TopJetId higgs_one_btag_jetID = AndId<TopJet>(ZPrimeTotTPrimeHiggsTag(100,150), Tau21(1) );
+  const TopJetId higgs_one_btag_jetID = AndId<TopJet>(ZPrimeTotTPrimeHiggsTag(100,140), Tau21(1) );
   higgstag_one_btag_sel.reset(new NTopJetSelection(1, -1, higgs_one_btag_jetID));
   higgstag_one_btag_cleaner.reset(new TopJetCleaner(ctx,higgs_one_btag_jetID));
 
 
   // W/Z TAGGER
-  const TopJetId ZWjetID = AndId<TopJet>(Type2TopTag(60,115,Type2TopTag::MassType::groomed), Tau21(0.5));
+  const TopJetId ZWjetID = AndId<TopJet>(Type2TopTag(65,105,Type2TopTag::MassType::groomed), Tau21(0.5));
   ZWtag_sel.reset(new NTopJetSelection(1, -1, ZWjetID));
   ZWtag_cleaner.reset(new TopJetCleaner(ctx,ZWjetID));
 
@@ -1526,20 +1526,20 @@ bool ZPrimeTotTPrimeSelectionModule::process(uhh2::Event& event){
 
     }
   Scalenfactors not produced yet  ****/
-  if(isMC){
-    ///sidebands
-    if(filename.Contains("TTbar")){
-      double SF=0.905	;
-      event.weight = event.weight * SF;
-    }
+  // if(isMC){
+  //   ///sidebands
+  //   if(filename.Contains("TTbar")){
+  //     double SF=0.905	;
+  //     event.weight = event.weight * SF;
+  //   }
 
 
-    if(filename.Contains("WJets")){
-      double SF=1.445	;
-      event.weight = event.weight * SF;
+  //   if(filename.Contains("WJets")){
+  //     double SF=1.445	;
+  //     event.weight = event.weight * SF;
 
-    }
-  }
+  //   }
+  // }
   ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
   chi2min_chi2cut_h->fill(event);

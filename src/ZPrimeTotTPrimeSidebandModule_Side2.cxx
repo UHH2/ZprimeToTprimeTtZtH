@@ -460,6 +460,7 @@ ZPrimeTotTPrimeSidebandModule_Side2::ZPrimeTotTPrimeSidebandModule_Side2(uhh2::C
   jet_IDcleaner.reset(new JetCleaner(ctx,jetID));
   jet_cleaner2.reset(new JetCleaner(ctx,15., 2.4));
   jet_cleaner1.reset(new JetCleaner(ctx,30., 2.4));
+  topjet_cleaner.reset(new TopJetCleaner(ctx,TopJetId(TopjetMassCleaner(30))));
   ak4_cleaner.reset(new JetCleaner(ctx,JetId(ZPrimeTotTPrimeAK4cleaner(1.2))));
   htcalc.push_back(std::unique_ptr<AnalysisModule>(new HTCalculator(ctx)));
   htcalc.push_back(std::unique_ptr<AnalysisModule>(new PrimaryLepton(ctx)));
@@ -918,18 +919,20 @@ bool ZPrimeTotTPrimeSidebandModule_Side2::process(uhh2::Event& event){
   //   event_reliso_h->fill(event);
   // }
 
- if(berror)   std::cout<<"SelectionModule L:294 vor TwoDCut"<<std::endl;  
+  if(berror)   std::cout<<"SelectionModule L:294 vor TwoDCut"<<std::endl;  
   ////////////////////////////////////////////////////////// TwoDCut //////////////////////////////////////////////////////////////////////////////////
- sort_by_pt<Jet>(*event.jets);
- const bool pass_twodcut = twodcut_sel->passes(event);
+  sort_by_pt<Jet>(*event.jets);
+  const bool pass_twodcut = twodcut_sel->passes(event);
   if(!pass_twodcut) return false;
   topjet_twodcut_h->fill(event);
   jet_twodcut_h->fill(event);
- eff_twodcut_h->fill(event);
- muon_twodcut_h->fill(event);
+  eff_twodcut_h->fill(event);
+  muon_twodcut_h->fill(event);
 
   jet_cleaner1->process(event);
   event_twodcut_h->fill(event);
+
+  topjet_cleaner->process(event);
  
   if(berror)  std::cout<<"SelectionModule L:338 vor HiggsTAGGER"<<std::endl;
   /////////////////////////////////////////////////////////// Higgs TAGGER //////////////////////////////////////////////////////////////////////////////////

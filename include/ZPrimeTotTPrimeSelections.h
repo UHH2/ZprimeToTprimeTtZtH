@@ -186,6 +186,25 @@ private:
   int num;
 };
 
+// ////////// ////////
+// ////////////////////////////////////////////////////////
+ class TopjetMassCleaner{
+ public:
+ TopjetMassCleaner(double min_mass_):min_mass(min_mass_){};
+
+   bool operator()(const TopJet & p, const Event & event)const{
+     auto subjets = p.subjets();
+     LorentzVector sumLorenzv4;
+     for (auto & subjet : subjets) {
+       sumLorenzv4 += subjet.v4();
+     }
+     return sumLorenzv4.M() > min_mass;
+  }
+
+ private:
+   double min_mass;
+};
+
 // ////////
 
 
