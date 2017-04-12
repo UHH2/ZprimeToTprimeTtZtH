@@ -465,7 +465,7 @@ ZPrimeTotTPrimeEffModule::ZPrimeTotTPrimeEffModule(uhh2::Context& ctx){
 
   twodcut_sel.reset(new TwoDCut(.4, 40.));     
   jet_sel.reset(new NJetSelection(2,-1, JetId(PtEtaCut( 50., 2.4))));         
-  topjet_sel.reset(new NTopJetSelection(1,-1, TopJetId(PtEtaCut( 200., 2.4)))); 
+  topjet_sel.reset(new NTopJetSelection(1,-1, TopJetId(PtEtaCut( 200., 2.4,400)))); 
   njet2_sel.reset(new NJetSelection(2,2, JetId(PtEtaCut( 30., 2.4))));
   njet3_sel.reset(new NJetSelection(2,3, JetId(PtEtaCut( 30., 2.4))));
 
