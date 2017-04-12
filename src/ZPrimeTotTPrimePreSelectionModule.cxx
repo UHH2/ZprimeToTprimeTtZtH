@@ -145,7 +145,7 @@ ZPrimeTotTPrimePreSelectionModule::ZPrimeTotTPrimePreSelectionModule(uhh2::Conte
 
   // set up object cleaners
   muo_cleaner.reset(new MuonCleaner (AndId<Muon> (PtEtaCut (50, 2.5), MuonIDMedium())));
-  ele_cleaner.reset(new ElectronCleaner(AndId<Electron>(PtEtaSCCut(20., 2.5),ElectronID_Spring16_medium  )));
+  ele_cleaner.reset(new ElectronCleaner(AndId<Electron>(PtEtaSCCut(50., 2.5),ElectronID_Spring16_loose  )));
 
   std::vector<std::string> JEC_AK4, JEC_AK8,JEC_AK4_BCD,JEC_AK4_EF,JEC_AK4_G,JEC_AK4_H,JEC_AK8_BCD,JEC_AK8_EF,JEC_AK8_G,JEC_AK8_H;
   if(isMC){
