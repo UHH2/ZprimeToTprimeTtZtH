@@ -52,6 +52,7 @@ private:
   //cleaner
   std::unique_ptr<TopJetCleaner>      topjet_cleaner;
   std::unique_ptr<TopJetCleaner>      mass_cleaner;
+  std::unique_ptr<TopJetCleaner>      mass_cleaner30GeV;
   std::unique_ptr<TopJetLeptonDeltaRCleaner> topjetlepton_cleaner; 
   
   //calculators
@@ -191,13 +192,17 @@ ZPrimeTotTPrimeMisstagModule::ZPrimeTotTPrimeMisstagModule(uhh2::Context& ctx){
   //cleaner
   topjet_cleaner.reset(new TopJetCleaner(ctx,TopJetId(PtEtaCut(200., 2.5))));
   const TopJetId massID = Type2TopTag(24,182,Type2TopTag::MassType::groomed);
+  const TopJetId massID_normal = Type2TopTag(30,40000,Type2TopTag::MassType::groomed);
   mass_cleaner.reset(new TopJetCleaner(ctx,massID));
+  mass_cleaner30GeV.reset(new TopJetCleaner(ctx,massID_normal));
 
   //Selections
   topjet2_sel.reset(new NTopJetSelection(2,-1,TopJetId(PtEtaCut( 250., 2.4)))); 
   const TopJetId ZWjetID = AndId<TopJet>(Type2TopTag(60,115,Type2TopTag::MassType::groomed), Tau21(0.5));
   const TopJetId higgsjetID = AndId<TopJet>(HiggsTag(100,150), Tau21(1) );
-  tagger_sel.reset(new NTopJetSelection(1, -1, ZWjetID));
+  const TopJetId higgs_one_btag_jetID = AndId<TopJet>(ZPrimeTotTPrimeHiggsTag(100,150), Tau21(1) );
+  const TopJetId topjetID = AndId<TopJet>(Type2TopTag(150,220,Type2TopTag::MassType::groomed), Tau32(0.57));
+  tagger_sel.reset(new NTopJetSelection(1, -1, topjetID));
   
   //Genral
   const std::string ttbar_gen_label ("ttbargen");
@@ -309,12 +314,13 @@ bool ZPrimeTotTPrimeMisstagModule::process(Event & event) {
 
 
   uhh2::Event::TriggerIndex ti_HT;
-  ti_HT=event.get_trigger_index("HLT_PFHT800_v*");
+  ti_HT=event.get_trigger_index("HLT_PFHT900_v*");
   bool HT_trigger = event.passes_trigger(ti_HT);
   if(!HT_trigger) return false;
 
   topjet_cleaner->process(event);
-  mass_cleaner->process(event);
+  //  mass_cleaner->process(event);
+  mass_cleaner30GeV->process(event);
 
   //  std::cout<<"In MisstagModule: vor Input"<<std::endl;
   input_h_event ->fill(event);

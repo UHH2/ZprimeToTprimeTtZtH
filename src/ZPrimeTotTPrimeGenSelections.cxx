@@ -551,8 +551,16 @@ void ZPrimeGen::DecayChannel( const vector<GenParticle> & genparticles ){
   else Wleptop = *leptop.daughter(&genparticles,2);
   }
  if(hadtop.daughter(&genparticles,1)&& hadtop.daughter(&genparticles,2)){
-  if(abs(hadtop.daughter(&genparticles,1)->pdgId()) == 24 ) Whadtop =  *hadtop.daughter(&genparticles,1);
-  else Whadtop = *hadtop.daughter(&genparticles,2);
+   if(abs(hadtop.daughter(&genparticles,1)->pdgId()) == 24 ){
+     Whadtop =  *hadtop.daughter(&genparticles,1);
+     Whadtopq1 =  *Whadtop.daughter(&genparticles,1);
+     Whadtopq2 =  *Whadtop.daughter(&genparticles,2);
+
+   }  else {
+     Whadtop = *hadtop.daughter(&genparticles,2);
+     Whadtopq1 =  *Whadtop.daughter(&genparticles,1);
+     Whadtopq2 =  *Whadtop.daughter(&genparticles,2);
+   }
   }
 
   //return n_vector;
@@ -648,6 +656,12 @@ GenParticle ZPrimeGen::Quark2()const{
 }
 GenParticle ZPrimeGen::BHad()const{
   return bhad;
+}
+GenParticle ZPrimeGen::WHadQ1()const{
+  return Whadtopq1;
+}
+GenParticle ZPrimeGen::WHadQ2()const{
+  return Whadtopq2;
 }
 
 

@@ -5,6 +5,7 @@
 #include "UHH2/common/include/PartonHT.h"
 
 #include "TH1F.h"
+#include "TH2F.h"
 #include <iostream>
 
 using namespace std;
@@ -154,6 +155,23 @@ ZPrimeTotTPrimeHists::ZPrimeTotTPrimeHists(Context & ctx, const string & dirname
  //patron HT
  book<TH1F>("partonht", "partonht", 2000, 0, 2000);
  isMC = (ctx.get("dataset_type") == "MC");
+
+ //// MET
+ met__pt = book<TH1F>("met__pt", ";MET [GeV]", 180, 0, 1800);
+ met__phi = book<TH1F>("met__phi", ";MET #phi", 72, -3.6, 3.6);
+ met_VS_dphi_lep1 = book<TH2F>("met_VS_dphi_lep1", ";MET [GeV];#Delta#phi(MET, l1)", 180, 0, 1800, 60, 0, 3.6);
+ met_VS_dphi_jet1 = book<TH2F>("met_VS_dphi_jet1", ";MET [GeV];#Delta#phi(MET, l1)", 180, 0, 1800, 60, 0, 3.6);
+ met_VS_dphi_jet2 = book<TH2F>("met_VS_dphi_jet2", ";MET [GeV];#Delta#phi(MET, l1)", 180, 0, 1800, 60, 0, 3.6);
+ met_VS_dphi_jet3 = book<TH2F>("met_VS_dphi_jet3", ";MET [GeV];#Delta#phi(MET, l1)", 180, 0, 1800, 60, 0, 3.6);
+
+
+ met_VS_dphi_lep1_a = book<TH2F>("met_VS_dphi_lep1_a", ";MET [GeV];#Delta#phi(MET, l1)", 180, 0, 1800, 60, 0, 3.6);
+ met_VS_dphi_jet1_a = book<TH2F>("met_VS_dphi_jet1_a", ";MET [GeV];#Delta#phi(MET, l1)", 180, 0, 1800, 60, 0, 3.6);
+ met_VS_dphi_jet2_a = book<TH2F>("met_VS_dphi_jet2_a", ";MET [GeV];#Delta#phi(MET, l1)", 180, 0, 1800, 60, 0, 3.6);
+ met_VS_dphi_jet3_a = book<TH2F>("met_VS_dphi_jet3_a", ";MET [GeV];#Delta#phi(MET, l1)", 180, 0, 1800, 60, 0, 3.6);
+
+ //PartonW
+ book<TH1F>("partonWPt", "P_{T}", 1000, 0, 1000); 
 }
 
 
@@ -512,6 +530,38 @@ const auto & ttbargen = event.get(h_ttbargen);
   auto pht = PartonHT::calculate(*event.genparticles);  
   hist("partonht")->Fill(pht,weight);
   }
+
+
+
+  // MET
+  met__pt->Fill(event.met->pt(), weight);
+  met__phi->Fill(event.met->phi(), weight);
+  const Particle* lep1(0);
+  float max_lep_pt(0.);
+  for(const auto& l : *event.muons)     if(l.pt() > max_lep_pt){ lep1 = &l; max_lep_pt = l.pt(); }
+  for(const auto& l : *event.electrons) if(l.pt() > max_lep_pt){ lep1 = &l; max_lep_pt = l.pt(); }
+
+  /* triangular cuts vars */
+  if(lep1)               met_VS_dphi_lep1->Fill(event.met->pt(), fabs(uhh2::deltaPhi(*event.met, *lep1))            , weight);
+  if(event.jets->size()) met_VS_dphi_jet1->Fill(event.met->pt(), fabs(uhh2::deltaPhi(*event.met, event.jets->at(0))), weight);
+  if(event.jets->size()>1) met_VS_dphi_jet2->Fill(event.met->pt(), fabs(uhh2::deltaPhi(*event.met, event.jets->at(1))), weight);
+  if(event.jets->size()>2) met_VS_dphi_jet3->Fill(event.met->pt(), fabs(uhh2::deltaPhi(*event.met, event.jets->at(2))), weight);
+
+  if(lep1)               met_VS_dphi_lep1_a->Fill(event.met->pt()/75, fabs(fabs(uhh2::deltaPhi(*event.met, *lep1))-1.5)            , weight);
+  if(event.jets->size()) met_VS_dphi_jet1_a->Fill(event.met->pt()/75, fabs(fabs(uhh2::deltaPhi(*event.met, event.jets->at(0)))-1.5), weight);
+  if(event.jets->size()>1) met_VS_dphi_jet2_a->Fill(event.met->pt()/75, fabs(fabs(uhh2::deltaPhi(*event.met, event.jets->at(1)))-1.5), weight);
+  if(event.jets->size()>2) met_VS_dphi_jet3_a->Fill(event.met->pt()/75, fabs(fabs(uhh2::deltaPhi(*event.met, event.jets->at(2)))-1.5), weight);
+
+  double Wpt=10000;
+  //PartonWpt
+  if(isMC){
+    std::vector<GenParticle> & genparticles = *event.genparticles;
+    
+    for(const auto & gp : genparticles){
+    if(abs(gp.pdgId())==24) Wpt = gp.pt();
+    }
+  }
+    hist("partonWPt")->Fill(Wpt,weight);
 }
 
 ZPrimeTotTPrimeHists::~ZPrimeTotTPrimeHists(){}

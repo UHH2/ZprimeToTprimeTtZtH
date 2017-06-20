@@ -7,6 +7,7 @@
 #include "UHH2/ZprimeToTprimeTtZtH/include/ZPrimeTotTPrimeReconstructionHypothesisDiscriminators.h"
 #include "UHH2/common/include/TopJetIds.h"
 #include "UHH2/common/include/Utils.h"
+#include "TH2F.h"
 
 
   class EffHists: public uhh2::Hists {
@@ -25,6 +26,7 @@
     double matching;
 
     std::string m_discriminator_name;
+    TH2F *Wmass_rec_vs_pt;
   };
 
 

@@ -2,7 +2,6 @@
 #include "UHH2/core/include/Utils.h"
 #include "UHH2/ZprimeToTprimeTtZtH/include/EffHists.h"
 #include "UHH2/common/include/TTbarGen.h"
-#include "TH1F.h"
 
 
 using namespace std;
@@ -136,6 +135,9 @@ EffHists::EffHists(Context & ctx, const string & dirname, const std::string & hy
   //////////////////////////////////    MatchingCuts   //////////////////////////////////////////////////////
   book<TH1F>("matchingCut_WTopjets", "DeltaR between W and Topjets",50,0,5);
   book<TH1F>("matchingCut_TopTopjets", "DeltaR between Top and Topjets",50,0,5);
+
+  ////////////////////////////////   rec W mass over pT 2D /////////////////////////////////////////////////
+  Wmass_rec_vs_pt=book<TH2F>("Wmass_rec_vs_pt","W mass rec vs pt",1000,0,1000,120,40,160);
 
   //////////////////////////////////    Handles   //////////////////////////////////////////////////////
 
@@ -370,6 +372,9 @@ void EffHists::fill(const Event & event){
     }
 
     hist("reco_mass_W")->Fill(mass_W,weight);
+    //hier  
+    double w_pt =  hyp->W_v4().pt();
+    Wmass_rec_vs_pt->Fill(w_pt,mass_W,weight);
     double mass_leptop=0;
     if(hyp->toplep_v4().isTimelike()) mass_leptop = hyp->toplep_v4().M();
     else mass_leptop = sqrt(hyp->toplep_v4().mass2());

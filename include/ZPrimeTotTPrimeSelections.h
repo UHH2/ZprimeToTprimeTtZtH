@@ -9,6 +9,8 @@
 #include "UHH2/core/include/Event.h"
 #include "UHH2/common/include/TopJetIds.h"
 #include "UHH2/common/include/Utils.h"
+#include "TH2F.h"
+#include <TGraphAsymmErrors.h>
 
 namespace uhh2examples {
     
@@ -34,6 +36,26 @@ namespace uhh2examples {
     float ptmin1, ptmin2, etamax;
   };
 
+ class ZPrimeTotTPrimePartonW: public uhh2::Selection {
+  public:
+    ZPrimeTotTPrimePartonW();
+    virtual bool passes(const uhh2::Event & event) override;
+  private:
+   
+  };
+
+class ElectronTriggerWeights: public uhh2::AnalysisModule{
+
+ public:
+  explicit ElectronTriggerWeights(uhh2::Context & ctx, TString path_, TString SysDirection_);
+  virtual bool process(uhh2::Event & event) override;
+
+ private:
+  TString path, SysDirection;
+  std::unique_ptr<TGraphAsymmErrors> Eff_lowpt_MC, Eff_lowpt_DATA, Eff_highpt_MC, Eff_highpt_DATA;
+
+};
+
  class ZPrimeTotTPrimeNTopJetCut: public uhh2::Selection {
   public:
     ZPrimeTotTPrimeNTopJetCut(int nmin_, int nmax_, float ptmin1_,float ptmin2_, float etamax_);
@@ -54,6 +76,14 @@ namespace uhh2examples {
   class ZPrimeTotTPrimeTopMassCut: public uhh2::Selection{
   public:
     ZPrimeTotTPrimeTopMassCut(float mmin_, float mmax_);
+    virtual bool passes(const uhh2::Event & event) override;
+  private:
+    float mmin, mmax;
+  };
+
+  class ZPrimeTotTPrimeDRele: public uhh2::Selection{
+  public:
+    ZPrimeTotTPrimeDRele(float mmin_, float mmax_);
     virtual bool passes(const uhh2::Event & event) override;
   private:
     float mmin, mmax;
@@ -134,6 +164,14 @@ private:
     double ht_min, ht_max;
  };
 
+ /////
+ class HtJetsSelection: public uhh2::Selection {
+  public:
+    explicit HtJetsSelection(double ht_min=0., double ht_max=-1);
+    virtual bool passes(const uhh2::Event & event);
+ private:
+    double ht_min, ht_max;
+ };
 
 /////
 
@@ -262,6 +300,16 @@ private:
    private:
     float min_deltaR_, min_pTrel_;
   };
+// ////////////////////////////////////////////////////////
+
+class TriangularCuts : public Selection {
+   public:
+    explicit TriangularCuts(float, float);
+    virtual bool passes(const Event&) override;
+
+   private:
+    float a_, b_;
+};
 
 // ////////////////////////////////////////////////////////
 class ZPrimeTotTPrimeChiCut:public Selection{
@@ -316,6 +364,26 @@ public:
 private:
     double threshold;
 };
+
+
+// ////////////////////////////////////////////////////////
+ class TopjetMassCleaner{
+ public:
+ TopjetMassCleaner(double min_mass_):min_mass(min_mass_){};
+
+   bool operator()(const TopJet & p, const uhh2::Event & event)const{
+     auto subjets = p.subjets();
+     LorentzVector sumLorenzv4;
+     for (auto & subjet : subjets) {
+       sumLorenzv4 += subjet.v4();
+     }
+     return sumLorenzv4.M() > min_mass;
+  }
+
+ private:
+   double min_mass;
+};
+
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
 class UnHiggsTag {
 public:
@@ -372,3 +440,6 @@ private:
     JetId btagid_;
 
 };
+
+
+

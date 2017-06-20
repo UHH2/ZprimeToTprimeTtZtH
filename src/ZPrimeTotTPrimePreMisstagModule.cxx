@@ -162,16 +162,16 @@ ZPrimeTotTPrimePreMisstagModule::ZPrimeTotTPrimePreMisstagModule(uhh2::Context& 
     JEC_AK4_G =  JERFiles::Summer16_23Sep2016_V4_G_L123_AK4PFchs_DATA;
     JEC_AK4_H =  JERFiles::Summer16_23Sep2016_V4_H_L123_AK4PFchs_DATA;
     
-    JEC_AK8_BCD =  JERFiles::Summer16_23Sep2016_V4_BCD_L123_AK4PFchs_DATA;
-    JEC_AK8_EF =  JERFiles::Summer16_23Sep2016_V4_EF_L123_AK4PFchs_DATA;
-    JEC_AK8_G =  JERFiles::Summer16_23Sep2016_V4_G_L123_AK4PFchs_DATA;
-    JEC_AK8_H =  JERFiles::Summer16_23Sep2016_V4_H_L123_AK4PFchs_DATA;
+    JEC_AK8_BCD =  JERFiles::Summer16_23Sep2016_V4_BCD_L123_AK8PFchs_DATA;
+    JEC_AK8_EF =  JERFiles::Summer16_23Sep2016_V4_EF_L123_AK8PFchs_DATA;
+    JEC_AK8_G =  JERFiles::Summer16_23Sep2016_V4_G_L123_AK8PFchs_DATA;
+    JEC_AK8_H =  JERFiles::Summer16_23Sep2016_V4_H_L123_AK8PFchs_DATA;
    
   }
 
  if(isMC){ 
     jet_corrector.reset(new JetCorrector(ctx, JEC_AK4));
-    topjet_corrector.reset(new TopJetCorrector(ctx, JEC_AK4));
+    topjet_corrector.reset(new TopJetCorrector(ctx, JEC_AK8));
     subjet_corrector.reset(new SubJetCorrector(ctx,JEC_AK4));
     jetlepton_cleaner.reset(new JetLeptonCleaner(ctx,JEC_AK4));
     jetlepton_cleaner->set_drmax(.4);
@@ -226,7 +226,7 @@ ZPrimeTotTPrimePreMisstagModule::ZPrimeTotTPrimePreMisstagModule(uhh2::Context& 
   muo_sel.reset(new NMuonSelection(0,0)); 
   ele_sel.reset(new NElectronSelection(0,0));
   topjet2_sel.reset(new NTopJetSelection(2,-1,TopJetId(PtEtaCut( 250., 2.4)))); 
-  ht_sel.reset(new HtSelection(1000,-1));
+  ht_sel.reset(new HtJetsSelection(1000,-1));
   
   //Genral
   const std::string ttbar_gen_label ("ttbargen");
@@ -321,7 +321,7 @@ bool ZPrimeTotTPrimePreMisstagModule::process(Event & event) {
   }
 
   uhh2::Event::TriggerIndex ti_HT;
-  ti_HT=event.get_trigger_index("HLT_PFHT800_v*");
+  ti_HT=event.get_trigger_index("HLT_PFHT900_v*");
   bool HT_trigger = event.passes_trigger(ti_HT);
   if(!HT_trigger) return false;
 

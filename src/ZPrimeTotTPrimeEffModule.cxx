@@ -27,6 +27,7 @@
 #include <UHH2/common/include/TriggerSelection.h>
 #include "UHH2/common/include/LuminosityHists.h"
 #include <fstream>
+#include "UHH2/common/include/TopPtReweight.h"
 
 #include <UHH2/ZprimeToTprimeTtZtH/include/ZPrimeTotTPrimeSelections.h>
 #include <UHH2/ZprimeToTprimeTtZtH/include/ZPrimeTotTPrimeHists.h>
@@ -59,9 +60,9 @@ private:
   //cleaner
 
   std::unique_ptr<MuonCleaner>     muo_cleaner;
-  //  std::unique_ptr<ElectronCleaner> ele_cleaner;
+  std::unique_ptr<ElectronCleaner> ele_cleaner;
 
- std::unique_ptr<JetCorrector> jet_corrector;
+  std::unique_ptr<JetCorrector> jet_corrector;
   std::unique_ptr<JetCorrector> jet_corrector_BCD;
   std::unique_ptr<JetCorrector> jet_corrector_EF;
   std::unique_ptr<JetCorrector> jet_corrector_G;
@@ -111,6 +112,7 @@ private:
   std::unique_ptr<uhh2::AnalysisModule> muonscale;
   std::unique_ptr<uhh2::AnalysisModule> triggerscale;
   std::unique_ptr<uhh2::AnalysisModule> btagwAK4;
+  //  std::unique_ptr<uhh2::AnalysisModule> topptreweighting_all;
 
   //Selections
   std::unique_ptr<AndSelection>  metfilters_selection;
@@ -324,7 +326,7 @@ private:
   bool do_scale_variation;
 
   //general
-  std::string filename;
+  TString filename;
   double distance;
   double matching;
   uhh2::Event::Handle<double> h_ht;
@@ -356,8 +358,9 @@ ZPrimeTotTPrimeEffModule::ZPrimeTotTPrimeEffModule(uhh2::Context& ctx){
     pileup_SF.reset(new MCPileupReweight(ctx,ctx.get("puVariation"))); 
     lumiweight.reset(new MCLumiWeight(ctx)); 
     btagwAK4.reset(new MCBTagScaleFactor(ctx, CSVBTag::WP_MEDIUM,"jets",sysAK4,"mujets","incl","MCBtagEfficienciesAK4","_AK4","BTagCalibration")); 
-    muonscale.reset(new MCMuonScaleFactor(ctx,data_dir_path + "MuonID_EfficienciesAndSF_average_RunBtoH.root","MC_NUM_MediumID2016_DEN_genTracks_PAR_pt_eta", 1.));
-    triggerscale.reset(new MCMuonScaleFactor(ctx,data_dir_path + "MuonTrigger_EfficienciesAndSF_average_RunBtoH.root","IsoMu50_OR_IsoTkMu50_PtEtaBins", 1.));
+    muonscale.reset(new MCMuonScaleFactor(ctx,data_dir_path + "MuonID_EfficienciesAndSF_average_RunBtoH.root","MC_NUM_TightID_DEN_genTracks_PAR_pt_eta", 1.,"Tight", true, ctx.get("Systematic_MuonID")));
+    triggerscale.reset(new MCMuonScaleFactor(ctx,data_dir_path + "MuonTrigger_EfficienciesAndSF_average_RunBtoH.root","IsoMu50_OR_IsoTkMu50_PtEtaBins", 1., "trigger", true, ctx.get("Systematic_MuonTrigger") )); 
+    //    topptreweighting_all.reset(new TopPtReweight(ctx, 0.0615 , -0.0005 ,"ttbargen","weight_ttbar", true,1));
   }else     lumi_sel.reset(new LumiSelection(ctx));
 
   PrimaryVertexId pvid=StandardPrimaryVertexId();
@@ -386,16 +389,16 @@ ZPrimeTotTPrimeEffModule::ZPrimeTotTPrimeEffModule(uhh2::Context& ctx){
     JEC_AK4_G =  JERFiles::Summer16_23Sep2016_V4_G_L123_AK4PFchs_DATA;
     JEC_AK4_H =  JERFiles::Summer16_23Sep2016_V4_H_L123_AK4PFchs_DATA;
     
-    JEC_AK8_BCD =  JERFiles::Summer16_23Sep2016_V4_BCD_L123_AK4PFchs_DATA;
-    JEC_AK8_EF =  JERFiles::Summer16_23Sep2016_V4_EF_L123_AK4PFchs_DATA;
-    JEC_AK8_G =  JERFiles::Summer16_23Sep2016_V4_G_L123_AK4PFchs_DATA;
-    JEC_AK8_H =  JERFiles::Summer16_23Sep2016_V4_H_L123_AK4PFchs_DATA;
+    JEC_AK8_BCD =  JERFiles::Summer16_23Sep2016_V4_BCD_L123_AK8PFchs_DATA;
+    JEC_AK8_EF =  JERFiles::Summer16_23Sep2016_V4_EF_L123_AK8PFchs_DATA;
+    JEC_AK8_G =  JERFiles::Summer16_23Sep2016_V4_G_L123_AK8PFchs_DATA;
+    JEC_AK8_H =  JERFiles::Summer16_23Sep2016_V4_H_L123_AK8PFchs_DATA;
    
   }
 
  if(isMC){ 
     jet_corrector.reset(new JetCorrector(ctx, JEC_AK4));
-    topjet_corrector.reset(new TopJetCorrector(ctx, JEC_AK4));
+    topjet_corrector.reset(new TopJetCorrector(ctx, JEC_AK8));
     subjet_corrector.reset(new SubJetCorrector(ctx,JEC_AK4));
     jetlepton_cleaner.reset(new JetLeptonCleaner(ctx,JEC_AK4));
     jetlepton_cleaner->set_drmax(.4);
@@ -430,14 +433,14 @@ ZPrimeTotTPrimeEffModule::ZPrimeTotTPrimeEffModule(uhh2::Context& ctx){
 
 
   //// OBJ CLEANING
-  muo_cleaner.reset(new MuonCleaner    (AndId<Muon>    (PtEtaCut  (53., 2.1), MuonIDTight())));
+  muo_cleaner.reset(new MuonCleaner    (AndId<Muon>    (PtEtaCut  (53., 2.4), MuonIDTight())));
   //  ele_cleaner.reset(new ElectronCleaner(AndId<Electron>(PtEtaSCCut(50., 2.4), ElectronID_MVAnotrig_Spring15_25ns_loose)));
 
   const JetId jetID(JetPFID(JetPFID::WP_LOOSE));
   jet_IDcleaner.reset(new JetCleaner(ctx,jetID));
   jet_cleaner2.reset(new JetCleaner(ctx,15., 2.4));
   jet_cleaner1.reset(new JetCleaner(ctx,30., 2.4));
-  topjet_PTcleaner.reset(new TopJetCleaner(ctx,TopJetId(PtEtaCut(200,2.4,300))));
+  topjet_PTcleaner.reset(new TopJetCleaner(ctx,TopJetId(PtEtaCut(250,2.4,300))));
   ak4_cleaner.reset(new JetCleaner(ctx,JetId(ZPrimeTotTPrimeAK4cleaner(1.2))));
   topjetlepton_cleaner.reset(new TopJetLeptonDeltaRCleaner(.8));
  
@@ -465,7 +468,7 @@ ZPrimeTotTPrimeEffModule::ZPrimeTotTPrimeEffModule(uhh2::Context& ctx){
 
   twodcut_sel.reset(new TwoDCut(.4, 40.));     
   jet_sel.reset(new NJetSelection(2,-1, JetId(PtEtaCut( 50., 2.4))));         
-  topjet_sel.reset(new NTopJetSelection(1,-1, TopJetId(PtEtaCut( 200., 2.4,400)))); 
+  topjet_sel.reset(new NTopJetSelection(1,-1, TopJetId(PtEtaCut( 200., 2.4)))); 
   njet2_sel.reset(new NJetSelection(2,2, JetId(PtEtaCut( 30., 2.4))));
   njet3_sel.reset(new NJetSelection(2,3, JetId(PtEtaCut( 30., 2.4))));
 
@@ -494,7 +497,9 @@ ZPrimeTotTPrimeEffModule::ZPrimeTotTPrimeEffModule(uhh2::Context& ctx){
   chi2cut10_sel.reset(new ZPrimeTotTPrimeChiCut( ctx,10,ttbar_hyps_label,ttbar_chi2_label));
 
  // Select of the inclusiv ttbar sample only events from 0 to 700 GeV
-  if(ctx.get("dataset_version") == "TTbarAll"){ genmttbar_sel.reset(new GenMttbarCut(ctx, 0., 700., ttbar_gen_label));}
+  if(ctx.get("dataset_version")=="TTbarAll"){ genmttbar_sel.reset(new GenMttbarCut(ctx, 0., 700., ttbar_gen_label));}
+  else if(ctx.get("dataset_version")=="TTbarAll_right"){ genmttbar_sel.reset(new GenMttbarCut(ctx, 0., 700., ttbar_gen_label));}
+  else if(ctx.get("dataset_version")=="TTbarAll_wrong"){ genmttbar_sel.reset(new GenMttbarCut(ctx, 0., 700., ttbar_gen_label));}
   else genmttbar_sel.reset(new uhh2::AndSelection(ctx));
 
  //divide event.jets in reco used jets and the rest
@@ -737,13 +742,13 @@ bool ZPrimeTotTPrimeEffModule::process(uhh2::Event& event){
   
 
   //Select of the inclusiv ttbar sample only events from 0 to 700 GeV
-  if(filename  == "TTbarAll"){
+  if(filename.Contains("TTbar")){
     ttgenprod->process(event);
-   
     if(!genmttbar_sel->passes(event)) return false;
   }
-  if(filename  == "TTbar_Mtt1000toINFT" || filename  == "TTbar_Mtt0700to1000") ttgenprod->process(event);
  
+  //  if(filename.Contains("TTbar"))topptreweighting_all->process(event);
+
   //common Modules
   /* luminosity sections from CMS silver-JSON file */
   if(event.isRealData && !lumi_sel->passes(event)) return false;
@@ -762,34 +767,39 @@ bool ZPrimeTotTPrimeEffModule::process(uhh2::Event& event){
 
  ///correctors
   if(isMC){
+    jetlepton_cleaner->process(event);
     jet_corrector->process(event);
     topjet_corrector->process(event);
     subjet_corrector->process(event);
-    jetlepton_cleaner->process(event);
+    jet_corrector->correct_met(event);
   }else{
-    if(event.run <= runnr_BCD)  {       
+    if(event.run <= runnr_BCD)  {    
+      jetlepton_cleaner_BCD->process(event);   
       jet_corrector_BCD->process(event);
       topjet_corrector_BCD->process(event);
       subjet_corrector_BCD->process(event);
-      jetlepton_cleaner_BCD->process(event);
+      jet_corrector_BCD->correct_met(event);
     }
-    else if(event.run < runnr_EF){       
+    else if(event.run < runnr_EF){    
+      jetlepton_cleaner_EF->process(event);   
       jet_corrector_EF->process(event);
       topjet_corrector_EF->process(event);
       subjet_corrector_EF->process(event);
-      jetlepton_cleaner_EF->process(event);
+      jet_corrector_EF->correct_met(event);
     } 
-    else if(event.run <= runnr_G) {       
+    else if(event.run <= runnr_G) {   
+      jetlepton_cleaner_G->process(event);    
       jet_corrector_G->process(event);
       topjet_corrector_G->process(event);
       subjet_corrector_G->process(event);
-      jetlepton_cleaner_G->process(event);
+      jet_corrector_G->correct_met(event);
     } 
-    else if(event.run > runnr_G) {       
+    else if(event.run > runnr_G) {    
+      jetlepton_cleaner_H->process(event);   
       jet_corrector_H->process(event);
       topjet_corrector_H->process(event);
       subjet_corrector_H->process(event);
-      jetlepton_cleaner_H->process(event);
+      jet_corrector_H->correct_met(event);
     } 
   }
 
@@ -1039,6 +1049,7 @@ bool ZPrimeTotTPrimeEffModule::process(uhh2::Event& event){
   WBoson->clear();
   WBoson->reserve(event.jets->size());
   WBoson->push_back(hyp->HZW());
+  if(berror)  std::cout<<"Size W Boson "<<WBoson->size()<<std::endl;
   event.set(h_WTopjet,*WBoson);
 
   /////////////////AK4 cleaning end ////////////////
@@ -1077,43 +1088,50 @@ bool ZPrimeTotTPrimeEffModule::process(uhh2::Event& event){
   chi2min_reco_h->fill(event);
   tagger_reco_h->fill(event);
 
- mass_cleaner->process(event);
+  mass_cleaner->process(event);
 
   if(berror)   std::cout<<"SelectionModule L:294 vor chi2cut Selection"<<std::endl;  
-  ////////////////////////////////////////////////////////// chi2cut Selction //////////////////////////////////////////////////////////////////////////////////
+  // ////////////////////////////////////////////////////////// chi2cut Selction //////////////////////////////////////////////////////////////////////////////////
   bool pass_chi2cut = chi2cut_sel->passes(event);
   if(!pass_chi2cut) return false;
 
   lumi_h->fill(event); 
 
-  topjet_chi2cut_comb_h->fill(event);
-  topjet_chi2cut_w_h->fill(event);
-  topjet_chi2cut_other_h->fill(event);
-  jet_chi2cut_comb_h->fill(event);
-  jet_chi2cut_btag_h->fill(event);
-  jet_chi2cut_other_h->fill(event);
-  eff_chi2cut_h->fill(event);
-  muon_chi2cut_h->fill(event);
-  event_chi2cut_h->fill(event);
-  chi2min_chi2cut_h->fill(event);
-  tagger_chi2cut_h->fill(event);
+  // topjet_chi2cut_comb_h->fill(event);
+  // topjet_chi2cut_w_h->fill(event);
+  // topjet_chi2cut_other_h->fill(event);
+  // jet_chi2cut_comb_h->fill(event);
+  // jet_chi2cut_btag_h->fill(event);
+  // jet_chi2cut_other_h->fill(event);
+  // eff_chi2cut_h->fill(event);
+  // muon_chi2cut_h->fill(event);
+  // event_chi2cut_h->fill(event);
+  // chi2min_chi2cut_h->fill(event);
+  // tagger_chi2cut_h->fill(event);
 
-  if(berror)   std::cout<<"SelectionModule L:294 vor Z/W tag"<<std::endl;  
-  ////////////////////////////////////////////////////////// zw tag Selction //////////////////////////////////////////////////////////////////////////////////
-   bool pass_zwtag = ZWtag_sel->passes(event);
-  if(!pass_zwtag) return false;
-  input_zwtag_h->fill(event);
-  topjet_zwtag_comb_h->fill(event);
-  topjet_zwtag_w_h->fill(event);
-  topjet_zwtag_other_h->fill(event);
-  jet_zwtag_comb_h->fill(event);
-  jet_zwtag_btag_h->fill(event);
-  jet_zwtag_other_h->fill(event);
-  eff_zwtag_h->fill(event);
-  muon_zwtag_h->fill(event);
-  event_zwtag_h->fill(event);
-  chi2min_zwtag_h->fill(event);
-  tagger_zwtag_h->fill(event);
+  // //change topjet collection to only tag W of the reconstruction
+  // std::vector<TopJet>* topjets(new std::vector<TopJet> (*event.topjets));
+  // event.topjets->clear();
+  // event.topjets->reserve(WBoson->size());
+  // if(berror)  std::cout<<"Size W Boson after chi2 cut  "<<WBoson->size()<<std::endl;
+  // for(auto j:*WBoson)event.topjets->push_back(j);
+
+  // if(berror)   std::cout<<"SelectionModule L:294 vor Z/W tag"<<std::endl;  
+  // ////////////////////////////////////////////////////////// zw tag Selction //////////////////////////////////////////////////////////////////////////////////
+  //  bool pass_zwtag = ZWtag_sel->passes(event);
+  // if(!pass_zwtag) return false;
+  // input_zwtag_h->fill(event);
+  // topjet_zwtag_comb_h->fill(event);
+  // topjet_zwtag_w_h->fill(event);
+  // topjet_zwtag_other_h->fill(event);
+  // jet_zwtag_comb_h->fill(event);
+  // jet_zwtag_btag_h->fill(event);
+  // jet_zwtag_other_h->fill(event);
+  // eff_zwtag_h->fill(event);
+  // muon_zwtag_h->fill(event);
+  // event_zwtag_h->fill(event);
+  // chi2min_zwtag_h->fill(event);
+  // tagger_zwtag_h->fill(event);
 
 
  ///////////////////////////////////// hists for wrong and right W //////////////////////////////
@@ -1148,7 +1166,14 @@ bool ZPrimeTotTPrimeEffModule::process(uhh2::Event& event){
 	// event_chi2cut_h->fill(event);
 	// chi2min_chi2cut_h->fill(event);
 	// tagger_chi2cut_h->fill(event);
- 	// bool pass_zwtag = ZWtag_sel->passes(event);
+
+	// //change topjet collection to only tag W of the reconstruction
+	// std::vector<TopJet>* topjets(new std::vector<TopJet> (*event.topjets));
+	// event.topjets->clear();
+	// event.topjets->reserve(WBoson->size());
+	// for(auto j:*WBoson)event.topjets->push_back(j);
+
+	// bool pass_zwtag = ZWtag_sel->passes(event);
  	// if(!pass_zwtag) return false;
  	// input_zwtag_h->fill(event);
  	// topjet_zwtag_comb_h->fill(event);
@@ -1165,34 +1190,40 @@ bool ZPrimeTotTPrimeEffModule::process(uhh2::Event& event){
  
       }else{
 	// 	wrong
-	// topjet_chi2cut_comb_h->fill(event);
-	// topjet_chi2cut_w_h->fill(event);
-	// topjet_chi2cut_other_h->fill(event);
-	// jet_chi2cut_comb_h->fill(event);
-	// jet_chi2cut_btag_h->fill(event);
-	// jet_chi2cut_other_h->fill(event);
-	// eff_chi2cut_h->fill(event);
-	// muon_chi2cut_h->fill(event);
-	// event_chi2cut_h->fill(event);
-	// chi2min_chi2cut_h->fill(event);
-	// tagger_chi2cut_h->fill(event);
+	topjet_chi2cut_comb_h->fill(event);
+	topjet_chi2cut_w_h->fill(event);
+	topjet_chi2cut_other_h->fill(event);
+	jet_chi2cut_comb_h->fill(event);
+	jet_chi2cut_btag_h->fill(event);
+	jet_chi2cut_other_h->fill(event);
+	eff_chi2cut_h->fill(event);
+	muon_chi2cut_h->fill(event);
+	event_chi2cut_h->fill(event);
+	chi2min_chi2cut_h->fill(event);
+	tagger_chi2cut_h->fill(event);
 
-	// if(berror)   std::cout<<"SelectionModule L:294 vor Z/W tag"<<std::endl;  
-	// ////////////////////////////////////////////////////////////////////////////////zw Selction //////////////////////////////////////////////////////////////////////////////////
-	// bool pass_zwtag = ZWtag_sel->passes(event);
-	// if(!pass_zwtag) return false;
-	// input_zwtag_h->fill(event);
-	// topjet_zwtag_comb_h->fill(event);
-	// topjet_zwtag_w_h->fill(event);
-	// topjet_zwtag_other_h->fill(event);
-	// jet_zwtag_comb_h->fill(event);
-	// jet_zwtag_btag_h->fill(event);
-	// jet_zwtag_other_h->fill(event);
-	// eff_zwtag_h->fill(event);
-	// muon_zwtag_h->fill(event);
-	// event_zwtag_h->fill(event);
-	// chi2min_zwtag_h->fill(event);
-	// tagger_zwtag_h->fill(event);
+	//change topjet collection to only tag W of the reconstruction
+	std::vector<TopJet>* topjets(new std::vector<TopJet> (*event.topjets));
+	event.topjets->clear();
+	event.topjets->reserve(WBoson->size());
+	for(auto j:*WBoson)event.topjets->push_back(j);
+
+	if(berror)   std::cout<<"SelectionModule L:294 vor Z/W tag"<<std::endl;  
+	////////////////////////////////////////////////////////////////////////////////zw Selction //////////////////////////////////////////////////////////////////////////////////
+	bool pass_zwtag = ZWtag_sel->passes(event);
+	if(!pass_zwtag) return false;
+	input_zwtag_h->fill(event);
+	topjet_zwtag_comb_h->fill(event);
+	topjet_zwtag_w_h->fill(event);
+	topjet_zwtag_other_h->fill(event);
+	jet_zwtag_comb_h->fill(event);
+	jet_zwtag_btag_h->fill(event);
+	jet_zwtag_other_h->fill(event);
+	eff_zwtag_h->fill(event);
+	muon_zwtag_h->fill(event);
+	event_zwtag_h->fill(event);
+	chi2min_zwtag_h->fill(event);
+	tagger_zwtag_h->fill(event);
 
       }
     }

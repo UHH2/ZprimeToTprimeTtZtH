@@ -70,6 +70,7 @@ private:
 
   std::unique_ptr<JetCleaner>       jet_cleaner;
   std::unique_ptr<JetResolutionSmearer> jetER_smearer;
+  std::unique_ptr<GenericJetResolutionSmearer> topjetER_smearer;
  
   std::unique_ptr<JetCleaner>                topjet_IDcleaner;
   std::unique_ptr<TopJetCleaner>             topjet_cleaner;
@@ -158,19 +159,20 @@ ZPrimeTotTPrimePreSelectionModule::ZPrimeTotTPrimePreSelectionModule(uhh2::Conte
     JEC_AK4_G =  JERFiles::Summer16_23Sep2016_V4_G_L123_AK4PFchs_DATA;
     JEC_AK4_H =  JERFiles::Summer16_23Sep2016_V4_H_L123_AK4PFchs_DATA;
     
-    JEC_AK8_BCD =  JERFiles::Summer16_23Sep2016_V4_BCD_L123_AK4PFchs_DATA;
-    JEC_AK8_EF =  JERFiles::Summer16_23Sep2016_V4_EF_L123_AK4PFchs_DATA;
-    JEC_AK8_G =  JERFiles::Summer16_23Sep2016_V4_G_L123_AK4PFchs_DATA;
-    JEC_AK8_H =  JERFiles::Summer16_23Sep2016_V4_H_L123_AK4PFchs_DATA;
+    JEC_AK8_BCD =  JERFiles::Summer16_23Sep2016_V4_BCD_L123_AK8PFchs_DATA;
+    JEC_AK8_EF =  JERFiles::Summer16_23Sep2016_V4_EF_L123_AK8PFchs_DATA;
+    JEC_AK8_G =  JERFiles::Summer16_23Sep2016_V4_G_L123_AK8PFchs_DATA;
+    JEC_AK8_H =  JERFiles::Summer16_23Sep2016_V4_H_L123_AK8PFchs_DATA;
   }
 
   if(isMC){ 
     jet_corrector.reset(new JetCorrector(ctx, JEC_AK4));
-    topjet_corrector.reset(new TopJetCorrector(ctx, JEC_AK4));
+    topjet_corrector.reset(new TopJetCorrector(ctx, JEC_AK8));
     subjet_corrector.reset(new SubJetCorrector(ctx,JEC_AK4));
     jetlepton_cleaner.reset(new JetLeptonCleaner(ctx,JEC_AK4));
     jetlepton_cleaner->set_drmax(.4);
     jetER_smearer.reset(new JetResolutionSmearer(ctx));
+    topjetER_smearer.reset(new GenericJetResolutionSmearer(ctx,"topjets","gentopjets"));
   }
   else {
    
@@ -296,6 +298,7 @@ bool ZPrimeTotTPrimePreSelectionModule::process(Event & event) {
     subjet_corrector->process(event);
     jetlepton_cleaner->process(event);
     jetER_smearer->process(event);
+    topjetER_smearer->process(event);
   }else{
     if(event.run <= runnr_BCD)  {       
       jet_corrector_BCD->process(event);

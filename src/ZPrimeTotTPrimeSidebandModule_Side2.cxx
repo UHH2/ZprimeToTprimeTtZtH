@@ -27,6 +27,7 @@
 #include <UHH2/common/include/TriggerSelection.h>
 #include "UHH2/common/include/LuminosityHists.h"
 #include <fstream>
+#include "UHH2/common/include/TopPtReweight.h"
 
 #include <UHH2/ZprimeToTprimeTtZtH/include/ZPrimeTotTPrimeSelections.h>
 #include <UHH2/ZprimeToTprimeTtZtH/include/ZPrimeTotTPrimeHists.h>
@@ -58,9 +59,10 @@ private:
 
   // cleaners
   std::unique_ptr<MuonCleaner>     muo_cleaner;
-  // std::unique_ptr<ElectronCleaner> ele_cleaner;
+  std::unique_ptr<ElectronCleaner> ele_cleaner1; 
+  std::unique_ptr<ElectronCleaner> ele_cleaner2; 
 
- std::unique_ptr<JetCorrector> jet_corrector;
+  std::unique_ptr<JetCorrector> jet_corrector;
   std::unique_ptr<JetCorrector> jet_corrector_BCD;
   std::unique_ptr<JetCorrector> jet_corrector_EF;
   std::unique_ptr<JetCorrector> jet_corrector_G;
@@ -89,7 +91,7 @@ private:
   std::unique_ptr<JetCleaner>      jet_cleaner2;
   std::unique_ptr<JetCleaner>      jet_cleaner1;
   std::unique_ptr<JetCleaner>      topjet_IDcleaner;
-  std::unique_ptr<TopJetCleaner>   topjet_cleaner;
+  std::unique_ptr<TopJetCleaner>   topjet_mass_cleaner;
   std::unique_ptr<TopJetCleaner>   toptag_cleaner;
   std::unique_ptr<TopJetCleaner>   higgstag_cleaner;
   std::unique_ptr<TopJetCleaner>   ZWtag_cleaner;
@@ -102,6 +104,8 @@ private:
   std::unique_ptr<TopJetLeptonDeltaRCleaner> topjetlepton_cleaner;
   std::unique_ptr<uhh2::Selection> triggerMu50_sel;
   std::unique_ptr<uhh2::Selection> triggerTrkMu50_sel;
+  std::unique_ptr<uhh2::Selection> triggerElec_sel1;
+  std::unique_ptr<uhh2::Selection> triggerElec_sel2;
   std::unique_ptr<AndSelection>  metfilters_selection;
 
  
@@ -110,8 +114,13 @@ private:
   std::unique_ptr<uhh2::AnalysisModule> pileup_SF;
   std::unique_ptr<uhh2::AnalysisModule> lumiweight;
   std::unique_ptr<uhh2::AnalysisModule> muonscale;
+  std::unique_ptr<uhh2::AnalysisModule> elecid2;
+  std::unique_ptr<uhh2::AnalysisModule> elecid1;
+  std::unique_ptr<uhh2::AnalysisModule> elecreco;
+  std::unique_ptr<uhh2::AnalysisModule> electrigger;
   std::unique_ptr<uhh2::AnalysisModule> triggerscale;
   std::unique_ptr<uhh2::AnalysisModule> btagwAK4;
+  std::unique_ptr<uhh2::AnalysisModule> topptreweighting_all;
 
   //Selections
   std::unique_ptr<uhh2::Selection> lumi_sel;
@@ -120,8 +129,10 @@ private:
   std::unique_ptr<uhh2::Selection> chi2cut_sel; // chi2min <50
   std::unique_ptr<uhh2::Selection> btag1_sel;
   std::unique_ptr<uhh2::Selection> btag0_sel;
+  std::unique_ptr<uhh2::Selection> met_sel7;
 
   std::unique_ptr<uhh2::Selection> twodcut_sel;// pt 20 rel 0.4
+  std::unique_ptr<uhh2::Selection> triangc_sel;
   std::unique_ptr<uhh2::Selection> met_sel;
   std::unique_ptr<uhh2::Selection> ht_sel;
  
@@ -149,6 +160,7 @@ private:
   // reconstruction TTBar for Background
   std::unique_ptr<uhh2::Selection> genmttbar_sel;
   std::unique_ptr<uhh2::AnalysisModule> ttgenprod;
+  std::unique_ptr<uhh2::Selection> genwpt_sel;
 
   
   ////////////////////HISTS///////////////////////////////////////
@@ -207,7 +219,16 @@ std::unique_ptr<Hists> higgs_top_chi2min_btag1_h;
   std::unique_ptr<Hists> jet_twodcut_h;
   std::unique_ptr<Hists> topjet_twodcut_h;
   std::unique_ptr<Hists> muon_twodcut_h;
- std::unique_ptr<Hists> event_twodcut_h;
+  std::unique_ptr<Hists> event_twodcut_h;
+
+  //Triangularcut Hists
+  std::unique_ptr<Hists> eff_triangcut_h;
+  std::unique_ptr<Hists> jet_triangcut_h;
+  std::unique_ptr<Hists> topjet_triangcut_h;
+  std::unique_ptr<Hists> muon_triangcut_h;
+  std::unique_ptr<Hists> electron_triangcut_h;
+  std::unique_ptr<Hists> event_triangcut_h;
+  std::unique_ptr<Hists> lumi_triangcut_h;
    
 //Higgstag Hists
   std::unique_ptr<TopJetHists> input_higgstag_h;
@@ -345,15 +366,20 @@ std::unique_ptr<Hists> higgs_top_chi2min_btag1_h;
 
 
   //general
-  std::string filename;
+  TString filename;
   uhh2::Event::Handle<std::vector<ZPrimeTotTPrimeReconstructionHypothesis> > h_ZprimeTotTPrime_hyps;
   uhh2::Event::Handle<double> h_ht;
   bool berror;
   bool isMC;
 
+  std::unique_ptr<AnalysisModule> syst_module;
+  bool do_scale_variation;
+
   const int runnr_BCD = 276811;
   const int runnr_EF = 278802;
   const int runnr_G = 280385;
+
+  TString elec_up_down;
 };
 
 
@@ -372,11 +398,19 @@ ZPrimeTotTPrimeSidebandModule_Side2::ZPrimeTotTPrimeSidebandModule_Side2(uhh2::C
   string sysAK4=ctx.get("btagging_sys", "central");
 
   if(isMC){ 
-    pileup_SF.reset(new MCPileupReweight(ctx)); 
+    pileup_SF.reset(new MCPileupReweight(ctx,ctx.get("puVariation"))); 
     lumiweight.reset(new MCLumiWeight(ctx)); 
-    btagwAK4.reset(new MCBTagScaleFactor(ctx, CSVBTag::WP_MEDIUM,"jets",sysAK4,"mujets","incl","MCBtagEfficienciesAK4","_AK4","BTagCalibration")); 
-    muonscale.reset(new MCMuonScaleFactor(ctx,data_dir_path + "MuonID_EfficienciesAndSF_average_RunBtoH.root","MC_NUM_MediumID2016_DEN_genTracks_PAR_pt_eta", 1.));
-    triggerscale.reset(new MCMuonScaleFactor(ctx,data_dir_path + "MuonTrigger_EfficienciesAndSF_average_RunBtoH.root","IsoMu50_OR_IsoTkMu50_PtEtaBins", 1.));
+    btagwAK4.reset(new MCBTagScaleFactor(ctx, CSVBTag::WP_MEDIUM,"jets",sysAK4,"mujets","incl","MCBtagEfficienciesAK4","_AK4","BTagCalibration"));  
+    if(channel_==muon){
+      muonscale.reset(new MCMuonScaleFactor(ctx,data_dir_path + "MuonID_EfficienciesAndSF_average_RunBtoH.root","MC_NUM_MediumID2016_DEN_genTracks_PAR_pt_eta", 1.,"MediumID2016", true, ctx.get("Systematic_MuonID")));
+      triggerscale.reset(new MCMuonScaleFactor(ctx,data_dir_path + "MuonTrigger_EfficienciesAndSF_average_RunBtoH.root","IsoMu50_OR_IsoTkMu50_PtEtaBins", 1., "trigger", true, ctx.get("Systematic_MuonTrigger") ));
+    }else if(channel_==elec){
+      // elecid2.reset(new MCElecScaleFactor(ctx, "/nfs/dust/cms/user/abenecke/CMSSW_8_0_24_patch1/src/UHH2/common/data/egammaEffi.txt_EGM2D_CutBased_Tight_ID.root", 1, "", ctx.get("Systematic_EleID")));
+      // electrigger.reset(new ElectronTriggerWeights(ctx,"/nfs/dust/cms/user/abenecke/CMSSW_8_0_24_patch1/src/UHH2/ZprimeToTprimeTtZtH/hist/ElectronEfficiencies.root",ctx.get("Systematic_EleTrigger")));
+      elecreco.reset(new MCElecScaleFactor(ctx, "/nfs/dust/cms/user/abenecke/CMSSW_8_0_24_patch1/src/UHH2/common/data/egammaEffi.txt_EGM2D_RecEff_Moriond17.root", 1, "", ctx.get("Systematic_EleReco")));
+      elecid1.reset(new MCElecScaleFactor(ctx, "/nfs/dust/cms/user/abenecke/CMSSW_8_0_24_patch1/src/UHH2/common/data/egammaEffi.txt_EGM2D_MVA90_ID.root", 1, "", ctx.get("Systematic_EleID")));
+    } 
+    topptreweighting_all.reset(new TopPtReweight(ctx, 0.0615 , -0.0005 ,"ttbargen","weight_ttbar", true,1));
   }
   else     lumi_sel.reset(new LumiSelection(ctx));
 
@@ -407,16 +441,16 @@ ZPrimeTotTPrimeSidebandModule_Side2::ZPrimeTotTPrimeSidebandModule_Side2(uhh2::C
     JEC_AK4_G =  JERFiles::Summer16_23Sep2016_V4_G_L123_AK4PFchs_DATA;
     JEC_AK4_H =  JERFiles::Summer16_23Sep2016_V4_H_L123_AK4PFchs_DATA;
     
-    JEC_AK8_BCD =  JERFiles::Summer16_23Sep2016_V4_BCD_L123_AK4PFchs_DATA;
-    JEC_AK8_EF =  JERFiles::Summer16_23Sep2016_V4_EF_L123_AK4PFchs_DATA;
-    JEC_AK8_G =  JERFiles::Summer16_23Sep2016_V4_G_L123_AK4PFchs_DATA;
-    JEC_AK8_H =  JERFiles::Summer16_23Sep2016_V4_H_L123_AK4PFchs_DATA;
+    JEC_AK8_BCD =  JERFiles::Summer16_23Sep2016_V4_BCD_L123_AK8PFchs_DATA;
+    JEC_AK8_EF =  JERFiles::Summer16_23Sep2016_V4_EF_L123_AK8PFchs_DATA;
+    JEC_AK8_G =  JERFiles::Summer16_23Sep2016_V4_G_L123_AK8PFchs_DATA;
+    JEC_AK8_H =  JERFiles::Summer16_23Sep2016_V4_H_L123_AK8PFchs_DATA;
    
   }
 
  if(isMC){ 
     jet_corrector.reset(new JetCorrector(ctx, JEC_AK4));
-    topjet_corrector.reset(new TopJetCorrector(ctx, JEC_AK4));
+    topjet_corrector.reset(new TopJetCorrector(ctx, JEC_AK8));
     subjet_corrector.reset(new SubJetCorrector(ctx,JEC_AK4));
     jetlepton_cleaner.reset(new JetLeptonCleaner(ctx,JEC_AK4));
     jetlepton_cleaner->set_drmax(.4);
@@ -452,56 +486,61 @@ ZPrimeTotTPrimeSidebandModule_Side2::ZPrimeTotTPrimeSidebandModule_Side2(uhh2::C
 
 
 
-  //// OBJ CLEANING
-  muo_cleaner.reset(new MuonCleaner    (AndId<Muon>    (PtEtaCut  (53., 2.1), MuonIDMedium())));
-  // ele_cleaner.reset(new ElectronCleaner(AndId<Electron>(PtEtaSCCut(50., 2.4), ElectronID_MVAnotrig_Spring15_25ns_loose)));
+ //// OBJ CLEANING
+ muo_cleaner.reset(new MuonCleaner    (AndId<Muon>    (PtEtaCut  (53., 2.4), MuonIDMedium())));
+ // ele_cleaner2.reset(new ElectronCleaner(AndId<Electron>(PtEtaCut(30., 2.4), ElectronID_Spring16_tight)));
+ ele_cleaner1.reset(new ElectronCleaner(AndId<Electron>(PtEtaCut(125, 2.4), ElectronID_MVAGeneralPurpose_Spring16_loose)));//Arne
+ topjet_mass_cleaner.reset(new TopJetCleaner(ctx,TopJetId(TopjetMassCleaner(30))));
 
-  const JetId jetID(JetPFID(JetPFID::WP_LOOSE));
-  jet_IDcleaner.reset(new JetCleaner(ctx,jetID));
-  jet_cleaner2.reset(new JetCleaner(ctx,15., 2.4));
-  jet_cleaner1.reset(new JetCleaner(ctx,30., 2.4));
-  ak4_cleaner.reset(new JetCleaner(ctx,JetId(ZPrimeTotTPrimeAK4cleaner(1.2))));
-  htcalc.push_back(std::unique_ptr<AnalysisModule>(new HTCalculator(ctx)));
-  htcalc.push_back(std::unique_ptr<AnalysisModule>(new PrimaryLepton(ctx)));
-  htcalc.push_back(std::unique_ptr<AnalysisModule>(new HTlepCalculator(ctx)));
-  topjetlepton_cleaner.reset(new TopJetLeptonDeltaRCleaner(.8));
+ const JetId jetID(JetPFID(JetPFID::WP_LOOSE));
+ jet_IDcleaner.reset(new JetCleaner(ctx,jetID));
+ jet_cleaner2.reset(new JetCleaner(ctx,15., 2.4));
+ jet_cleaner1.reset(new JetCleaner(ctx,30., 2.4));
+ ak4_cleaner.reset(new JetCleaner(ctx,JetId(ZPrimeTotTPrimeAK4cleaner(1.2))));
+ htcalc.push_back(std::unique_ptr<AnalysisModule>(new HTCalculator(ctx)));
+ htcalc.push_back(std::unique_ptr<AnalysisModule>(new PrimaryLepton(ctx)));
+ htcalc.push_back(std::unique_ptr<AnalysisModule>(new HTlepCalculator(ctx)));
+ topjetlepton_cleaner.reset(new TopJetLeptonDeltaRCleaner(.8));
 
 
 
-  // TOPJET SELECTIONS
-  TOPjet1_sel.reset(new NTopJetSelection(1, -1, TopJetId(PtEtaCut( 250., 2.4))));
+ // TOPJET SELECTIONS
+ TOPjet1_sel.reset(new NTopJetSelection(1, -1, TopJetId(PtEtaCut( 250., 2.4))));
  
  
-//BTAG
-  btag1_sel.reset(new NBTagSelection(1, -1));
-  btag0_sel.reset(new NBTagSelection(0, 0));
+ //BTAG
+ btag1_sel.reset(new NBTagSelection(1, -1));
+ btag0_sel.reset(new NBTagSelection(0, 0));
 
 
-  //2D Cut
-   twodcut_sel.reset(new TwoDCut(.4, 40.));
-  // reliso_sel.reset(new ZPrimeTotTPrimeRelIsoCut(0.15));
+ //2D Cut
+ twodcut_sel.reset(new TwoDCut(.4, 40.));
 
-  //TOP TAGGER
-   const TopJetId topjetID = AndId<TopJet>(Type2TopTag(150,240,Type2TopTag::MassType::groomed), Tau32(0.6));
-   //  const TopJetId untopjetID =VetoId<TopJet>(topjetID);
-  toptag_sel.reset(new NTopJetSelection(1, -1, topjetID));
-  toptag_cleaner.reset(new TopJetCleaner(ctx,topjetID));
-  //toptag_uncleaner.reset(new TopJetCleaner(ctx,untopjetID));
+ if     (channel_ == elec) triangc_sel.reset(new uhh2::AndSelection(ctx));
+ else if(channel_ == muon) triangc_sel.reset(new uhh2::AndSelection(ctx)); // always true (no triangular cuts for muon channel)
 
 
-  //Higgs TAGGER
-    // const TopJetId higgsjetID = AndId<TopJet>(HiggsTag(100,150,VetoId<Jet>(CSVBTag(CSVBTag::WP_LOOSE))), Tau21(1) );
-  //const TopJetId higgsjetID = AndId<TopJet>(HiggsTag(100,150), Tau21(1) );
+ //TOP TAGGER
+ const TopJetId topjetID = AndId<TopJet>(Type2TopTag(150,240,Type2TopTag::MassType::groomed), Tau32(0.6));
+ //  const TopJetId untopjetID =VetoId<TopJet>(topjetID);
+ toptag_sel.reset(new NTopJetSelection(1, -1, topjetID));
+ toptag_cleaner.reset(new TopJetCleaner(ctx,topjetID));
+ //toptag_uncleaner.reset(new TopJetCleaner(ctx,untopjetID));
+
+
+ //Higgs TAGGER
+ // const TopJetId higgsjetID = AndId<TopJet>(HiggsTag(100,150,VetoId<Jet>(CSVBTag(CSVBTag::WP_LOOSE))), Tau21(1) );
+ //const TopJetId higgsjetID = AndId<TopJet>(HiggsTag(100,150), Tau21(1) );
  const TopJetId higgsjetID = AndId<TopJet>(ZPrimeTotTPrimeUnHiggstag(60,150), Tau21(1)  );
  higgstag_sel.reset(new NTopJetSelection(1, -1, higgsjetID));
  higgstag_cleaner.reset(new TopJetCleaner(ctx,higgsjetID));
  // higgstag_uncleaner.reset(new TopJetCleaner(ctx,unhiggsjetID));
 
-  //W/Z TAGGER
+ //W/Z TAGGER
  // const TopJetId ZWjetID = AndId<TopJet>(Type2TopTag(60,115,Type2TopTag::MassType::groomed),VetoId<TopJet>( Tau21(0.4)));
  //  const TopJetId ZWjetID = AndId<TopJet>(Type2TopTag(60,115,Type2TopTag::MassType::groomed), Tau21(0.5));
  // const TopJetId ZWjetID = AndId<TopJet>(ZPrimeTotTPrimeUnHiggstag(60,150) , Tau21(1) );
-    // const TopJetId unZWjetID =VetoId<TopJet>(ZWjetID);
+ // const TopJetId unZWjetID =VetoId<TopJet>(ZWjetID);
  // ZWtag_sel.reset(new NTopJetSelection(1, -1, ZWjetID));
  //ZWtag_cleaner.reset(new TopJetCleaner(ctx,ZWjetID));
  // ZWtag_uncleaner.reset(new TopJetCleaner(ctx,unZWjetID));
@@ -546,10 +585,13 @@ ZPrimeTotTPrimeSidebandModule_Side2::ZPrimeTotTPrimeSidebandModule_Side2(uhh2::C
   // Select of the inclusiv ttbar sample only events from 0 to 700 GeV
   if(ctx.get("dataset_version") == "TTbarAll"){ genmttbar_sel.reset(new GenMttbarCut(ctx, 0., 700., ttbar_gen_label));}
   else                                                    genmttbar_sel.reset(new uhh2::AndSelection(ctx));
+// Select of the inclusiv ttbar sample only events from 0 to 700 GeV
+  if(ctx.get("dataset_version") == "MC_WJetsAll"){ genwpt_sel.reset(new ZPrimeTotTPrimePartonW());}
+  else                                          genwpt_sel.reset(new uhh2::AndSelection(ctx));
 
 
   // //MetCut
-  // met_sel.reset(new ZPrimeTotTPrimeMETCut(250,-1));
+  met_sel.reset(new ZPrimeTotTPrimeMETCut(90,-1));
   // ht_sel.reset(new HtSelection(400,-1));
 
   // Hists Input
@@ -608,6 +650,15 @@ ZPrimeTotTPrimeSidebandModule_Side2::ZPrimeTotTPrimeSidebandModule_Side2(uhh2::C
   jet_twodcut_h.reset(new JetHists(ctx, "jet_twodcut"));
   muon_twodcut_h.reset(new MuonHists(ctx, "muon_twodcut"));
   event_twodcut_h.reset(new EventHists(ctx, "event_twodcut"));
+
+  //Hist triangcut
+  topjet_triangcut_h.reset(new TopJetHists(ctx, "topjet_triangcut"));
+  eff_triangcut_h.reset(new ZPrimeTotTPrimeHists(ctx, "eff_triangcut"));
+  jet_triangcut_h.reset(new JetHists(ctx, "jet_triangcut"));
+  muon_triangcut_h.reset(new MuonHists(ctx, "muon_triangcut"));
+  electron_triangcut_h.reset(new ElectronHists(ctx, "electron_triangcut"));
+  event_triangcut_h.reset(new EventHists(ctx, "event_triangcut"));
+  lumi_triangcut_h.reset(new LuminosityHists(ctx,"lumi_triangcut"));
 
   //HIGGSTAG HISTS
   input_higgstag_h.reset(new TopJetHists(ctx, "input_higgstag"));
@@ -751,11 +802,19 @@ ZPrimeTotTPrimeSidebandModule_Side2::ZPrimeTotTPrimeSidebandModule_Side2(uhh2::C
   //  h_ZWtag = ctx.declare_event_output< std::vector<TopJet> > ("ZWTag");
   h_ht = ctx.get_handle<double>("HT");
 
+  //systematicen
+  syst_module.reset(new MCScaleVariation(ctx));
+  
+  do_scale_variation = (ctx.get("ScaleVariationMuR") == "up" || ctx.get("ScaleVariationMuR") == "down") || (ctx.get("ScaleVariationMuF") == "up" || ctx.get("ScaleVariationMuF") == "down");
+
 
   //Trigger
   triggerMu50_sel.reset(new TriggerSelection("HLT_Mu50_v*"));
   triggerTrkMu50_sel.reset(new TriggerSelection("HLT_TkMu50_v*"));
-  
+  triggerElec_sel1.reset(new TriggerSelection("HLT_Ele115_CaloIdVT_GsfTrkIdT_v*"));//Arne
+  //  triggerElec_sel2.reset(new TriggerSelection("HLT_Ele27_WPTight_Gsf_v*"));//Iso
+
+  elec_up_down = ctx.get("Systematic_EleTrigger");
   berror=false;
   
 }
@@ -774,13 +833,20 @@ bool ZPrimeTotTPrimeSidebandModule_Side2::process(uhh2::Event& event){
   }
 
   //Select of the inclusiv ttbar sample only events from 0 to 700 GeV
-  if(filename  == "TTbarAll"){
+  if(filename.Contains("TTbar")){
     ttgenprod->process(event);
-    if(!genmttbar_sel->passes(event)) return false;
+      if(!genmttbar_sel->passes(event)) return false;
+      topptreweighting_all->process(event);
   }
+  
+  if(filename.Contains("WJetsAll")){
+     genwpt_sel->passes(event);
+     if(!genwpt_sel->passes(event)) return false;
+  }
+ 
 
   //ZPrime Genrator Level
-  if(filename.find("MC_ZPrime")!=std::string::npos){
+  if(filename.Contains("MC_ZPrime")){
     ZprimeTotTPrimeprod->process(event); 
   }
 
@@ -795,42 +861,51 @@ bool ZPrimeTotTPrimeSidebandModule_Side2::process(uhh2::Event& event){
   /* pileup SF */
   if(!event.isRealData){ 
     pileup_SF->process(event);
-    lumiweight->process(event);
-    muonscale->process(event);
-    triggerscale->process(event);
+    lumiweight->process(event);  
+    if(channel_ == muon)    muonscale->process(event);
+    if(channel_ == muon) triggerscale->process(event);
+    if(channel_ == elec) elecreco->process(event);
   }
   ////
 
+//systematicen
+  if(do_scale_variation) syst_module->process(event); 
+
  ///correctors
   if(isMC){
+    jetlepton_cleaner->process(event);
     jet_corrector->process(event);
     topjet_corrector->process(event);
     subjet_corrector->process(event);
-    jetlepton_cleaner->process(event);
+    jet_corrector->correct_met(event);
   }else{
-    if(event.run <= runnr_BCD)  {       
+    if(event.run <= runnr_BCD)  {   
+      jetlepton_cleaner_BCD->process(event);    
       jet_corrector_BCD->process(event);
       topjet_corrector_BCD->process(event);
       subjet_corrector_BCD->process(event);
-      jetlepton_cleaner_BCD->process(event);
+      jet_corrector_BCD->correct_met(event);
     }
-    else if(event.run < runnr_EF){       
+    else if(event.run < runnr_EF){  
+      jetlepton_cleaner_EF->process(event);     
       jet_corrector_EF->process(event);
       topjet_corrector_EF->process(event);
       subjet_corrector_EF->process(event);
-      jetlepton_cleaner_EF->process(event);
+      jet_corrector_EF->correct_met(event);
     } 
-    else if(event.run <= runnr_G) {       
+    else if(event.run <= runnr_G) {  
+      jetlepton_cleaner_G->process(event);     
       jet_corrector_G->process(event);
       topjet_corrector_G->process(event);
       subjet_corrector_G->process(event);
-      jetlepton_cleaner_G->process(event);
+      jet_corrector_G->correct_met(event);
     } 
-    else if(event.run > runnr_G) {       
+    else if(event.run > runnr_G) {   
+      jetlepton_cleaner_H->process(event);    
       jet_corrector_H->process(event);
       topjet_corrector_H->process(event);
       subjet_corrector_H->process(event);
-      jetlepton_cleaner_H->process(event);
+      jet_corrector_H->correct_met(event);
     } 
   }
 
@@ -839,8 +914,6 @@ bool ZPrimeTotTPrimeSidebandModule_Side2::process(uhh2::Event& event){
   muo_cleaner->process(event);
   sort_by_pt<Muon>(*event.muons);
 
-  // ele_cleaner->process(event);
-  //sort_by_pt<Electron>(*event.electrons);
 
   jet_IDcleaner->process(event);
   jet_cleaner2->process(event); 
@@ -850,19 +923,39 @@ bool ZPrimeTotTPrimeSidebandModule_Side2::process(uhh2::Event& event){
 
 
   // ///////Trigger///////
-  if (!isMC){
-    bool pass_Mu50 = triggerMu50_sel->passes(event);
-    if (event.run<274954) {
-      if (!pass_Mu50) return false;
-    }
-    else {
+  if(channel_==muon){
+    if (!isMC){
+      bool pass_Mu50 = triggerMu50_sel->passes(event);
+      if (event.run<274954) {
+	if (!pass_Mu50) return false;
+      }
+      else {
+	bool pass_TrkMu50 = triggerTrkMu50_sel->passes(event);
+	if (!(pass_Mu50||pass_TrkMu50)) return false;
+      }
+    }else{
+      bool pass_Mu50 = triggerMu50_sel->passes(event);
       bool pass_TrkMu50 = triggerTrkMu50_sel->passes(event);
       if (!(pass_Mu50||pass_TrkMu50)) return false;
     }
-  }else{
-    bool pass_Mu50 = triggerMu50_sel->passes(event);
-    bool pass_TrkMu50 = triggerTrkMu50_sel->passes(event);
-    if (!(pass_Mu50||pass_TrkMu50)) return false;
+  }
+
+  bool pass_elecTrigger1 = triggerElec_sel1 ->passes(event);
+  // bool pass_elecTrigger2 = triggerElec_sel2 ->passes(event);
+  if(channel_==elec){
+    
+    // if(!(pass_elecTrigger1||pass_elecTrigger2)) return false;
+    if(!(pass_elecTrigger1)) return false;
+    if(pass_elecTrigger1){
+      ele_cleaner1->process(event);
+      sort_by_pt<Electron>(*event.electrons);
+      if(isMC)  elecid1->process(event);
+    }else{
+      // ele_cleaner2->process(event);
+      // sort_by_pt<Electron>(*event.electrons);
+      // if(isMC)  elecid2->process(event);
+    }
+    // if(isMC) electrigger->process(event);
   }
 
 
@@ -887,14 +980,126 @@ bool ZPrimeTotTPrimeSidebandModule_Side2::process(uhh2::Event& event){
   // jet_lep1_h->fill(event);
 
   
+  // trigger SF
+  if(isMC){
+    if(channel_==elec){
+      double sf=1;
+      Particle elec = event.electrons->at(0);
+      double elec_pt=elec.pt();
+      double elec_eta =abs(elec.eta());
 
+      if(elec_pt<100 && elec_pt>80){
+	if(elec_eta>0 && elec_eta <1.45){
+	  sf=1;
+	  if(elec_up_down == "up")sf+=1.414;
+	  if(elec_up_down == "down")sf-=1.414;
+	}else if(elec_eta<1.55){
+	  sf=0.697;
+	  if(elec_up_down == "up")sf+=0.467;
+	  if(elec_up_down == "down")sf-=0.467;
+	}else{
+	  sf=2.5;
+	  if(elec_up_down == "up")sf+=22.522;
+	  if(elec_up_down == "down")sf-=22.522;
+	}
+      }else if(elec_pt<125){
+	if(elec_eta>0 && elec_eta <1.45){
+	  sf=0.854;
+	  if(elec_up_down == "up")sf+=0.017;
+	  if(elec_up_down == "down")sf-=0.017;
+	}else if(elec_eta<1.55){
+	  sf=0.924;
+	  if(elec_up_down == "up")sf+=0.087;
+	  if(elec_up_down == "down")sf-=0.087;
+	}else{
+	  sf=0.668;
+	  if(elec_up_down == "up")sf+=0.026;
+	  if(elec_up_down == "down")sf-=0.026;
+	}
+      }else if(elec_pt<150){
+	if(elec_eta>0 && elec_eta <1.45){
+	  sf=0.987;
+	  if(elec_up_down == "up")sf+=0.005;
+	  if(elec_up_down == "down")sf-=0.005;
+	}else if(elec_eta<1.55){
+	  sf=0.996;
+	  if(elec_up_down == "up")sf+=0.029;
+	  if(elec_up_down == "down")sf-=0.029;
+	}else{
+	  sf=1.011;
+	  if(elec_up_down == "up")sf+=0.007;
+	  if(elec_up_down == "down")sf-=0.007;
+	}
+      }else if(elec_pt<180){
+	if(elec_eta>0 && elec_eta <1.45){
+	  sf=1.004;
+	  if(elec_up_down == "up")sf+=0.006;
+	  if(elec_up_down == "down")sf-=0.006;
+	}else if(elec_eta<1.55){
+	  sf=0.978;
+	  if(elec_up_down == "up")sf+=0.033;
+	  if(elec_up_down == "down")sf-=0.033;
 
-   topjetlepton_cleaner->process(event);
- sort_by_pt<TopJet>(*event.topjets);
+	}else{
+	  sf=1.014;
+	  if(elec_up_down == "up")sf+=0.009;
+	  if(elec_up_down == "down")sf-=0.009;
+	}
+      }else if(elec_pt<250){
+	if(elec_eta>0 && elec_eta <1.45){
+	  sf=0.981;
+	  if(elec_up_down == "up")sf+=0.007;
+	  if(elec_up_down == "down")sf-=0.007;
+	}else if(elec_eta<1.55){
+	  sf=1.098;
+	  if(elec_up_down == "up")sf+=0.055;
+	  if(elec_up_down == "down")sf-=0.055;
+	}else{
+	  sf=1.019;
+	  if(elec_up_down == "up")sf+=0.012;
+	  if(elec_up_down == "down")sf-=0.012;
+	}
+      }else if(elec_pt<350){
+	if(elec_eta>0 && elec_eta <1.45){
+	  sf=1.004;
+	  if(elec_up_down == "up")sf+=0.012;
+	  if(elec_up_down == "down")sf-=0.012;
+	}else if(elec_eta<1.55){
+	  sf=1.083;
+	  if(elec_up_down == "up")sf+=0.108;
+	  if(elec_up_down == "down")sf-=0.108;
+	}else{
+	  sf=0.978;
+	  if(elec_up_down == "up")sf+=0.01;
+	  if(elec_up_down == "down")sf-=0.01;
+	}
+      }else{
+	if(elec_eta>0 && elec_eta <1.45){
+	  sf=0.96;
+	  if(elec_up_down == "up")sf+=0.022;
+	  if(elec_up_down == "down")sf-=0.022;
+	}else if(elec_eta<1.55){
+	  sf=0.905;
+	  if(elec_up_down == "up")sf+=0.107;
+	  if(elec_up_down == "down")sf-=0.107;
+	}else{
+	  sf=1.033;
+	  if(elec_up_down == "up")sf+=0.059;
+	  if(elec_up_down == "down")sf-=0.059;
+	}
+      }
+      double weight= event.weight *sf;
+      if(isMC)  event.weight = weight;
+    }
+  }
+
+  topjetlepton_cleaner->process(event);
+  sort_by_pt<TopJet>(*event.topjets);
 
   if(berror)  std::cout<<"SelectionModule L:268 vor TopJetSelection"<<std::endl;
   ////////////////////////////////////////////////////////// TopJET selection//////////////////////////////////////////////////////////////////////////////////
 
+  topjet_mass_cleaner->process(event);
   const bool pass_Topjet1 = TOPjet1_sel->passes(event);
   if(!pass_Topjet1) return false;
 
@@ -918,18 +1123,32 @@ bool ZPrimeTotTPrimeSidebandModule_Side2::process(uhh2::Event& event){
   //   event_reliso_h->fill(event);
   // }
 
- if(berror)   std::cout<<"SelectionModule L:294 vor TwoDCut"<<std::endl;  
+  if(berror)   std::cout<<"SelectionModule L:294 vor TwoDCut"<<std::endl;  
   ////////////////////////////////////////////////////////// TwoDCut //////////////////////////////////////////////////////////////////////////////////
- sort_by_pt<Jet>(*event.jets);
- const bool pass_twodcut = twodcut_sel->passes(event);
+  sort_by_pt<Jet>(*event.jets);
+  const bool pass_twodcut = twodcut_sel->passes(event);
   if(!pass_twodcut) return false;
   topjet_twodcut_h->fill(event);
   jet_twodcut_h->fill(event);
- eff_twodcut_h->fill(event);
- muon_twodcut_h->fill(event);
+  eff_twodcut_h->fill(event);
+  muon_twodcut_h->fill(event);
 
   jet_cleaner1->process(event);
   event_twodcut_h->fill(event);
+
+
+ if(berror)   std::cout<<"SelectionModule L:294 vor Triangcut"<<std::endl;  
+  ////////////////////////////////////////////////////////// Triangcut //////////////////////////////////////////////////////////////////////////////////
+ // const bool pass_triangc = triangc_sel->passes(event);
+  //  if(!pass_triangc) return false;
+  topjet_triangcut_h->fill(event);
+  jet_triangcut_h->fill(event);
+  eff_triangcut_h->fill(event);
+  muon_triangcut_h->fill(event);
+  electron_triangcut_h->fill(event);
+  lumi_triangcut_h->fill(event);
+  event_triangcut_h->fill(event);
+
  
   if(berror)  std::cout<<"SelectionModule L:338 vor HiggsTAGGER"<<std::endl;
   /////////////////////////////////////////////////////////// Higgs TAGGER //////////////////////////////////////////////////////////////////////////////////
@@ -1193,6 +1412,10 @@ if(berror) std::cout<<"SelectionModule L:858 Size topjets Collection "<<event.to
 
   bool pass_chi2cut = chi2cut_sel->passes(event);
   if(!pass_chi2cut) return false;
+
+  bool pass_met;
+  if(channel_==elec)pass_met = met_sel->passes(event);
+  if(channel_==elec) if(!pass_met) return false;
 
   chi2min_chi2cut_h->fill(event);
   topjet_chi2cut_h->fill(event);

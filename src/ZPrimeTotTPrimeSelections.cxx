@@ -5,10 +5,14 @@
 #include "TFile.h"
 #include "TH1F.h"
 #include <stdexcept>
+#include <iostream>
+#include <memory>
+#include <fstream>
 
+#include "UHH2/core/include/Hists.h"
 using namespace uhh2examples;
 using namespace uhh2;
-
+using namespace std;
 
 ZPrimeTotTPrimeDijetSelection::ZPrimeTotTPrimeDijetSelection(float dphi_min_, float third_frac_max_): dphi_min(dphi_min_), third_frac_max(third_frac_max_){}
     
@@ -33,6 +37,9 @@ bool ZPrimeTotTPrimeDijetSelection::passes(const Event & event){
 //   if(event.muons)
 // }
 
+
+
+
 ////////////////////////////////////////////////////////
 
 ZPrimeTotTPrimeNJetCut::ZPrimeTotTPrimeNJetCut(int nmin_, int nmax_, float ptmin1_,float ptmin2_, float etamax_):
@@ -54,9 +61,147 @@ bool ZPrimeTotTPrimeNJetCut::passes(const uhh2::Event& event){
 
   return (njet >= nmin) && (njet <= nmax || nmax < 0);
 }
+////////////////////////////////////////////////////////
+ZPrimeTotTPrimePartonW::ZPrimeTotTPrimePartonW(){}
 
+bool ZPrimeTotTPrimePartonW::passes(const uhh2::Event& event){
+  std::vector<GenParticle> & genparticles = *event.genparticles;
+  double Wpt=10000;
+
+ 
+ for(const auto & gp : genparticles){
+   if(abs(gp.pdgId())==24) Wpt = gp.pt();
+ }
+ // cout<<Wpt<<endl;
+ return Wpt<100;
+}
 
 ////////////////////////////////////////////////////////
+
+ElectronTriggerWeights::ElectronTriggerWeights(Context & ctx, TString path_, TString SysDirection_): path(path_), SysDirection(SysDirection_){
+
+  auto dataset_type = ctx.get("dataset_type");
+  bool is_mc = dataset_type == "MC";
+  if(!is_mc){
+    cout << "Warning: ElectronTriggerWeights will not have an effect on this non-MC sample (dataset_type = '" + dataset_type + "')" << endl;
+    return;
+  }
+  
+  unique_ptr<TFile> file;												 
+  file.reset(new TFile(path,"READ"));											 
+  
+  Eff_lowpt_MC.reset((TGraphAsymmErrors*)file->Get("gr_lowpt_eta_TTbar_eff"));					 
+  Eff_highpt_MC.reset((TGraphAsymmErrors*)file->Get("gr_highpt_eta_TTbar_eff"));					 
+  Eff_lowpt_DATA.reset((TGraphAsymmErrors*)file->Get("gr_lowpt_eta_DATA_eff"));					 
+  Eff_highpt_DATA.reset((TGraphAsymmErrors*)file->Get("gr_highpt_eta_DATA_eff"));					 
+  
+  if(SysDirection != "nominal" && SysDirection != "up" && SysDirection != "down") throw runtime_error("In LQToTopMuModules.cxx, ElectronTriggerWeights.process(): Invalid SysDirection specified.");
+  
+}
+
+bool ElectronTriggerWeights::process(Event & event){
+
+  if(event.isRealData) return true;
+
+  //cout << "Weight before SF: " << event.weight << endl;
+  double prob_notrig_mc = 1, prob_notrig_data = 1;
+  for(const auto & ele : *event.electrons){
+    double eta = ele.eta();
+    if(fabs(eta) > 2.4) throw runtime_error("In LQToTopMuModules.cxx, ElectronTriggerWeights.process(): Ele-|eta| > 2.4 is not supported at the moment.");
+
+
+    //find right bin in eta
+    int idx = 0;
+    bool lowpt = false;
+    if(30 <= ele.pt() && ele.pt() < 120){
+      lowpt = true;
+      //lowpt trigger
+      bool keep_going = true;
+      while(keep_going){
+	double x,y;
+	Eff_lowpt_MC->GetPoint(idx,x,y);
+	keep_going = eta > x + Eff_lowpt_MC->GetErrorXhigh(idx);
+	if(keep_going) idx++;
+      }
+    }
+    else if(ele.pt() >= 120){
+     //highpt trigger
+      bool keep_going = true;
+      while(keep_going){
+	double x,y;
+	Eff_highpt_MC->GetPoint(idx,x,y);
+	keep_going = eta > x + Eff_highpt_MC->GetErrorXhigh(idx);
+	if(keep_going) idx++;
+      }
+    }
+    else throw runtime_error("In LQToTopMuModules.cxx, ElectronTriggerWeights.process(): Electron has pt<30. Clean electron collection before applying weights.");
+
+    //access efficiencies for MC and DATA, possibly accout for systematics = statistical + add. 2% up/down
+    double eff_data = -1, eff_mc = -1, dummy_x;
+    double stat_data = -1, stat_mc = -1, tp = 0.02, total_syst_data = -1, total_syst_mc = -1;
+    if(lowpt){
+      Eff_lowpt_MC->GetPoint(idx,dummy_x,eff_mc);
+      Eff_lowpt_DATA->GetPoint(idx,dummy_x,eff_data);
+
+      if(SysDirection == "up"){		
+	stat_mc = Eff_lowpt_MC->GetErrorYlow(idx);	
+	stat_data = Eff_lowpt_DATA->GetErrorYhigh(idx);
+	total_syst_mc = sqrt(pow(stat_mc,2) + pow(tp,2));
+	total_syst_data = sqrt(pow(stat_data,2) + pow(tp,2));
+
+      	eff_mc -= total_syst_mc;    	
+      	eff_data += total_syst_data;	
+      }							
+      else if(SysDirection == "down"){
+	stat_mc = Eff_lowpt_MC->GetErrorYhigh(idx);	
+	stat_data = Eff_lowpt_DATA->GetErrorYlow(idx);
+	total_syst_mc = sqrt(pow(stat_mc,2) + pow(tp,2));
+	total_syst_data = sqrt(pow(stat_data,2) + pow(tp,2));
+			
+      	eff_mc += Eff_lowpt_MC->GetErrorYhigh(idx);    	
+      	eff_data -= Eff_lowpt_DATA->GetErrorYlow(idx);	
+      }                                                 
+    }
+    else{
+      Eff_highpt_MC->GetPoint(idx,dummy_x,eff_mc);
+      Eff_highpt_DATA->GetPoint(idx,dummy_x,eff_data);
+
+      if(SysDirection == "up"){	
+	stat_mc = Eff_highpt_MC->GetErrorYlow(idx);	
+	stat_data = Eff_highpt_DATA->GetErrorYhigh(idx);
+	total_syst_mc = sqrt(pow(stat_mc,2) + pow(tp,2));
+	total_syst_data = sqrt(pow(stat_data,2) + pow(tp,2));
+			
+	eff_mc -= Eff_highpt_MC->GetErrorYlow(idx);    	
+	eff_data += Eff_highpt_DATA->GetErrorYhigh(idx);	
+      }							
+      else if(SysDirection == "down"){	
+	stat_mc = Eff_highpt_MC->GetErrorYhigh(idx);	
+	stat_data = Eff_highpt_DATA->GetErrorYlow(idx);
+	total_syst_mc = sqrt(pow(stat_mc,2) + pow(tp,2));
+	total_syst_data = sqrt(pow(stat_data,2) + pow(tp,2));
+					
+	eff_mc += Eff_highpt_MC->GetErrorYhigh(idx);    	
+	eff_data -= Eff_highpt_DATA->GetErrorYlow(idx);	
+      }                                                 
+    }
+
+    //multiply to the efficiency for not triggering
+    prob_notrig_mc *= 1-eff_mc;
+    prob_notrig_data *= 1-eff_data;
+
+    //cout << "Efficiency for this ele -- MC: " << eff_mc << ", DATA" << eff_data << endl;
+    //cout << "prob for not triggering -- MC: " << prob_notrig_mc << ", DATA: " << prob_notrig_data << endl;
+
+  }
+
+  //Scale weight by (1-prob_notrig_data) / (1-prob_notrig_mc)
+  double SF = (1-prob_notrig_data)/(1-prob_notrig_mc);
+  event.weight *= SF;
+
+  //cout << "Weight with SF: " << event.weight << endl; 
+  return true;
+}
 
 
 ////////////////////////////////////////////////////////
@@ -94,8 +239,8 @@ bool ZPrimeTotTPrimeMassCut::passes(const uhh2::Event& event){
     return false;
   }
 }
-////////////////////////////////////////////////////////
 
+////////////////////////////////////////////////////////
 ZPrimeTotTPrimeTopMassCut::ZPrimeTotTPrimeTopMassCut(float mmin_, float mmax_): mmin(mmin_), mmax(mmax_) {}
 
 bool ZPrimeTotTPrimeTopMassCut::passes(const uhh2::Event& event){
@@ -106,6 +251,30 @@ bool ZPrimeTotTPrimeTopMassCut::passes(const uhh2::Event& event){
     return false;
   }
 }
+
+////////////////////////////////////////////////////////
+
+ZPrimeTotTPrimeDRele::ZPrimeTotTPrimeDRele(float mmin_, float mmax_): mmin(mmin_), mmax(mmax_) {}
+
+bool ZPrimeTotTPrimeDRele::passes(const uhh2::Event& event){
+  std::vector<Electron>* electrons = event.electrons;
+  std::vector<float> drmin_buf;
+  for(const auto & ele : *event.electrons){
+        
+    if(event.jets){
+      auto nj = nextJet(ele, *event.jets);
+      auto drmin_val = nj ? deltaR(ele, *nj) : numeric_limits<float>::infinity();
+      drmin_buf.push_back(drmin_val);
+        
+    }
+  }
+
+
+
+  return ( drmin_buf.back() >= mmin && (mmax<0||drmin_buf.back() <= mmax));
+   
+}
+
 ////////////////////////////////////////////////////////
 
 
@@ -117,7 +286,7 @@ bool ZPrimeTotTPrimeMETCut::passes(const Event & event){
   assert(event.met);
   float MET = event.met->pt();
   //  return(MET > min_MET && (MET < max_MET || max_MET <0));
-return(MET < min_MET );
+return(MET > min_MET );
 }
 
 ////////////////////////////////////////////////////////
@@ -189,9 +358,9 @@ bool HtSelection::passes(const Event & event){
   double ht_jets = 0.0;
   double ht_lep = 0.0;
 
-  for(const auto & jet : *jets){
-    ht_jets += jet.pt();
-    }
+  // for(const auto & jet : *jets){
+  //   ht_jets += jet.pt();
+  //   }
   for(const auto & electron : *event.electrons){
     ht_lep += electron.pt();
   }
@@ -205,8 +374,38 @@ bool HtSelection::passes(const Event & event){
   ht = ht_lep + ht_jets + met;
 
   bool pass = false;
-  // pass = ht > ht_min && (ht_max < 0 || ht < ht_max);
-  pass = ht > ht_min;
+  pass = ht > ht_min && (ht_max < 0 || ht < ht_max);
+  // pass = ht > ht_min;
+  return pass;
+}
+
+HtJetsSelection::HtJetsSelection(double ht_min_, double ht_max_):ht_min(ht_min_), ht_max(ht_max_){}
+bool HtJetsSelection::passes(const Event & event){
+  auto met = event.met->pt();
+ std::vector<Jet>* jets = event.jets;
+
+  double ht = 0.0;
+  double ht_jets = 0.0;
+  double ht_lep = 0.0;
+
+  for(const auto & jet : *jets){
+    ht_jets += jet.pt();
+    }
+  // for(const auto & electron : *event.electrons){
+  //   ht_lep += electron.pt();
+  // }
+  // for(const auto & muon : *event.muons){
+  //   ht_lep += muon.pt();
+  // }
+  /*for(const auto & tau : *event.taus){
+    ht_lep += tau.pt();
+    }*/
+
+  ht = ht_lep + ht_jets;
+
+  bool pass = false;
+  pass = ht > ht_min && (ht_max < 0 || ht < ht_max);
+  // pass = ht > ht_min;
   return pass;
 }
 
@@ -281,20 +480,36 @@ bool ZPrimeTotTPrimedrmin::passes(const Event & event){
  
 }
 
+const Particle* leading_lepton(const uhh2::Event& event){
+
+  const Particle* lep(0);
+
+  float ptL_max(0.);
+  if(event.muons)    { for(const auto& mu : *event.muons)    { if(mu.pt() > ptL_max){ ptL_max = mu.pt(); lep = &mu; } } }
+  if(event.electrons){ for(const auto& el : *event.electrons){ if(el.pt() > ptL_max){ ptL_max = el.pt(); lep = &el; } } }
+
+  if(!lep) throw std::runtime_error("leading_lepton -- pt-leading lepton not found");
+
+  return lep;
+}
+
 // // //////////////////////////////////////////////////////// 
 bool uhh2::TwoDCut::passes(const uhh2::Event& event){
 
-  assert(event.muons && event.jets);
-  if(event.muons->size() < 1){
+  assert((event.muons||event.electrons) && event.jets);
+  // std::cout<<"number of electrons "<<event.electrons->size() << "  number of muons "<< event.muons->size()<<"  number of AK4 jets  "<< event.jets->size()<<std::endl;
+  if((event.muons->size() < 1) && (event.electrons->size() < 1) ){
     std::cout << "\n @@@ WARNING -- TwoDCut::passes -- unexpected number of muons+electrons in the event (!=1). returning 'false'\n";
     return false;
   }
 
-  float drmin, ptrel;  
-  if(event.muons->size()) std::tie(drmin, ptrel) = drmin_pTrel(event.muons->at(0), *event.jets);
- 
+  const Particle* lepton = leading_lepton(event);
+
+  float drmin, ptrel;
+  std::tie(drmin, ptrel) = drmin_pTrel(*lepton, *event.jets);
 
   return (drmin > min_deltaR_) || (ptrel > min_pTrel_);
+
 }
  // //////////////////////////////////////////////////////// 
 ZPrimeTotTPrimeChiCut::ZPrimeTotTPrimeChiCut(uhh2::Context& ctx,float chi_,const std::string & hyps_name,const std::string & discriminator_name):chi(chi_){
@@ -334,6 +549,11 @@ bool TopJetLeptonDeltaRCleaner::process(uhh2::Event& event){
       for(const auto & muo : *event.muons)
         if(uhh2::deltaR(tjet, muo) < minDR_) skip_tjet = true;
     }
+    if(event.electrons){
+      for(const auto & muo : *event.electrons)
+        if(uhh2::deltaR(tjet, muo) < minDR_) skip_tjet = true;
+    }
+
 
     if(skip_tjet) continue;
 
@@ -450,4 +670,40 @@ bool ZPrimeTotTPrimeHiggsTag::operator()(TopJet const & topjet, uhh2::Event cons
     if(mjet > maxmass_) return false;
     // std::cout<<"ZPrimeHiggstag returnes true, mass jet "<< mjet<<std::endl;
     return true;
+}
+
+
+uhh2::TriangularCuts::TriangularCuts(float a, float b): a_(a), b_(b) {
+
+  if(!b_) std::runtime_error("TriangularCuts -- incorrect initialization (parameter 'b' is null)");
+}
+
+bool uhh2::TriangularCuts::passes(const uhh2::Event& event){
+
+  assert(event.muons || event.electrons);
+  assert(event.jets && event.met);
+
+  if((event.muons->size()+event.electrons->size()) != 1){
+    std::cout << "\n @@@ WARNING -- TriangularCuts::passes -- unexpected number of muons+electrons in the event (!=1). returning 'false'\n";
+    return false;
+  }
+
+  if(!event.jets->size()){
+    std::cout << "\n @@@ WARNING -- TriangularCuts::passes -- unexpected number of jets in the event (==0). returning 'false'\n";
+    return false;
+  }
+
+  // pt-leading charged lepton
+  const Particle* lep1 = leading_lepton(event);
+
+  // 1st entry in jet collection (should be the pt-leading jet)
+  const Particle* jet1 = &event.jets->at(0);
+
+  // MET-lepton triangular cut
+  bool pass_tc_lep = fabs(fabs(deltaPhi(*event.met, *lep1)) - a_) < a_/b_ * event.met->pt();
+
+  // MET-jet triangular cut
+  bool pass_tc_jet = fabs(fabs(deltaPhi(*event.met, *jet1)) - a_) < a_/b_ * event.met->pt();
+
+  return pass_tc_lep && pass_tc_jet;
 }

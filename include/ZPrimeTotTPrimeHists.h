@@ -29,6 +29,21 @@ public:
     uhh2::Event::Handle<TTbarGen> h_ttbargen;
     std::string btopjets;
     bool isMC=false;;
+
+    // MET
+    TH1F* met__pt;
+    TH1F* met__phi;
+    TH1F* htlep__pt;
+    TH2F* met_VS_dphi_lep1;
+    TH2F* met_VS_dphi_jet1;
+    TH2F* met_VS_dphi_jet2;
+    TH2F* met_VS_dphi_jet3;
+
+    TH2F* met_VS_dphi_lep1_a;
+    TH2F* met_VS_dphi_jet1_a;
+    TH2F* met_VS_dphi_jet2_a;
+    TH2F* met_VS_dphi_jet3_a;
+
 };
 
 }
