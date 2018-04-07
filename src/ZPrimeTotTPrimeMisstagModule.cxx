@@ -30,7 +30,7 @@
 
 #include <UHH2/ZprimeToTprimeTtZtH/include/ZPrimeTotTPrimeSelections.h>
 #include <UHH2/ZprimeToTprimeTtZtH/include/ZPrimeTotTPrimeHists.h>
-//#include <UHH2/ZprimeToTprimeTtZtH/include/MistagHists.h>
+#include <UHH2/ZprimeToTprimeTtZtH/include/MistagHists.h>
 #include <UHH2/ZprimeToTprimeTtZtH/include/ZPrimeTotTPrimeGenSelections.h>
 
 
@@ -143,6 +143,18 @@ private:
   std::unique_ptr<uhh2::AnalysisModule> ttgenprod;
   bool b_error;
 
+  // Hier
+  uhh2::Event::Handle< std::vector<TopJet> > h_quarks;
+  uhh2::Event::Handle< std::vector<TopJet> > h_gluons;
+  uhh2::Event::Handle< std::vector<TopJet> > h_quark_zwtag_topjets;
+  uhh2::Event::Handle< std::vector<TopJet> > h_gluon_zwtag_topjets;
+
+  std::unique_ptr<Hists> mistag_topjet2_h;
+  
+  std::unique_ptr<Hists> gluon_topjet_topjet2_h;
+  std::unique_ptr<Hists> quark_topjet_topjet2_h;
+  std::unique_ptr<Hists> gluon_topjet_pass_zwtag_h;
+  std::unique_ptr<Hists> quark_topjet_pass_zwtag_h;
 
   //systematicen
 
@@ -154,7 +166,6 @@ private:
 };
 
 ZPrimeTotTPrimeMisstagModule::ZPrimeTotTPrimeMisstagModule(uhh2::Context& ctx){ 
-
   //GenParticleprinter
   printer.reset(new GenParticlesPrinter(ctx));
 
@@ -190,11 +201,11 @@ ZPrimeTotTPrimeMisstagModule::ZPrimeTotTPrimeMisstagModule(uhh2::Context& ctx){
   htcalc.push_back(std::unique_ptr<AnalysisModule>(new HTlepCalculator(ctx)));
 
   //cleaner
-  topjet_cleaner.reset(new TopJetCleaner(ctx,TopJetId(PtEtaCut(200., 2.5))));
-  const TopJetId massID = Type2TopTag(24,182,Type2TopTag::MassType::groomed);
+  topjet_cleaner.reset(new TopJetCleaner(ctx,TopJetId(PtEtaCut(200., 2.4))));
+  const TopJetId massID = Type2TopTag(40,180,Type2TopTag::MassType::groomed);
   const TopJetId massID_normal = Type2TopTag(30,40000,Type2TopTag::MassType::groomed);
   mass_cleaner.reset(new TopJetCleaner(ctx,massID));
-  mass_cleaner30GeV.reset(new TopJetCleaner(ctx,massID_normal));
+  mass_cleaner30GeV.reset(new TopJetCleaner(ctx,massID));
 
   //Selections
   topjet2_sel.reset(new NTopJetSelection(2,-1,TopJetId(PtEtaCut( 250., 2.4)))); 
@@ -202,7 +213,7 @@ ZPrimeTotTPrimeMisstagModule::ZPrimeTotTPrimeMisstagModule(uhh2::Context& ctx){
   const TopJetId higgsjetID = AndId<TopJet>(HiggsTag(100,150), Tau21(1) );
   const TopJetId higgs_one_btag_jetID = AndId<TopJet>(ZPrimeTotTPrimeHiggsTag(100,150), Tau21(1) );
   const TopJetId topjetID = AndId<TopJet>(Type2TopTag(150,220,Type2TopTag::MassType::groomed), Tau32(0.57));
-  tagger_sel.reset(new NTopJetSelection(1, -1, topjetID));
+  tagger_sel.reset(new NTopJetSelection(1, -1, higgsjetID));
   
   //Genral
   const std::string ttbar_gen_label ("ttbargen");
@@ -231,7 +242,13 @@ ZPrimeTotTPrimeMisstagModule::ZPrimeTotTPrimeMisstagModule(uhh2::Context& ctx){
   h_nozwtag_topjets= ctx.declare_event_output< std::vector<TopJet> > ("nozwtag_topjets");
 
 
-  //Hist
+  h_quarks= ctx.declare_event_output< std::vector<TopJet> > ("quarks");
+  h_gluons= ctx.declare_event_output< std::vector<TopJet> > ("gluon");
+  h_quark_zwtag_topjets = ctx.declare_event_output< std::vector<TopJet> > ("quark_zwtag");
+  h_gluon_zwtag_topjets = ctx.declare_event_output< std::vector<TopJet> > ("gluon_zwtag");
+
+
+
   input_h_event.reset(new EventHists   (ctx, "input_Event"));
   input_h_muo.reset(new MuonHists (ctx, "input_Muons"));
   input_h_ele.reset(new ElectronHists(ctx, "input_Electrons"));
@@ -241,6 +258,9 @@ ZPrimeTotTPrimeMisstagModule::ZPrimeTotTPrimeMisstagModule(uhh2::Context& ctx){
 
   //Hists topjet2
   topjet_topjet2_h.reset(new TopJetHists(ctx, "topjet_topjet2"));
+  gluon_topjet_topjet2_h.reset(new TopJetHists(ctx, "gluon_topjet_topjet2",4,"gluon"));
+  quark_topjet_topjet2_h.reset(new TopJetHists(ctx, "quark_topjet_topjet2",4,"quarks"));
+  mistag_topjet2_h.reset(new MistagHists(ctx, "mistag_topjet2"));
   eff_topjet2_h.reset(new ZPrimeTotTPrimeHists(ctx, "eff_topjet2"));
   jet_topjet2_h.reset(new JetHists(ctx, "jet_topjet2"));
   muon_topjet2_h.reset(new MuonHists(ctx, "muon_topjet2"));
@@ -272,6 +292,9 @@ ZPrimeTotTPrimeMisstagModule::ZPrimeTotTPrimeMisstagModule(uhh2::Context& ctx){
    topjet_fourth_nopass_zwtag_h.reset(new TopJetHists(ctx, "topjet_fourth_nopass_zwtag",4,"fourth_nopass_topjets"));
   // all topjets passed the tagger
    topjet_pass_zwtag_h.reset(new TopJetHists(ctx, "topjet_pass_zwtag",4,"zwtag_topjets"));
+   gluon_topjet_pass_zwtag_h.reset(new TopJetHists(ctx, "gluon_topjet_pass_zwtag",4,"gluon_zwtag"));
+   quark_topjet_pass_zwtag_h.reset(new TopJetHists(ctx, "quark_topjet_pass_zwtag",4,"quark_zwtag"));
+
    topjet_nopass_zwtag_h.reset(new TopJetHists(ctx, "topjet_nopass_zwtag",4,"nozwtag_topjets"));
 
 //systematics
@@ -311,7 +334,53 @@ bool ZPrimeTotTPrimeMisstagModule::process(Event & event) {
   //systematicen
  if(do_scale_variation) syst_module->process(event); 
 
+ std::unique_ptr< std::vector<TopJet> > gluon_topjets(new std::vector<TopJet> (*event.topjets));
+ std::unique_ptr< std::vector<TopJet> > quark_topjets(new std::vector<TopJet> (*event.topjets));
+ gluon_topjets->clear();
+ quark_topjets->clear();
+ gluon_topjets->reserve(event.topjets->size());
+ quark_topjets->reserve(event.topjets->size());
+ //Define if topjet is q or gluon
+ for(topjet:*event.topjets){
+   double number_genp = 0;
+   double deltar_min=1000;
+   GenParticle closest_genp;
+   for(genp:*event.genparticles){
+     double deltar = deltaR(topjet,genp);
 
+     if(deltar < deltar_min){
+       deltar_min = deltar;
+       closest_genp = genp;
+     }
+
+     // if(deltar<0.8){
+     //   number_genp++;
+     //   if(abs(genp.pdgId())==21) {
+     // 	 gluon_topjets->push_back(topjet);
+     // 	 std::cout<<"it's a gluon"<<std::endl;
+     //   }
+     //   else{
+     // 	 quark_topjets->push_back(topjet);
+     //   	 std::cout<<"it's a quark"<<std::endl;
+     //   }
+     //     }
+   }
+   if(abs(closest_genp.pdgId())==21) {
+     gluon_topjets->push_back(topjet);
+     if(b_error) std::cout<<"it's a gluon"<<std::endl;
+   }
+   else{
+     quark_topjets->push_back(topjet);
+     if(b_error) std::cout<<"it's a quark"<<std::endl;
+   }
+
+
+        if(b_error) std::cout<<"number_genp that pass deltar < 0.8  "<< number_genp <<std::endl;
+ }
+ event.set(h_quarks,*quark_topjets );
+ event.set(h_gluons,*gluon_topjets );
+
+ if(b_error) std::cout<<"Size of topjets  "<<event.topjets ->size()<<"  size of gluon  "<<gluon_topjets->size() << "  size of quarks  "<<quark_topjets->size()<<std::endl;
 
   uhh2::Event::TriggerIndex ti_HT;
   ti_HT=event.get_trigger_index("HLT_PFHT900_v*");
@@ -338,6 +407,9 @@ bool ZPrimeTotTPrimeMisstagModule::process(Event & event) {
   eff_topjet2_h ->fill(event);
   event_topjet2_h->fill(event);
   topjet_topjet2_h->fill(event);
+  gluon_topjet_topjet2_h->fill(event);
+  quark_topjet_topjet2_h->fill(event);
+  mistag_topjet2_h->fill(event);
   jet_topjet2_h->fill(event);
 
   //Handle
@@ -401,6 +473,12 @@ bool ZPrimeTotTPrimeMisstagModule::process(Event & event) {
   std::vector<TopJet>* tagged(new std::vector<TopJet> (*event.topjets));
   tagged-> clear();
   tagged->reserve(event.topjets->size());
+  std::vector<TopJet>* gluon_tagged(new std::vector<TopJet> (*event.topjets));
+  gluon_tagged-> clear();
+  gluon_tagged->reserve(event.topjets->size());
+  std::vector<TopJet>* quark_tagged(new std::vector<TopJet> (*event.topjets));
+  quark_tagged-> clear();
+  quark_tagged->reserve(event.topjets->size());
   std::vector<TopJet>* untagged(new std::vector<TopJet> (*event.topjets));
   untagged-> clear();
   untagged->reserve(event.topjets->size());
@@ -515,6 +593,69 @@ bool ZPrimeTotTPrimeMisstagModule::process(Event & event) {
     for(const auto & j : *AK8Jets) event.topjets->push_back(j);
     topjet_fourth_pass_zwtag_h->fill(event);
     topjet_fourth_nopass_zwtag_h->fill(event);
+
+    ///////// TEST ANFANG
+    //ToDo: check the jets that pass the tag selection. maybe do it in normal way and do again the matching with genp
+    if (b_error) std::cout<<"Number of topjets  "<<event.topjets->size()<<std::endl;
+
+    for(const auto & j : *gluon_topjets){
+      event.topjets->clear();
+      event.topjets->reserve(gluon_topjets->size());
+      event.topjets->push_back(j); 
+      if (b_error) std::cout<<"Number of topjets after filling in the gluon topjets  "<<event.topjets->size()<<std::endl;
+      pass_zwtag = tagger_sel->passes(event);
+      if(pass_zwtag){
+	if (b_error) std::cout<<"Number of topjets pass zwtag in the gluon topjets  "<<event.topjets->size()<<std::endl;
+	gluon_tagged->push_back(event.topjets->at(0));
+      }
+      // }else{
+      // 	event.topjets->clear();
+      // 	event.topjets->reserve(AK8Jets->size());
+      // 	gluon_tagged->push_back(event.topjets->at(0));
+      // }
+    }
+    // if(gluon_topjets->size()==0){
+    // 	event.topjets->clear();
+    // 	event.topjets->reserve(AK8Jets->size());
+    // 	gluon_tagged->push_back(event.topjets->at(0));
+    // }
+
+    event.set(h_gluon_zwtag_topjets,*gluon_tagged);
+
+    event.topjets->clear();
+    event.topjets->reserve(AK8Jets->size());
+    for(const auto & j : *AK8Jets) event.topjets->push_back(j);
+    //quarks
+
+    for(const auto & j : *quark_topjets){
+      event.topjets->clear();
+      event.topjets->reserve(quark_topjets->size());
+      event.topjets->push_back(j); 
+      if (b_error) std::cout<<"Number of topjets after filling in the quarks topjets  "<<event.topjets->size()<<std::endl;
+      pass_zwtag = tagger_sel->passes(event);
+      if(pass_zwtag){
+	if (b_error) std::cout<<"Number of topjets pass zwtag in the quarks topjets  "<<event.topjets->size()<<std::endl;
+	quark_tagged->push_back(event.topjets->at(0));
+      }
+      // }else{
+      // 	event.topjets->clear();
+      // 	event.topjets->reserve(AK8Jets->size());
+      // 	quark_tagged->push_back(event.topjets->at(0));
+      // }
+    }
+    // if(quark_topjets->size()==0){
+    // 	event.topjets->clear();
+    // 	event.topjets->reserve(AK8Jets->size());
+    // 	quark_tagged->push_back(event.topjets->at(0));
+    // }
+    event.set(h_quark_zwtag_topjets,*quark_tagged);
+
+    event.topjets->clear();
+    event.topjets->reserve(AK8Jets->size());
+    for(const auto & j : *AK8Jets) event.topjets->push_back(j);
+
+    ////// TEST ENDE
+
   
 if(b_error) std::cout <<"----------------------------------------  Ende ---------------------------------------------------------------------------------------------------------------------"<<std::endl;
 
@@ -530,6 +671,8 @@ if(b_error) std::cout <<"----------------------------------------  Ende --------
   topjet_seconde_nopass_zwtag_h->fill(event);
   // all topjets passed the tagger
   topjet_pass_zwtag_h->fill(event);
+  gluon_topjet_pass_zwtag_h->fill(event);
+  quark_topjet_pass_zwtag_h->fill(event);
   topjet_nopass_zwtag_h->fill(event);
 
   return true;

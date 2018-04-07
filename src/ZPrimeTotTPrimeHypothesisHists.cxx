@@ -30,10 +30,12 @@ ZPrimeTotTPrimeHypothesisHists::ZPrimeTotTPrimeHypothesisHists(uhh2::Context & c
     Discriminator_2 = book<TH1F>("Discriminator_2",name,50,0,50);
     Discriminator_3 = book<TH1F>("Discriminator_3",name,300,0,30); 
     DiscriminatorH = book<TH1F>("DiscriminatorH",name+"H",100,min,max);
+    Discriminator_mismatchedHadTop = book<TH1F>("Discriminator_mismatchedHadTops",name,100,min,max);
+    Discriminator_mismatchedHiggs = book<TH1F>("Discriminator_mismatchedHiggs",name,100,min,max);
 
     M_ttbar_rec = book<TH1F>( "M_ttbar_rec", "M_{t#bar{t}}^{rec} [GeV/c^{2}]", 100, 0, 5000 ) ;
     M_Higgs_rec = book<TH1F>( "M_Higgs_rec", "M_{Higgs}^{rec} [GeV/c^{2}]", 60, 50, 170 ) ;
-    M_ZPrime_rec = book<TH1F>( "M_ZPrime_rec", "M_{ZPrime}^{rec} [GeV/c^{2}]", 40, 600, 3000 ) ;
+    M_ZPrime_rec = book<TH1F>( "M_ZPrime_rec", "M_{ZPrime}^{rec} [GeV/c^{2}]", 40, 600, 4000 ) ;
     M_ZPrime_scaled = book<TH1F>( "M_ZPrime_scaled", "M_{ZPrime}^{rec} [GeV/c^{2}]", 40, 600, 3000 ) ;
     M_TPrime_rec = book<TH1F>( "M_TPrime_rec", "M_{TPrime}^{rec} [GeV/c^{2}]", 50, 500, 1600 ) ;
     M_TPrime_rec2 = book<TH1F>( "M_TPrime_rec2", "M_{TPrime}^{rec} [GeV/c^{2}]", 50, 500, 1600 ) ;
@@ -57,6 +59,16 @@ ZPrimeTotTPrimeHypothesisHists::ZPrimeTotTPrimeHypothesisHists(uhh2::Context & c
     M_tophad_rec_1jet = book<TH1F>( "M_tophad_rec_1jet", "M^{top,had}_{1jet} [GeV/c^{2}]", 100, 0, 500 ) ;
     M_tophad_rec_2jet = book<TH1F>( "M_tophad_rec_2jet", "M^{top,had}_{2jet} [GeV/c^{2}]", 100, 0, 500 ) ;
     M_tophad_rec_3jet = book<TH1F>( "M_tophad_rec_3jet", "M^{top,had}_{3jet} [GeV/c^{2}]", 100, 0, 500 ) ;
+
+    M_tophad_rec_1jet_pdgid = book<TH1F>( "M_tophad_rec_1jet_pdgid", "M^{top,had}_{1jet} [GeV/c^{2}]", 22, 0, 22 ) ;
+    M_tophad_rec_2jet_pdgid = book<TH1F>( "M_tophad_rec_2jet_pdgid", "M^{top,had}_{2jet} [GeV/c^{2}]", 22, 0, 22 ) ;
+    M_tophad_rec_3jet_pdgid = book<TH1F>( "M_tophad_rec_3jet_pdgid", "M^{top,had}_{3jet} [GeV/c^{2}]", 22, 0, 22 ) ;
+    M_tophad_rec_1jet_pdgid->Fill("Gluon",0);
+    M_tophad_rec_1jet_pdgid->Fill("Quark",0);
+    M_tophad_rec_2jet_pdgid->Fill("Gluon",0);
+    M_tophad_rec_2jet_pdgid->Fill("Quark",0);
+    M_tophad_rec_3jet_pdgid->Fill("Gluon",0);
+    M_tophad_rec_3jet_pdgid->Fill("Quark",0);
     
     Pt_toplep_rec = book<TH1F>( "Pt_toplep_rec", "P_{T}^{top,lep} [GeV/c]", 60, 0, 1200 ) ;
     Pt_tophad_rec = book<TH1F>( "Pt_tophad_rec", "P_{T}^{top,had} [GeV/c]", 60, 0, 1200 ) ;
@@ -157,6 +169,17 @@ ZPrimeTotTPrimeHypothesisHists::ZPrimeTotTPrimeHypothesisHists(uhh2::Context & c
     massfitlepTop = book<TH1F>("massfitlepTop","Mass reco lepTop",200, 50, 400);
  
     missmatch = book<TH1F>("missmatch","Match Rate",8,0,8);
+
+    //distance between lepton and bjet of the lep top
+    deltar_mu_blep = book<TH1F>("deltar_mu_blep","Distance between the lepton and the jet used for top lep",50,0,5);
+    number_closet_jet = book<TH1F>("number_closet_jet","Number of jets which are closest, number of all jets",3,0,3);
+    number_closet_jet->Fill("#closest",0);
+    number_closet_jet->Fill("#reconstruction",0);
+
+    number_closet_jet_with_matching = book<TH1F>("number_closet_jet_with_matching","Number of jets which are closest, number of all jets",3,0,3);
+    number_closet_jet_with_matching->Fill("#closest",0);
+    number_closet_jet_with_matching->Fill("#reconstruction",0);
+
        
     h_hyps = ctx.get_handle<std::vector<ZPrimeTotTPrimeReconstructionHypothesis>>(hyps_name);
     h_zprimegen = ctx.get_handle<ZPrimeGen>("zprimegen");
@@ -380,6 +403,8 @@ M_TPrime_rec4->Fill(mTPrime_rec4, weight);
     eta_toplep_vs ->Fill((etatoplep_rec-etaHiggs_gen)/etatoplep_gen,weight);
     eta_tophad_vs ->Fill((etatophad_rec-etaHiggs_gen)/etatophad_gen,weight);
 
+    
+
 
     ////////////////////////////////////////////////////////
 
@@ -459,9 +484,54 @@ M_TPrime_rec4->Fill(mTPrime_rec4, weight);
 
     if(distance_blep<=0.4){
       massfitlepTop ->Fill(hyp->toplep_v4().M(), weight);
-      missmatch->Fill("lep TopR matched",1);
-    }else{missmatch->Fill("lep TopR miss",1);}
+      missmatch->Fill("lep TopR matched",weight);
+    }else{missmatch->Fill("lep TopR miss",weight);}
+
+    // go over each jet to define the matching by the closest jet to the generator b quark and not over deltaR (might be different due to hadronisation)
+    double deltaR_bgen_breco_min=1000;
+    Jet closets_reco_jet;
+    for(auto jet:*e.jets){
+      double tmp_deltar = deltaR(zprimegen.BLep(), jet);
+      if(tmp_deltar < deltaR_bgen_breco_min){
+	deltaR_bgen_breco_min = tmp_deltar;
+	closets_reco_jet = jet;
+      }
+    }
+    if(deltaR(closets_reco_jet,hyp->blep_v4()))  missmatch->Fill("lep Top matched with closet jet",weight);
+    else missmatch->Fill("lep Top missmatched with closest jet",weight);
+
+
+    double deltar_WQ1= deltaR(hyp->HZW_v4(), zprimegen.WHadQ1());
+    double deltar_WQ2= deltaR(hyp->HZW_v4(), zprimegen.WHadQ2());
+    double deltar_bhad= deltaR(hyp->HZW_v4(), zprimegen.BHad());
+
+    if(deltar_WQ1<=0.8 && deltar_WQ2<=0.8  && deltar_bhad<=0.8) Discriminator_mismatchedHadTop->Fill(hyp->discriminator(m_discriminator_name) ,weight);
+
+    if(deltaR(hyp->HZW_v4(), zprimegen.Higgs())>0.8) Discriminator_mismatchedHiggs->Fill(hyp->discriminator(m_discriminator_name) ,weight);
+
+    // with bjet matching of the closest jet
+    //for each jet in event check if it is the closest, if it is check deltar with hyp->blep_v4() if match count number_closest up and for each event fill number_closet_jet->Fill("#reconstruction",weight);
+    if(deltaR(hyp->blep_v4(),zprimegen.BLep())<0.4){
+      number_closet_jet_with_matching->Fill("#reconstruction",weight);
+      double deltar_min = 1000;
+      Jet closest_jet;
+      for(jet:*e.jets){
+	double deltar = deltaR(hyp->lepton().v4(),jet);
+	if(deltar < deltar_min){
+	  deltar_min = deltar;
+	  closest_jet = jet;
+	}
+      }
+      if(deltaR(closest_jet,hyp->blep_v4())<0.01) number_closet_jet_with_matching->Fill("#closest",weight);
+    }
+
+
+
   }
+
+ 
+  
+ 
   
   Discriminator->Fill(hyp->discriminator(m_discriminator_name) ,weight);
   Discriminator_2->Fill(hyp->discriminator(m_discriminator_name) ,weight);
@@ -480,9 +550,55 @@ M_TPrime_rec4->Fill(mTPrime_rec4, weight);
   if(hyp->tophad_jets().size()==2) M_tophad_rec_2jet->Fill(mtophad,weight);
   if(hyp->tophad_jets().size()>=3) M_tophad_rec_3jet->Fill(mtophad,weight);
 
+  if(e.is_valid(h_ttbargen)){
+    const auto & ttbargen = e.get(h_ttbargen);  
+
+    if(hyp->tophad_jets().size()==1){
+      double deltar_gluon = deltaR(ttbargen.Gluon(),hyp->tophad_jets()[0]);
+      double deltar_quark = deltaR(ttbargen.Quark(),hyp->tophad_jets()[0]);
+      if(deltar_gluon<=0.8) M_tophad_rec_1jet_pdgid->Fill("Gluon",weight);
+      else if(deltar_quark<=0.8) M_tophad_rec_1jet_pdgid->Fill("Quark",weight);
+    }
+
+    if(hyp->tophad_jets().size()==2){
+      double deltar_gluon = deltaR(ttbargen.Gluon(),hyp->tophad_jets()[1]);
+      double deltar_quark = deltaR(ttbargen.Quark(),hyp->tophad_jets()[1]);
+      if(deltar_gluon<=0.8) M_tophad_rec_2jet_pdgid->Fill("Gluon",weight);
+      else if(deltar_quark<=0.8) M_tophad_rec_2jet_pdgid->Fill("Quark",weight);
+    }
+
+    if(hyp->tophad_jets().size()==3){
+      double deltar_gluon = deltaR(ttbargen.Gluon(),hyp->tophad_jets()[2]);
+      double deltar_quark = deltaR(ttbargen.Quark(),hyp->tophad_jets()[2]);
+      if(deltar_gluon<=0.8) M_tophad_rec_3jet_pdgid->Fill("Gluon",weight);
+      else if(deltar_quark<=0.8) M_tophad_rec_3jet_pdgid->Fill("Quark",weight);
+    }
+  }
+
+
+
   Pt_toplep_rec->Fill( hyp->toplep_v4().Pt(),weight );
   Pt_tophad_rec->Fill( hyp->tophad_v4().Pt(),weight );
 
- 
+//////////// distance between lepton and bjet of the lep top
+    double deltaR_lepton_bjet = deltaR(hyp->lepton().v4(),hyp->blep_v4());
+    deltar_mu_blep->Fill(deltaR_lepton_bjet,weight);
+    
+    //for each jet in event check if it is the closest, if it is check deltar with hyp->blep_v4() if match count number_closest up and for each event fill number_closet_jet->Fill("#reconstruction",weight);
+    number_closet_jet->Fill("#reconstruction",weight);
+    double deltar_min = 1000;
+    Jet closest_jet;
+    for(jet:*e.jets){
+      double deltar = deltaR(hyp->lepton().v4(),jet);
+      if(deltar < deltar_min){
+	deltar_min = deltar;
+	closest_jet = jet;
+      }
+    }
+    if(deltaR(closest_jet,hyp->blep_v4())<0.01) number_closet_jet->Fill("#closest",weight);
+
+
+
+
 
 }

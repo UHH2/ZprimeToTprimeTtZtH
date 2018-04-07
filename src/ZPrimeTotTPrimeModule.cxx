@@ -93,7 +93,7 @@ ZPrimeTotTPrimeModule::ZPrimeTotTPrimeModule(Context & ctx){
     njet2_sel.reset(new NJetSelection(2)); // see common/include/NSelections.h
     njet3_sel.reset(new NJetSelection(3)); // see common/include/NSelections.h
     njet4_sel.reset(new NJetSelection(4)); // see common/include/NSelections.h
-    dijet_sel.reset(new ZPrimeTotTPrimeDijetSelection()); // see ZPrimeTotTPrimeSelections
+    //    dijet_sel.reset(new ZPrimeTotTPrimeDijetSelection()); // see ZPrimeTotTPrimeSelections
     MET_sel.reset(new ZPrimeTotTPrimeMETCut(100)); // see ZPrimeTotTPrimeSelections
     Ht_cut.reset(new HtSelection(100,1000)); // see ZPrimeTotTPrimeSelections
     PtJet_cut.reset(new ZPrimeTotTPrimePtJetCut(0,400,1)); // see ZPrimeTotTPrimeSelections
@@ -155,10 +155,10 @@ bool ZPrimeTotTPrimeModule::process(Event & event) {
     if(njet_selection){
         h_njet2->fill(event);
     }
-    bool dijet_selection = dijet_sel->passes(event);
-    if(dijet_selection){
-        h_dijet->fill(event);
-    }
+    // bool dijet_selection = dijet_sel->passes(event);
+    //    if(dijet_selection){
+    //        h_dijet->fill(event);
+    //    }
 
     bool MET_selection = MET_sel -> passes(event);
     if(MET_selection){

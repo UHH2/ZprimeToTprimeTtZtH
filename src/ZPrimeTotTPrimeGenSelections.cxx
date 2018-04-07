@@ -22,6 +22,7 @@ ZPrimeGen::ZPrimeGen(const vector<GenParticle> & genparticles){
     const GenParticle & genp = genparticles[i];
     // allparticles.push_back(*genp);
     if(abs(genp.pdgId()) ==9900113){ZPrime = genp;}
+    if(abs(genp.pdgId()) ==9000010){ZPrime = genp;}
     if(abs(genp.pdgId())==8000001){TPrime = genp;}
     if(abs(genp.pdgId())==6 && oncetop){main_top = genp;oncetop=false;}
     if(abs(genp.pdgId())==21 && i>1 && oncegluon && genp.mother(&genparticles,1)-> index() == 0){ZPrimeGluon = genp;oncegluon= false;}
@@ -503,6 +504,10 @@ void ZPrimeGen::DecayChannel( const vector<GenParticle> & genparticles ){
 	  default: ;//cout<<"L583: Zerfall nicht bedacht, pdgID "<< abs(H.daughter(&genparticles,1)->pdgId())<<endl;break;
 	  }
 	}
+	
+
+	WHiggsTop1daughter1=*WHiggsTop1.daughter(&genparticles,1);
+	WHiggsTop1daughter2=*WHiggsTop1.daughter(&genparticles,2);
       }
       //top (TPrime)  decays  hadronic
       if(Z.daughter(&genparticles,1)&&WZTop1.daughter(&genparticles,1)&&WZTop1.daughter(&genparticles,2) ){
@@ -563,6 +568,13 @@ void ZPrimeGen::DecayChannel( const vector<GenParticle> & genparticles ){
    }
   }
 
+ if(top_W.daughter(&genparticles,1) && top_W.daughter(&genparticles,2)){
+  WTop1daughter1=*top_W.daughter(&genparticles,1);
+  WTop1daughter2=*top_W.daughter(&genparticles,2);
+ }else{
+  WTop1daughter1=top_W;
+  WTop1daughter2=top_W;
+ }
   //return n_vector;
 }
 vector<int> ZPrimeGen::GetDecayChannel(){return n_vector;}
@@ -631,6 +643,18 @@ GenParticle ZPrimeGen::Lepton()const{
 GenParticle ZPrimeGen::WHiggsTop()const{
   return WHiggsTop1;
 }
+GenParticle ZPrimeGen::WHiggsTopD1()const{
+  return WHiggsTop1daughter1;
+}
+GenParticle ZPrimeGen::WHiggsTopD2()const{
+  return WHiggsTop1daughter2;
+}
+GenParticle ZPrimeGen::WTopD1()const{
+  return WTop1daughter1;
+}
+GenParticle ZPrimeGen::WTopD2()const{
+  return WTop1daughter2;
+}
 GenParticle ZPrimeGen::BHiggsTop()const{
   return BHiggsTop1;
 }
@@ -663,7 +687,29 @@ GenParticle ZPrimeGen::WHadQ1()const{
 GenParticle ZPrimeGen::WHadQ2()const{
   return Whadtopq2;
 }
+GenParticle ZPrimeGen::Btop()const{
+  return top_b;
+}
 
+GenParticle  ZPrimeGen::ZQ1()const{
+  return decaydaughterZ1;
+}
+GenParticle  ZPrimeGen::ZQ2()const{
+  return decaydaughterZ2;
+}
+
+GenParticle  ZPrimeGen::HQ1()const{
+  return decaydaughterH1;
+}
+GenParticle  ZPrimeGen::HQ2()const{
+  return decaydaughterH2;
+}
+GenParticle  ZPrimeGen::WQ1()const{
+  return decaydaughterW1;
+}
+GenParticle  ZPrimeGen::WQ2()const{
+  return decaydaughterW2;
+}
 
 //Get the PT of the leading particles
 float ZPrimeGen::Main_Top_PT()const{return main_top.pt();}

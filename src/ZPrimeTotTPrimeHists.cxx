@@ -66,15 +66,44 @@ ZPrimeTotTPrimeHists::ZPrimeTotTPrimeHists(Context & ctx, const string & dirname
   book<TH1F>("MatchedHiggsTag","Matched Higgstag Jets",5,0,5);
 
   hist("MatchedHiggsTag")->Fill("Higgstag matched",0);
-  hist("MatchedHiggsTag")->Fill("W matched",0);
-  hist("MatchedHiggsTag")->Fill("Top matched",0);
-  hist("MatchedHiggsTag")->Fill("Z matched",0);
   hist("MatchedHiggsTag")->Fill("Higgstag miss",0);
+
+  hist("MatchedHiggsTag")->Fill("Top had matched",0);
+  hist("MatchedHiggsTag")->Fill("W had matched",0);
+  hist("MatchedHiggsTag")->Fill("b matched",0);
+  hist("MatchedHiggsTag")->Fill("b had and higgs  matched",0);
+  hist("MatchedHiggsTag")->Fill("Z matched",0);
+  hist("MatchedHiggsTag")->Fill("Top had Quarks matched",0);
+  hist("MatchedHiggsTag")->Fill("W had Quarks matched",0);
+  hist("MatchedHiggsTag")->Fill("b had Quarks matched",0);
+  hist("MatchedHiggsTag")->Fill("Quark matched",0);
+  hist("MatchedHiggsTag")->Fill("Gluon matched",0);
+  hist("MatchedHiggsTag")->Fill("Higgstag",0);
+
 
   book<TH1F>("pdgIdHiggsTag", "pdgId Higgstag",26, 0,26);
 
+ //HIGGSTAG 1b
+  book<TH1F>("MatchedHiggsTag_1b","Matched Higgstag Jets",5,0,5);
+
+  hist("MatchedHiggsTag_1b")->Fill("Higgstag matched",0);
+  hist("MatchedHiggsTag_1b")->Fill("Higgstag miss",0);
+  hist("MatchedHiggsTag_1b")->Fill("Top had matched",0);
+  hist("MatchedHiggsTag_1b")->Fill("W had matched",0);
+  hist("MatchedHiggsTag_1b")->Fill("b matched",0);
+  hist("MatchedHiggsTag_1b")->Fill("b had and higgs  matched",0);
+  hist("MatchedHiggsTag_1b")->Fill("Z matched",0);
+  hist("MatchedHiggsTag_1b")->Fill("Top had Quarks matched",0);
+  hist("MatchedHiggsTag_1b")->Fill("W had Quarks matched",0);
+  hist("MatchedHiggsTag_1b")->Fill("b had Quarks matched",0);
+  hist("MatchedHiggsTag_1b")->Fill("Quark matched",0);
+  hist("MatchedHiggsTag_1b")->Fill("Gluon matched",0);
+  hist("MatchedHiggsTag_1b")->Fill("Higgstag",0);
+
+  book<TH1F>("pdgIdHiggsTag1b", "pdgId Higgstag",26, 0,26);
 
   //ZWTAG
+  book<TH1F>("MatchedZquarksToAK8","Matched Quarks of Z to AK8 jet",14,0,14);
   book<TH1F>("MatchedZWTag","Matched ZWtag Jets",14,0,14);
   hist("MatchedZWTag")->Fill("Higgs matched",0);
   hist("MatchedZWTag")->Fill("W matched",0);
@@ -84,6 +113,27 @@ ZPrimeTotTPrimeHists::ZPrimeTotTPrimeHists(Context & ctx, const string & dirname
  hist("MatchedZWTag")->Fill("Wlep matched",0);
 
  book<TH1F>("pdgIdZWTag", "pdgId zwTag",26, 0,26);
+
+ // soft drop mass for the different tagger categories
+ book<TH1F>("Ztag_mass_subjet_sum","M^{ SD}_{AK8} [GeV]", 100, 0, 300);
+ book<TH1F>("H2btag_mass_subjet_sum","M^{ SD}_{AK8} [GeV]", 100, 0, 300);
+ book<TH1F>("H1btag_mass_subjet_sum","M^{ SD}_{AK8} [GeV]", 100, 0, 300);
+ book<TH1F>("Toptag_mass_subjet_sum","M^{ SD}_{AK8} [GeV]", 100, 0, 300);
+ 
+ //soft drop mass for the different objects: H,Z,W
+ //Hier
+ book<TH1F>("Z_mass_subjet_sum","M^{ SD}_{AK8} [GeV]", 100, 0, 300);
+ book<TH1F>("W_mass_subjet_sum","M^{ SD}_{AK8} [GeV]", 100, 0, 300);
+ book<TH1F>("H_mass_subjet_sum","M^{ SD}_{AK8} [GeV]", 100, 0, 300);
+ book<TH1F>("Top_mass_subjet_sum","M^{ SD}_{AK8} [GeV]", 100, 0, 300);
+ // need to loop over all topjets and see if one is matched to particle
+
+
+ //tau32 and tau21
+ book<TH1F>("tau21","#tau_{2}/#tau_{1}", 50, 0, 1);
+ book<TH1F>("tau32","#tau_{3}/#tau_{2}", 50, 0, 1);
+
+
 
  //matched W in ttbar
  book<TH1F>("matchedWTTbar","W machted ttbar",3,0,3);
@@ -104,9 +154,13 @@ ZPrimeTotTPrimeHists::ZPrimeTotTPrimeHists(Context & ctx, const string & dirname
   //efficiency
   book<TH1F>("eff", "Eff",10,0,9);
 
+  //numbers
+  book<TH1F>("n_Z", "number of Z bosons",10,0,9);
+
   h_zprimegen = ctx.get_handle<ZPrimeGen>("zprimegen");
   h_toptag = ctx.get_handle<std::vector<TopJet>>("TopTag");
   h_higgstag = ctx.get_handle<std::vector<TopJet>>("HiggsTag");
+  h_higgstag_1b = ctx.get_handle<std::vector<TopJet>>("HiggsTag_one_btag");
   h_ZWtag = ctx.get_handle<std::vector<TopJet>>("ZWTag");
   h_ttbargen = ctx.get_handle<TTbarGen>("ttbargen");
  
@@ -261,9 +315,56 @@ void ZPrimeTotTPrimeHists::fill(const Event & event){
   hist("H_T1")->Fill(ht, weight);
 
   hist("eff")-> Fill(1, weight);
+
+
+  //// loop over all topjets and see if the topjet matches to Z,W,H
+  if(event.is_valid(h_zprimegen)){
+    const auto & zprimegen = event.get(h_zprimegen);
+    for (TopJet topjet: *event.topjets){
+      //Hier
+      // Z boson matching
+      double deltarZq1 = deltaR(topjet,zprimegen.ZQ1());
+      double deltarZq2 = deltaR(topjet,zprimegen.ZQ2());
+
+      // W boson matching
+      double deltarWq1 = deltaR(topjet,zprimegen.WHadQ1());
+      double deltarWq2 = deltaR(topjet,zprimegen.WHadQ2());
+
+      // H boson matching
+      double deltarH = deltaR(topjet,zprimegen.Higgs());
+      double deltarHQ1 = deltaR(topjet,zprimegen.HQ1());
+      double deltarHQ2 = deltaR(topjet,zprimegen.HQ2());
+
+      //depending on matching fill histograms
+      //first calculate mass_subjet_sum
+      LorentzVector subjet_sum;
+      for (const auto s : topjet.subjets()) {
+	subjet_sum += s.v4();
+      }
+
+      if(deltarZq1 <0.8 && deltarZq2 <0.8) hist("Z_mass_subjet_sum")->Fill(subjet_sum.M(), weight);
+      if(deltarWq1 <0.8 && deltarWq2 <0.8) hist("W_mass_subjet_sum")->Fill(subjet_sum.M(), weight);
+      //      if(deltarH <0.8)	hist("H_mass_subjet_sum")->Fill(subjet_sum.M(), weight);
+      if(deltarHQ1 <0.8 && deltarHQ2 <0.8)	hist("H_mass_subjet_sum")->Fill(subjet_sum.M(), weight);
+
+      
+    }//over all topjets
+  }//end h_zprimegen
+  //// end loop over all topjets and see if the topjet matches to Z,W,H
+
  
   if(event.is_valid(h_zprimegen)){
     const auto & zprimegen = event.get(h_zprimegen);
+
+    bool deltar_zq1=false;
+    bool deltar_zq2=false;
+    for(auto topjet:*event.topjets) {
+      double deltarq1 = deltaR(topjet,zprimegen.ZQ1());
+      double deltarq2 = deltaR(topjet,zprimegen.ZQ2());
+      if(deltarq1<=0.8)deltar_zq1=true;
+      if(deltarq2<=0.8)deltar_zq2=true;
+    }
+    if(deltar_zq1&&deltar_zq2)hist("n_Z")-> Fill(1, weight);
 
     if(Njets>=1){ 
       double deltaRH = deltaR(jets->at(0),  zprimegen.Higgs());
@@ -356,6 +457,12 @@ void ZPrimeTotTPrimeHists::fill(const Event & event){
       }
     }
 
+      double delta_mub_lep = deltaR(zprimegen.Lepton(), zprimegen.BLep()); 
+      hist("deltaR_mub_lep")->Fill(delta_mub_lep,weight);
+      double delta_mub_had = deltaR(zprimegen.Lepton(), zprimegen.BHad()); 
+      hist("deltaR_mub_had")->Fill(delta_mub_had,weight);
+
+
 
   }//h_zprimegen
 
@@ -378,10 +485,33 @@ void ZPrimeTotTPrimeHists::fill(const Event & event){
 
 	hist("pdgIdTopTag")->Fill(abs(event.genparticles->at(jmin).pdgId()),weight);
 
+	double deltar_WQ1= deltaR(toptagevt.at(0).v4(), zprimegen.WHadQ1());
+	double deltar_WQ2= deltaR(toptagevt.at(0).v4(), zprimegen.WHadQ2());
+	double deltar_bhad= deltaR(toptagevt.at(0).v4(), zprimegen.BHad());
 
-	if(deltaR( toptagevt.at(0).v4(), zprimegen.hadTop())<= 0.8){
+	if(deltar_WQ1<= 0.8&&deltar_WQ2<=0.8&&deltar_bhad<=0.8){
 	  hist("MatchedTopTag")->Fill("Toptag matched",weight);
+
+	  //Hier
+	  LorentzVector subjet_sum;
+	  for (const auto s : toptagevt.at(0).subjets()) {
+	    subjet_sum += s.v4();
+	  }
+	  hist("Toptag_mass_subjet_sum")->Fill(subjet_sum.M(), weight);
+
+
 	}else hist("MatchedTopTag")->Fill("Toptag miss",weight);
+
+	double deltar_WtopQ1= deltaR(toptagevt.at(0).v4(), zprimegen.WTopD1());
+	double deltar_WtopQ2= deltaR(toptagevt.at(0).v4(), zprimegen.WTopD2());
+	double deltar_WtopTPQ1= deltaR(toptagevt.at(0).v4(), zprimegen.WHiggsTopD1());
+	double deltar_WtopTPQ2= deltaR(toptagevt.at(0).v4(), zprimegen.WHiggsTopD2());
+	double deltar_BtopTP= deltaR(toptagevt.at(0).v4(), zprimegen.BHiggsTop());
+	double deltar_Btop= deltaR(toptagevt.at(0).v4(), zprimegen.Btop());
+
+	if(deltar_WtopQ1<=0.8 && deltar_WtopQ2<=0.8 &&deltar_Btop <=0.8 ) hist("MatchedTopTag")->Fill("Top from Zp",weight);
+	if(deltar_WtopTPQ1<=0.8 && deltar_WtopTPQ2<=0.8 &&deltar_BtopTP <=0.8 ) hist("MatchedTopTag")->Fill("Top from Tp",weight);
+
 	if(toptagevt.size()>1){
 	if(deltaR( toptagevt.at(1).v4(), zprimegen.hadTop())<= 0.8){
 	  hist("MatchedTopTag")->Fill("Toptag1 matched",weight);
@@ -412,17 +542,141 @@ void ZPrimeTotTPrimeHists::fill(const Event & event){
 	}
 
 	hist("pdgIdHiggsTag")->Fill(abs(event.genparticles->at(jmin).pdgId()),weight);
-
 	if(deltaR( higgstagevt.at(0).v4(), zprimegen.Higgs())<= 0.8){
 	  hist("MatchedHiggsTag")->Fill("Higgstag matched",weight);
+
+	  //Hier
+	  LorentzVector subjet_sum;
+	  for (const auto s : higgstagevt.at(0).subjets()) {
+	    subjet_sum += s.v4();
+	  }
+	  hist("H2btag_mass_subjet_sum")->Fill(subjet_sum.M(), weight);
+
+
 	}else hist("MatchedHiggsTag")->Fill("Higgstag miss",weight);
 
-	if( deltaR(higgstagevt.at(0).v4(), zprimegen.hadTop())<=0.8)  hist("MatchedHiggsTag")->Fill("Top matched",weight);
-	if( deltaR(higgstagevt.at(0).v4(), zprimegen.WBoson())<=0.8)  hist("MatchedHiggsTag")->Fill("WBoson (T') matched",weight);
+	// if( deltaR(higgstagevt.at(0).v4(), zprimegen.hadTop())<=0.8)  hist("MatchedHiggsTag")->Fill("Top had matched",weight);
+	double deltar_WQ1= deltaR(higgstagevt.at(0).v4(), zprimegen.WHadQ1());
+	double deltar_WQ2= deltaR(higgstagevt.at(0).v4(), zprimegen.WHadQ2());
+	double deltar_bhad= deltaR(higgstagevt.at(0).v4(), zprimegen.BHad());
+	double deltar_blep= deltaR(higgstagevt.at(0).v4(), zprimegen.BLep());
+
+	if(deltar_WQ1<=0.8 && deltar_WQ2<=0.8 && deltar_bhad<=0.8)  hist("MatchedHiggsTag")->Fill("Top had matched",weight);
+	else if( deltar_WQ1<=0.8 && deltar_WQ2<=0.8 )  hist("MatchedHiggsTag")->Fill("W had matched",weight);
+	else if(deltar_bhad<=0.8 || deltar_blep<=0.8 )  hist("MatchedHiggsTag")->Fill("b matched",weight);
+	if(deltar_bhad<=0.8) hist("MatchedHiggsTag")->Fill("b had Quarks matched",weight);
+	if(deltar_bhad<=0.8 && deltaR( higgstagevt.at(0).v4(), zprimegen.Higgs())<= 0.8) hist("MatchedHiggsTag")->Fill("b had and higgs  matched",weight);
 	if( deltaR(higgstagevt.at(0).v4(), zprimegen.ZBoson())<=0.8)  hist("MatchedHiggsTag")->Fill("Z matched",weight);
+	// if( deltaR(higgstagevt.at(0).v4(), zprimegen.ZBoson())<=0.8)  hist("MatchedHiggsTag")->Fill("q matched",weight);
+	// if( deltaR(higgstagevt.at(0).v4(), zprimegen.ZBoson())<=0.8)  hist("MatchedHiggsTag")->Fill("g matched",weight);
+
 
       }
     }//h_higgstag
+  }else if(event.is_valid(h_ttbargen)){
+      const auto & ttbargen = event.get(h_ttbargen);
+      if(event.is_valid(h_higgstag)){
+	const auto & higgstagevt = event.get(h_higgstag);
+
+	if(higgstagevt.size()>=1&& ttbargen.IsSemiLeptonicDecay()){
+	  
+	  hist("MatchedHiggsTag")->Fill("Higgstag",weight);
+
+	  double deltar_top = deltaR(higgstagevt.at(0).v4(),ttbargen.TopHad());
+
+	  double deltar_bhad = deltaR(higgstagevt.at(0).v4(),ttbargen.BHad());
+          double deltar_Q1 = deltaR(higgstagevt.at(0).v4(),ttbargen.Q1());
+          double deltar_Q2 = deltaR(higgstagevt.at(0).v4(),ttbargen.Q2());
+
+	  double deltar_gluon = deltaR(higgstagevt.at(0).v4(),ttbargen.Gluon());
+	  double deltar_quark = deltaR(higgstagevt.at(0).v4(),ttbargen.Quark());
+
+	  if(deltar_top <= 0.8) hist("MatchedHiggsTag")->Fill("Top had matched",weight);
+          if(deltar_Q1 <= 0.8 && deltar_Q2 <= 0.8) hist("MatchedHiggsTag")->Fill("W had matched",weight);
+          if(deltar_bhad <= 0.8 && deltar_Q1 <= 0.8 && deltar_Q2 <= 0.8) hist("MatchedHiggsTag")->Fill("Top had Quarks matched",weight);
+	  else if(deltar_Q1 <= 0.8 && deltar_Q2 <= 0.8) hist("MatchedHiggsTag")->Fill("W had Quarks matched",weight);
+	  else if(deltar_bhad <= 0.8)hist("MatchedHiggsTag")->Fill("b had Quarks matched",weight);
+	  else if(deltar_quark <= 0.8) hist("MatchedHiggsTag")->Fill("Quark matched",weight);
+          if(deltar_gluon <= 0.8) hist("MatchedHiggsTag")->Fill("Gluon matched",weight);
+	}
+      }
+  }
+
+  //HIGGSTAG 1b
+  if(event.is_valid(h_zprimegen)){
+    const auto & zprimegen = event.get(h_zprimegen);
+   
+    if(event.is_valid(h_higgstag_1b)){
+      const auto & higgstagevt_1b = event.get(h_higgstag_1b);
+     
+      if(higgstagevt_1b.size()>=1){
+	const GenParticle & genp = event.genparticles->at(2);
+	float drmin = deltaR(genp.v4(),higgstagevt_1b.at(0));
+	int jmin =2; 
+	for(unsigned int i = 2; i<event.genparticles->size();i++){
+	  const auto & genp = event.genparticles->at(i);
+	  float dr = deltaR(genp.v4(),higgstagevt_1b.at(0));
+	  if(dr < drmin){drmin = dr;jmin = i;}
+	}
+
+	hist("pdgIdHiggsTag1b")->Fill(abs(event.genparticles->at(jmin).pdgId()),weight);
+
+	if(deltaR( higgstagevt_1b.at(0).v4(), zprimegen.Higgs())<= 0.8){
+	  hist("MatchedHiggsTag_1b")->Fill("Higgstag matched",weight);
+
+	  //Hier
+	  LorentzVector subjet_sum;
+	  for (const auto s : higgstagevt_1b.at(0).subjets()) {
+	    subjet_sum += s.v4();
+	  }
+	  hist("H1btag_mass_subjet_sum")->Fill(subjet_sum.M(), weight);
+
+
+	}else hist("MatchedHiggsTag_1b")->Fill("Higgstag miss",weight);
+	double deltar_WQ1= deltaR(higgstagevt_1b.at(0).v4(), zprimegen.WHadQ1());
+	double deltar_WQ2= deltaR(higgstagevt_1b.at(0).v4(), zprimegen.WHadQ2());
+	double deltar_bhad= deltaR(higgstagevt_1b.at(0).v4(), zprimegen.BHad());
+	double deltar_blep= deltaR(higgstagevt_1b.at(0).v4(), zprimegen.BLep());
+
+	if(deltar_WQ1<=0.8 && deltar_WQ2<=0.8 && deltar_bhad<=0.8)  hist("MatchedHiggsTag_1b")->Fill("Top had matched",weight);
+	else if( deltar_WQ1<=0.8 && deltar_WQ2<=0.8 )  hist("MatchedHiggsTag_1b")->Fill("W had matched",weight);
+	else if(deltar_bhad<=0.8 || deltar_blep<=0.8 )  hist("MatchedHiggsTag_1b")->Fill("b matched",weight);
+        if(deltar_bhad<=0.8) hist("MatchedHiggsTag_1b")->Fill("b had Quarks matched",weight);
+        if(deltar_bhad<=0.8 && deltaR( higgstagevt_1b.at(0).v4(), zprimegen.Higgs())<= 0.8) hist("MatchedHiggsTag_1b")->Fill("b had and higgs  matched",weight);
+	if( deltaR(higgstagevt_1b.at(0).v4(), zprimegen.ZBoson())<=0.8)  hist("MatchedHiggsTag_1b")->Fill("Z matched",weight);
+
+
+
+      }
+    }//h_higgstag 1b
+  }else if(event.is_valid(h_ttbargen)){
+    const auto & ttbargen = event.get(h_ttbargen);
+    if(event.is_valid(h_higgstag_1b)){
+      const auto & higgstagevt_1b = event.get(h_higgstag_1b);
+
+      if(higgstagevt_1b.size()>=1&& ttbargen.IsSemiLeptonicDecay()){
+
+	hist("MatchedHiggsTag_1b")->Fill("Higgstag",weight);
+
+	double deltar_top = deltaR(higgstagevt_1b.at(0).v4(),ttbargen.TopHad());
+
+	double deltar_bhad = deltaR(higgstagevt_1b.at(0).v4(),ttbargen.BHad());
+	double deltar_Q1 = deltaR(higgstagevt_1b.at(0).v4(),ttbargen.Q1());
+	double deltar_Q2 = deltaR(higgstagevt_1b.at(0).v4(),ttbargen.Q2());
+
+	double deltar_gluon = deltaR(higgstagevt_1b.at(0).v4(),ttbargen.Gluon());
+	double deltar_quark = deltaR(higgstagevt_1b.at(0).v4(),ttbargen.Quark());
+
+	if(deltar_top <= 0.8) hist("MatchedHiggsTag_1b")->Fill("Top had matched",weight);
+        if(deltar_Q1 <= 0.8 && deltar_Q2 <= 0.8) hist("MatchedHiggsTag_1b")->Fill("W had matched",weight);
+	if(deltar_bhad <= 0.8 && deltar_Q1 <= 0.8 && deltar_Q2 <= 0.8) hist("MatchedHiggsTag_1b")->Fill("Top had Quarks matched",weight);
+	else if(deltar_Q1 <= 0.8 && deltar_Q2 <= 0.8) hist("MatchedHiggsTag_1b")->Fill("W had Quarks matched",weight);
+	else if(deltar_bhad <= 0.8)hist("MatchedHiggsTag_1b")->Fill("b had Quarks matched",weight);
+	else if(deltar_quark <= 0.8) hist("MatchedHiggsTag_1b")->Fill("Quark matched",weight);
+	if(deltar_gluon <= 0.8) hist("MatchedHiggsTag_1b")->Fill("Gluon matched",weight);
+	
+      }
+    } 
   }
 
   
@@ -430,6 +684,12 @@ void ZPrimeTotTPrimeHists::fill(const Event & event){
   if(event.is_valid(h_zprimegen)){
     const auto & zprimegen = event.get(h_zprimegen);
  
+    for(auto topjet:*event.topjets){
+      float deltar = deltaR(topjet,zprimegen.ZBoson());
+      if(deltar <= 0.8) hist("MatchedZquarksToAK8")->Fill("Z matched",weight);
+    }
+
+
     if(event.is_valid(h_ZWtag)){
       const auto & ZWtagevt = event.get(h_ZWtag);
      
@@ -447,13 +707,20 @@ void ZPrimeTotTPrimeHists::fill(const Event & event){
 
 	hist("pdgIdZWTag")->Fill(abs(event.genparticles->at(jmin).pdgId()),weight);
 
-
+	double deltar_WtopQ1= deltaR(ZWtagevt.at(0).v4(), zprimegen.WTopD1());
+	double deltar_WtopQ2= deltaR(ZWtagevt.at(0).v4(), zprimegen.WTopD2());
+	double deltar_WtopTPQ1= deltaR(ZWtagevt.at(0).v4(), zprimegen.WHiggsTopD1());
+	double deltar_WtopTPQ2= deltaR(ZWtagevt.at(0).v4(), zprimegen.WHiggsTopD2());
+	double deltar_BtopTP= deltaR(ZWtagevt.at(0).v4(), zprimegen.BHiggsTop());
+	double deltar_Btop= deltaR(ZWtagevt.at(0).v4(), zprimegen.Btop());
 	///////////////////////////////////////////////////////////// matching Z/W tag /////////////////////////////////////////////////////////////////////////////
 	if(deltaR( ZWtagevt.at(0).v4(), zprimegen.Higgs())<= 0.8)	hist("MatchedZWTag")->Fill("Higgs matched",weight);
-	if(deltaR( ZWtagevt.at(0).v4(), zprimegen.WBoson())<= 0.8)	hist("MatchedZWTag")->Fill("WBoson (TPrime) matched",weight);
+	if(deltar_WtopTPQ1 <= 0.8&&deltar_WtopTPQ2<= 0.8)	hist("MatchedZWTag")->Fill("WBoson (TPrime) matched",weight);
 	if(deltaR(ZWtagevt.at(0).v4(), zprimegen.hadTop())<=0.8)  hist("MatchedZWTag")->Fill("had. Top matched",weight);
-	if(deltaR( ZWtagevt.at(0).v4(), zprimegen.TopW())<= 0.8)	hist("MatchedZWTag")->Fill("W aus Top matched",weight);
-	if(deltaR( ZWtagevt.at(0).v4(), zprimegen.WHiggsTop())<= 0.8)	hist("MatchedZWTag")->Fill("W aus top vom Higgs matched",weight);
+	if(deltar_WtopTPQ1<=0.8 && deltar_WtopTPQ2<=0.8 && deltar_BtopTP<=0.8)  hist("MatchedZWTag")->Fill(" Top aus Tp matched",weight);
+	if(deltar_WtopQ1<=0.8 &&deltar_WtopQ2<=0.8 && deltar_Btop<=0.8)  hist("MatchedZWTag")->Fill(" Top aus Zp matched",weight);
+	if(deltar_WtopQ1 <= 0.8 && deltar_WtopQ1<= 0.8 )	hist("MatchedZWTag")->Fill("W aus Top matched",weight);
+	// if(deltaR( ZWtagevt.at(0).v4(), zprimegen.WHiggsTop())<= 0.8)	hist("MatchedZWTag")->Fill("W aus top vom Higgs matched",weight);
 	if(ZWtagevt.size()>1){	
 	  if(deltaR(ZWtagevt.at(1).v4(), zprimegen.WLep())<=0.8)  hist("MatchedZWTag")->Fill("Wlep2 matched",weight);
 	if(deltaR(ZWtagevt.at(1).v4(), zprimegen.WHad())<=0.8)  hist("MatchedZWTag")->Fill("Whad2 matched",weight);
@@ -468,12 +735,45 @@ void ZPrimeTotTPrimeHists::fill(const Event & event){
 	if(deltaR(ZWtagevt.at(0).v4(), zprimegen.WHad())<=0.8)  hist("MatchedZWTag")->Fill("Whad matched",weight);
 	if(deltaR(ZWtagevt.at(0).v4(), zprimegen.ZBoson())<=0.8) {
 	  hist("MatchedZWTag")->Fill("Ztag matched",weight);
+	  //Hier
+	  LorentzVector subjet_sum;
+	  for (const auto s : ZWtagevt.at(0).subjets()) {
+	    subjet_sum += s.v4();
+	  }
+	  hist("Ztag_mass_subjet_sum")->Fill(subjet_sum.M(), weight);
 	}else hist("MatchedZWTag")->Fill("Ztag miss",weight);
 
       }
     }//h_ZWtag
-  }
+  }else if(event.is_valid(h_ttbargen)){
+    const auto & ttbargen = event.get(h_ttbargen);
+    if(event.is_valid(h_ZWtag)){
+      const auto & ZWtagevt = event.get(h_ZWtag);
 
+      if(ZWtagevt.size()>=1&& ttbargen.IsSemiLeptonicDecay()){
+
+	hist("MatchedZWTag")->Fill("Higgstag",weight);
+
+	double deltar_top = deltaR(ZWtagevt.at(0).v4(),ttbargen.TopHad());
+
+	double deltar_bhad = deltaR(ZWtagevt.at(0).v4(),ttbargen.BHad());
+	double deltar_Q1 = deltaR(ZWtagevt.at(0).v4(),ttbargen.Q1());
+	double deltar_Q2 = deltaR(ZWtagevt.at(0).v4(),ttbargen.Q2());
+
+	double deltar_gluon = deltaR(ZWtagevt.at(0).v4(),ttbargen.Gluon());
+	double deltar_quark = deltaR(ZWtagevt.at(0).v4(),ttbargen.Quark());
+
+	if(deltar_top <= 0.8) hist("MatchedZWTag")->Fill("Top had matched",weight);
+        if(deltar_Q1 <= 0.8 && deltar_Q2 <= 0.8) hist("MatchedZWTag")->Fill("W had matched",weight);
+	if(deltar_bhad <= 0.8 && deltar_Q1 <= 0.8 && deltar_Q2 <= 0.8) hist("MatchedZWTag")->Fill("Top had Quarks matched",weight);
+	else if(deltar_Q1 <= 0.8 && deltar_Q2 <= 0.8) hist("MatchedZWTag")->Fill("W had Quarks matched",weight);
+	else if(deltar_bhad <= 0.8)hist("MatchedZWTag")->Fill("b had Quarks matched",weight);
+	else if(deltar_quark <= 0.8) hist("MatchedZWTag")->Fill("Quark matched",weight);
+	if(deltar_gluon <= 0.8) hist("MatchedZWTag")->Fill("Gluon matched",weight);
+	
+      }
+    }
+  }//httbargen
 
   if(event.is_valid(h_zprimegen)){
     const auto & zprimegen = event.get(h_zprimegen);

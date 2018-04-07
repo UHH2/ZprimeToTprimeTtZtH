@@ -17,8 +17,8 @@ public:
     virtual void fill(const uhh2::Event & ev) override;
 
 protected:
-    TH1F *Discriminator, *Discriminator_2, *Discriminator_3,*DiscriminatorH;
-    TH1F *M_ttbar_rec, *M_ttbar_gen,*M_Higgs_rec, *M_Higgs_gen, *M_Z_gen, *M_W_gen,*M_ZPrime_rec, *M_ZPrime_gen,*M_TPrime_rec,*M_ZPrime_scaled, *M_TPrime_gen, *M_toplep_rec, *M_tophad_rec,  *M_toplep_gen, *M_tophad_gen,*M_tophad_rec_1jet, *M_tophad_rec_2jet, *M_tophad_rec_3jet,*M_TPrime_rec2,*M_TPrime_rec3,*M_TPrime_rec4;
+    TH1F *Discriminator, *Discriminator_2, *Discriminator_3,*DiscriminatorH,*Discriminator_mismatchedHadTop,*Discriminator_mismatchedHiggs;
+    TH1F *M_ttbar_rec, *M_ttbar_gen,*M_Higgs_rec, *M_Higgs_gen, *M_Z_gen, *M_W_gen,*M_ZPrime_rec, *M_ZPrime_gen,*M_TPrime_rec,*M_ZPrime_scaled, *M_TPrime_gen, *M_toplep_rec, *M_tophad_rec,  *M_toplep_gen, *M_tophad_gen,*M_tophad_rec_1jet, *M_tophad_rec_2jet, *M_tophad_rec_3jet,*M_tophad_rec_1jet_pdgid, *M_tophad_rec_2jet_pdgid, *M_tophad_rec_3jet_pdgid,*M_TPrime_rec2,*M_TPrime_rec3,*M_TPrime_rec4;
     TH1F *Pt_toplep_rec, *Pt_tophad_rec, *Pt_ttbar_rec, *Pt_ttbar_gen, *Pt_Higgs_rec, *Pt_Higgs_gen, *Pt_ZPrime_rec, *Pt_ZPrime_gen, *Pt_TPrime_rec, *Pt_TPrime_gen;
     TH2F *Pt_ttbar_rec_vs_Pt_ttbar_gen,*Pt_Higgs_rec_vs_Pt_Higgs_gen,*Pt_ZPrime_rec_vs_Pt_ZPrime_gen,*Pt_TPrime_rec_vs_Pt_TPrime_gen, *Discriminator_vs_M_ttbar, *M_ttbar_rec_vs_M_ttbar_gen,*M_Higgs_rec_vs_M_Higgs_gen,*M_TPrime_rec_vs_M_TPrime_gen,*M_ZPrime_rec_vs_M_ZPrime_gen, *M_ttbar_gen_vs_M_ttbar_rec, *M_Higgs_gen_vs_M_Higgs_rec, *M_ZPrime_gen_vs_M_ZPrime_rec, *M_TPrime_gen_vs_M_TPrime_rec;
     TH1F *M_ttbar_resolution;
@@ -33,6 +33,7 @@ protected:
     TH1F *M_Higgs_vs,*M_Z_vs,*M_W_vs, *M_ZPrime_vs, *M_TPrime_vs, *M_toplep_vs, *M_tophad_vs, *Pt_Higgs_vs, *Pt_ZPrime_vs, *Pt_TPrime_vs, *Pt_toplep_vs, *Pt_tophad_vs, *eta_Higgs_vs, *eta_ZPrime_vs, *eta_TPrime_vs, *eta_toplep_vs, *eta_tophad_vs;
 
 
+    TH1F *deltar_mu_blep, *number_closet_jet, *number_closet_jet_with_matching;
 
     uhh2::Event::Handle<std::vector<ZPrimeTotTPrimeReconstructionHypothesis>> h_hyps;
     uhh2::Event::Handle<ZPrimeGen> h_zprimegen;

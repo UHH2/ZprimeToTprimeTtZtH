@@ -26,6 +26,14 @@
  <!ENTITY Data_H_rereco SYSTEM "/nfs/dust/cms/user/abenecke/CMSSW_8_0_24_patch1/src/UHH2/common/datasets/RunII_80X_v3/DATA_SingleElectron_Run2016H_03Feb.xml" >
 
 
+<!ENTITY Data_B_photon SYSTEM "/nfs/dust/cms/user/gonvaq/CMSSW/CMSSW_8_0_24_patch1/src/UHH2/common/datasets/RunII_80X_v3/DATA_SinglePhoton_Run2016B_03Feb.xml">
+<!ENTITY Data_C_photon SYSTEM "/nfs/dust/cms/user/gonvaq/CMSSW/CMSSW_8_0_24_patch1/src/UHH2/common/datasets/RunII_80X_v3/DATA_SinglePhoton_Run2016C_03Feb.xml">
+<!ENTITY Data_D_photon SYSTEM "/nfs/dust/cms/user/gonvaq/CMSSW/CMSSW_8_0_24_patch1/src/UHH2/common/datasets/RunII_80X_v3/DATA_SinglePhoton_Run2016D_03Feb.xml">
+<!ENTITY Data_E_photon SYSTEM "/nfs/dust/cms/user/gonvaq/CMSSW/CMSSW_8_0_24_patch1/src/UHH2/common/datasets/RunII_80X_v3/DATA_SinglePhoton_Run2016E_03Feb.xml">
+<!ENTITY Data_F_photon SYSTEM "/nfs/dust/cms/user/gonvaq/CMSSW/CMSSW_8_0_24_patch1/src/UHH2/common/datasets/RunII_80X_v3/DATA_SinglePhoton_Run2016F_03Feb.xml">
+<!ENTITY Data_G_photon SYSTEM "/nfs/dust/cms/user/gonvaq/CMSSW/CMSSW_8_0_24_patch1/src/UHH2/common/datasets/RunII_80X_v3/DATA_SinglePhoton_Run2016G_03Feb.xml">
+<!ENTITY Data_H_photon SYSTEM "/nfs/dust/cms/user/gonvaq/CMSSW/CMSSW_8_0_24_patch1/src/UHH2/common/datasets/RunII_80X_v3/DATA_SinglePhoton_Run2016H_03Feb.xml">
+
  <!--                      Signal                       --> 
 
  <!ENTITY MC_ZPrime1500ToTPrime700T_TPrimeToHT SYSTEM "/nfs/dust/cms/user/abenecke/CMSSW_8_0_24_patch1/src/UHH2/common/datasets/RunII_80X_v3/ZPrimeToTPrimeT/ZprimeToTprimeT_TprimeToHT_MZp-1500Nar_MTp-700Nar_LH.xml" >
@@ -125,7 +133,7 @@
 
 <!--
 <ConfigParse NEventsBreak="0" FileSplit="100" />
-<ConfigSGE RAM ="8" DISK ="2" Mail="anna.benecke@desy.de" Notification="as" Workdir="workdir_preselection_elec"/>
+<ConfigSGE RAM ="8" DISK ="2" Mail="anna.benecke@desy.de" Notification="as" Workdir="workdir_preselection_elec_photon"/>
 -->
 
 <JobConfiguration JobName="ExampleCycleJob" OutputLevel="INFO">
@@ -156,7 +164,7 @@
     <InputData Version= "Data_H" Lumi="1" Type="Data" NEventsMax="&NEVT;" Cacheable="&b_Cacheable;">
       &Data_H; <InputTree Name="AnalysisTree"/> <OutputTree Name="AnalysisTree"/> </InputData>  -->
 
-
+<!--
    <InputData Version= "Data_B_rereco" Lumi="1" Type="Data" NEventsMax="&NEVT;" Cacheable="&b_Cacheable;">
       &Data_B_rereco; <InputTree Name="AnalysisTree"/> <OutputTree Name="AnalysisTree"/> </InputData>   
     <InputData Version= "Data_C_rereco" Lumi="1" Type="Data" NEventsMax="&NEVT;" Cacheable="&b_Cacheable;">
@@ -171,10 +179,25 @@
       &Data_G_rereco; <InputTree Name="AnalysisTree"/> <OutputTree Name="AnalysisTree"/> </InputData> 
     <InputData Version= "Data_H_rereco" Lumi="1" Type="Data" NEventsMax="&NEVT;" Cacheable="&b_Cacheable;">
       &Data_H_rereco; <InputTree Name="AnalysisTree"/> <OutputTree Name="AnalysisTree"/> </InputData>  
+-->
 
+   <InputData Version= "Data_B_photon" Lumi="1" Type="Data" NEventsMax="&NEVT;" Cacheable="&b_Cacheable;">
+      &Data_B_photon; <InputTree Name="AnalysisTree"/> <OutputTree Name="AnalysisTree"/> </InputData>   
+    <InputData Version= "Data_C_photon" Lumi="1" Type="Data" NEventsMax="&NEVT;" Cacheable="&b_Cacheable;">
+      &Data_C_photon; <InputTree Name="AnalysisTree"/> <OutputTree Name="AnalysisTree"/> </InputData>   
+    <InputData Version= "Data_D_photon" Lumi="1" Type="Data" NEventsMax="&NEVT;" Cacheable="&b_Cacheable;">
+      &Data_D_photon; <InputTree Name="AnalysisTree"/> <OutputTree Name="AnalysisTree"/> </InputData>   
+    <InputData Version= "Data_E_photon" Lumi="1" Type="Data" NEventsMax="&NEVT;" Cacheable="&b_Cacheable;">
+      &Data_E_photon; <InputTree Name="AnalysisTree"/> <OutputTree Name="AnalysisTree"/> </InputData> 
+    <InputData Version= "Data_F_photon" Lumi="1" Type="Data" NEventsMax="&NEVT;" Cacheable="&b_Cacheable;">
+      &Data_F_photon; <InputTree Name="AnalysisTree"/> <OutputTree Name="AnalysisTree"/> </InputData>   
+    <InputData Version= "Data_G_photon" Lumi="1" Type="Data" NEventsMax="&NEVT;" Cacheable="&b_Cacheable;">
+      &Data_G_photon; <InputTree Name="AnalysisTree"/> <OutputTree Name="AnalysisTree"/> </InputData> 
+    <InputData Version= "Data_H_photon" Lumi="1" Type="Data" NEventsMax="&NEVT;" Cacheable="&b_Cacheable;">
+      &Data_H_photon; <InputTree Name="AnalysisTree"/> <OutputTree Name="AnalysisTree"/> </InputData>  
 
     <!--                     Signal                      -->
-
+<!--
  <InputData Version= "MC_ZPrime1500ToTPrime700T_TPrimeToHT" Lumi="207419" Type="MC" NEventsMax="&NEVT;" Cacheable="&b_Cacheable;">
       &MC_ZPrime1500ToTPrime700T_TPrimeToHT; <InputTree Name="AnalysisTree"/> <OutputTree Name="AnalysisTree"/> </InputData>
     <InputData Version= "MC_ZPrime1500ToTPrime900T_TPrimeToHT" Lumi="205787" Type="MC" NEventsMax="&NEVT;" Cacheable="&b_Cacheable;">
@@ -231,10 +254,10 @@
       &MC_ZPrime2500ToTPrime1500T_TPrimeToWB; <InputTree Name="AnalysisTree"/> <OutputTree Name="AnalysisTree"/> </InputData>
 
 
-
+-->
 
     <!--                    Background                   -->
-
+<!--
   <InputData Version="TTbarAll_both" Lumi="92847.910" Type="MC" NEventsMax="&NEVT;" Cacheable="&b_Cacheable;">
       &TTbarAll_both; <InputTree Name="AnalysisTree"/> <OutputTree Name="AnalysisTree"/> </InputData> 
    <InputData Version="TTbarAll" Lumi="92847.910" Type="MC" NEventsMax="&NEVT;" Cacheable="&b_Cacheable;">
@@ -244,7 +267,7 @@
     <InputData Version="TTbar_Mtt1000toINFT" Lumi="1189652.930" Type="MC" NEventsMax="&NEVT;" Cacheable="&b_Cacheable;">
       &TTbar_Mtt1000toINFT; <InputTree Name="AnalysisTree"/> <OutputTree Name="AnalysisTree"/> </InputData>
     
-<!--  <InputData Version="MC_WJets_LNu_HT100To200" Lumi="48629.563" Type="MC" NEventsMax="&NEVT;" Cacheable="&b_Cacheable;">
+  <InputData Version="MC_WJets_LNu_HT100To200" Lumi="48629.563" Type="MC" NEventsMax="&NEVT;" Cacheable="&b_Cacheable;">
       &MC_WJets_LNu_HT100To200; <InputTree Name="AnalysisTree"/> <OutputTree Name="AnalysisTree"/> </InputData>  
     <InputData Version="MC_WJets_LNu_HT200To400" Lumi="90848.565" Type="MC" NEventsMax="&NEVT;" Cacheable="&b_Cacheable;">
       &MC_WJets_LNu_HT200To400; <InputTree Name="AnalysisTree"/> <OutputTree Name="AnalysisTree"/> </InputData>  
@@ -257,7 +280,7 @@
     <InputData Version="MC_WJets_LNu_HT1200To2500" Lumi="4059973.633" Type="MC" NEventsMax="&NEVT;" Cacheable="&b_Cacheable;">
       &MC_WJets_LNu_HT1200To2500; <InputTree Name="AnalysisTree"/> <OutputTree Name="AnalysisTree"/> </InputData>     
     <InputData Version="MC_WJets_LNu_HT2500ToInf" Lumi="67214110.234" Type="MC" NEventsMax="&NEVT;" Cacheable="&b_Cacheable;">
-      &MC_WJets_LNu_HT2500ToInf; <InputTree Name="AnalysisTree"/> <OutputTree Name="AnalysisTree"/> </InputData>-->
+      &MC_WJets_LNu_HT2500ToInf; <InputTree Name="AnalysisTree"/> <OutputTree Name="AnalysisTree"/> </InputData>
 
 
   <InputData Version="MC_WJetsToLNu_Pt_0To50" Lumi="261411503.121" Type="MC" NEventsMax="&NEVT;" Cacheable="&b_Cacheable;">
@@ -266,8 +289,7 @@
       &MC_WJetsToLNu_Pt_50To100; <InputTree Name="AnalysisTree"/> <OutputTree Name="AnalysisTree"/> </InputData>  
 
 
- <!--<InputData Version="MC_WJetsAll" Lumi="59569753.488" Type="MC" NEventsMax="&NEVT;" Cacheable="&b_Cacheable;">
-      &MC_WJetsAll; <InputTree Name="AnalysisTree"/> <OutputTree Name="AnalysisTree"/> </InputData>  -->
+
   <InputData Version="MC_WJetsToLNu_Pt_100To250" Lumi="261411503.121" Type="MC" NEventsMax="&NEVT;" Cacheable="&b_Cacheable;">
       &MC_WJetsToLNu_Pt_100To250; <InputTree Name="AnalysisTree"/> <OutputTree Name="AnalysisTree"/> </InputData>  
    <InputData Version="MC_WJetsToLNu_Pt_250To400" Lumi="25802848.787" Type="MC" NEventsMax="&NEVT;" Cacheable="&b_Cacheable;">
@@ -335,7 +357,7 @@
     &MC_QCD_Pt_170to250_bcToE; <InputTree Name="AnalysisTree"/> <OutputTree Name="AnalysisTree"/> </InputData> 
   <InputData Version="MC_QCD_Pt_250toInf_bcToE" Lumi="711.9259" Type="MC" NEventsMax="&NEVT;" Cacheable="&b_Cacheable;">
     &MC_QCD_Pt_250toInf_bcToE; <InputTree Name="AnalysisTree"/> <OutputTree Name="AnalysisTree"/> </InputData> 
-
+-->
 
 
 
@@ -351,7 +373,7 @@
 	<Item Name="TopJetCollection" Value="slimmedJetsAK8_SoftDrop" />
         <Item Name="GenParticleCollection" Value="GenParticles" /> 
 	<Item Name="additionalBranches" Value="patJetsHepTopTagCHSPacked_daughters" /> 
-
+	<Item Name="additionalBranches" Value="slimmedGenJetsAK8" /> 
 	
         <Item Name="use_sframe_weight" Value="false" />
         
@@ -368,6 +390,9 @@
 
 	<Item Name="jecsmear_direction" Value="nominal" />
 	<Item Name="jersmear_direction" Value="nominal" />
+
+	<Item Name="ScaleVariationMuR" Value="none" />
+	<Item Name="ScaleVariationMuF" Value="none" />
 
 
 

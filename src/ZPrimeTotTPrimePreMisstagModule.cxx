@@ -81,7 +81,8 @@ private:
   std::unique_ptr<JetLeptonCleaner> jetlepton_cleaner_G;
   std::unique_ptr<JetLeptonCleaner> jetlepton_cleaner_H;
 
- std::unique_ptr<JetResolutionSmearer> jet_resolution_smearer;
+  std::unique_ptr<JetResolutionSmearer> jet_resolution_smearer;
+  std::unique_ptr<GenericJetResolutionSmearer> topjetER_smearer;
   // Data/MC scale factors
   std::unique_ptr<uhh2::AnalysisModule> pileup_SF;
   std::unique_ptr<uhh2::AnalysisModule> lumiweight;
@@ -139,6 +140,7 @@ private:
   const int runnr_EF = 278802;
   const int runnr_G = 280385;
 
+ Event::Handle<std::vector<Jet>> h_myAK8Genjets;
 };
 
 ZPrimeTotTPrimePreMisstagModule::ZPrimeTotTPrimePreMisstagModule(uhh2::Context& ctx){ 
@@ -150,6 +152,8 @@ ZPrimeTotTPrimePreMisstagModule::ZPrimeTotTPrimePreMisstagModule(uhh2::Context& 
   //corrector
  //JEC
   std::vector<std::string> JEC_AK4, JEC_AK8,JEC_AK4_BCD,JEC_AK4_EF,JEC_AK4_G,JEC_AK4_H,JEC_AK8_BCD,JEC_AK8_EF,JEC_AK8_G,JEC_AK8_H;
+  h_myAK8Genjets = ctx.get_handle<std::vector<Jet>>("slimmedGenJetsAK8");
+
   if(isMC){
 
     JEC_AK4 = JERFiles::Summer16_23Sep2016_V4_L123_AK4PFchs_MC;
@@ -210,6 +214,7 @@ ZPrimeTotTPrimePreMisstagModule::ZPrimeTotTPrimePreMisstagModule(uhh2::Context& 
     pileup_SF.reset(new MCPileupReweight(ctx)); 
     lumiweight.reset(new MCLumiWeight(ctx));
     jet_resolution_smearer.reset(new JetResolutionSmearer(ctx));
+    topjetER_smearer.reset(new GenericJetResolutionSmearer(ctx,"topjets","slimmedGenJetsAK8"));
    } else     lumi_sel.reset(new LumiSelection(ctx));
 
    filename =  ctx.get("dataset_version");
@@ -283,6 +288,7 @@ bool ZPrimeTotTPrimePreMisstagModule::process(Event & event) {
     jetlepton_cleaner->process(event);
 
     jet_resolution_smearer->process(event);
+    topjetER_smearer->process(event);
   }else{
     if(event.run <= runnr_BCD)  {       
       jet_corrector_BCD->process(event);

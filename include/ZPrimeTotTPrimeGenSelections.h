@@ -52,7 +52,20 @@ class ZPrimeGen{
  GenParticle BHad()const;
  GenParticle WHadQ1()const;
  GenParticle WHadQ2()const;
+ GenParticle ZQ1()const;
+ GenParticle ZQ2()const;
+ GenParticle HQ1()const;
+ GenParticle HQ2()const;
+ GenParticle WQ1()const;
+ GenParticle WQ2()const;
 
+GenParticle WHiggsTopD1()const;
+
+GenParticle WHiggsTopD2()const;
+
+ GenParticle WTopD1()const;
+ GenParticle WTopD2()const;
+ GenParticle Btop()const;
 
   /* GenParticle WHiggsTopD(int i)const; */
   /* GenParticle HiggsD(int i) const; */
@@ -123,7 +136,7 @@ class ZPrimeGen{
 
  private:
 
-  GenParticle bottom, topHiggs, topZ, Z, W, H, top_W, top_b, main_top, TPrime, ZPrime, daughter1, daughter2, daughter3,up, down, daughter5, daughter6, gluon, Bottom,TPrimedaughter3,Top1,Gluon,Top2, ZPrimeGluon, TPrimereco1,TPrimereco2,TPrimereco3, ZPrimereco, decaydaughterH1,decaydaughterH2,decaydaughterZ1,decaydaughterZ2 , decaydaughterW1, decaydaughterW2,WHiggsTop1,BHiggsTop1,WZTop1, lepton,neutrino, leptop,hadtop, firstH, firstW, firstZ, Wleptop,Whadtop,muon_top, muon_tprime, blep, quark1, quark2, bhad, BZTop1, Whadtopq2,Whadtopq1;
+  GenParticle bottom, topHiggs, topZ, Z, W, H, top_W, top_b, main_top, TPrime, ZPrime, daughter1, daughter2, daughter3,up, down, daughter5, daughter6, gluon, Bottom,TPrimedaughter3,Top1,Gluon,Top2, ZPrimeGluon, TPrimereco1,TPrimereco2,TPrimereco3, ZPrimereco, decaydaughterH1,decaydaughterH2,decaydaughterZ1,decaydaughterZ2 , decaydaughterW1, decaydaughterW2,WHiggsTop1,BHiggsTop1,WZTop1, lepton,neutrino, leptop,hadtop, firstH, firstW, firstZ, Wleptop,Whadtop,muon_top, muon_tprime, blep, quark1, quark2, bhad, BZTop1, Whadtopq2,Whadtopq1,WHiggsTop1daughter1,WHiggsTop1daughter2,WTop1daughter1,WTop1daughter2;
  
   int n_TllTll=0,n_TllTh=0,n_ThTll=0,n_ThTh=0;
   int n_TllTllgg=0,n_TllTllZZ=0,n_TllTllWW=0,n_TllTllbb=0, n_TllThgg=0, n_TllThZZ=0, n_TllThWW=0,n_TllThbb=0,n_ThTllgg=0,n_ThTllZZ=0,n_ThTllWW=0,n_ThTllbb=0, n_ThThgg=0, n_ThThZZ=0, n_ThThWW=0,n_ThThbb=0;

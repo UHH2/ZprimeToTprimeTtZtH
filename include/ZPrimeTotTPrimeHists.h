@@ -25,6 +25,7 @@ public:
     uhh2::Event::Handle<ZPrimeGen> h_zprimegen;
     uhh2::Event::Handle<std::vector<TopJet> > h_toptag;
     uhh2::Event::Handle<std::vector<TopJet> > h_higgstag;
+    uhh2::Event::Handle<std::vector<TopJet> > h_higgstag_1b;
     uhh2::Event::Handle<std::vector<TopJet> > h_ZWtag;
     uhh2::Event::Handle<TTbarGen> h_ttbargen;
     std::string btopjets;

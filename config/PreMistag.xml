@@ -16,6 +16,8 @@
 <!ENTITY MC_QCD_HT1500to2000 SYSTEM "/nfs/dust/cms/user/abenecke/CMSSW_8_0_24_patch1/src/UHH2/common/datasets/RunII_80X_v3/MC_QCD_HT1500to2000.xml">
 <!ENTITY MC_QCD_HT2000toInf SYSTEM "/nfs/dust/cms/user/abenecke/CMSSW_8_0_24_patch1/src/UHH2/common/datasets/RunII_80X_v3/MC_QCD_HT2000toInf.xml">
 
+<!ENTITY MC_QCD_Flat SYSTEM "/nfs/dust/cms/user/abenecke/CMSSW_8_0_24_patch1/src/UHH2/common/datasets/RunII_80X_v3/MC_QCD_Flat_pythia8.xml">
+
  <!ENTITY TTbarAll_both SYSTEM "/nfs/dust/cms/user/abenecke/CMSSW_8_0_24_patch1/src/UHH2/common/datasets/RunII_80X_v3/MC_TT_TuneCUETP8M2T4_both.xml">
 
 <!ENTITY  DATA_JetHT_Run2016B_03Feb SYSTEM "/nfs/dust/cms/user/abenecke/CMSSW_8_0_24_patch1/src/UHH2/common/datasets/RunII_80X_v3/DATA_JetHT_Run2016B_03Feb.xml">
@@ -31,8 +33,8 @@
  ]>
 
 <!--
-<ConfigParse NEventsBreak="1000000" FileSplit="0" />
-<ConfigSGE RAM ="4" DISK ="2" Mail="anna.benecke@desy.de" Notification="as" Workdir="workdir_premistag"/>
+<ConfigParse NEventsBreak="5000" FileSplit="0" />
+<ConfigSGE RAM ="4" DISK ="2" Mail="anna.benecke@desy.de" Notification="as" Workdir="workdir_premistag2"/>
 -->
 
 <JobConfiguration JobName="ExampleCycleJob" OutputLevel="INFO">
@@ -63,7 +65,6 @@
 <InputData Lumi="1" NEventsMax="-1" Type="DATA" Version="DATA_JetHT_Run2016H_03Feb_v3" Cacheable="False">
         &DATA_JetHT_Run2016H_03Feb_v3; <InputTree Name="AnalysisTree" /> <OutputTree Name="AnalysisTree" />  </InputData>-->
   
-
 
 
 
@@ -106,11 +107,18 @@
     &MC_QCD_HT2000toInf;
     <InputTree Name="AnalysisTree" /> 
     <OutputTree Name="AnalysisTree" /> 
-</InputData> -->
+</InputData>-->
 
+<InputData Lumi="0.005" NEventsMax="-1" Type="MC" Version="QCD_Flat" Cacheable="False">
+    &MC_QCD_Flat;
+    <InputTree Name="AnalysisTree" /> 
+    <OutputTree Name="AnalysisTree" /> 
+</InputData>
+
+<!--
  <InputData Version="TTbarAll_both" Lumi="186543.350" Type="MC" NEventsMax="&NEVT;" Cacheable="&b_Cacheable;">
-      &TTbarAll_both; <InputTree Name="AnalysisTree"/> <OutputTree Name="AnalysisTree"/> </InputData> 
-
+      &TTbarAll_both; <InputTree Name="AnalysisTree"/> <OutputTree Name="AnalysisTree"/> </InputData>
+-->
 
    <UserConfig>
         <Item Name="PrimaryVertexCollection" Value="offlineSlimmedPrimaryVertices" />
@@ -119,11 +127,12 @@
         <Item Name="TauCollection" Value="slimmedTaus" />
         <Item Name="JetCollection" Value="slimmedJets" />
         <Item Name="GenJetCollection" Value="slimmedGenJets" /> 
+        <Item Name="GenTopJetCollection" Value="ak8GenJetsSoftDrop" /> 
         <Item Name="METName" Value="slimmedMETs" /> 
 	<Item Name="TopJetCollection" Value="slimmedJetsAK8_SoftDrop" />
         <Item Name="GenParticleCollection" Value="GenParticles" /> 
 	<Item Name="additionalBranches" Value="patJetsHepTopTagCHSPacked_daughters" /> 
-
+	<Item Name="additionalBranches" Value="slimmedGenJetsAK8" /> 
 	
         <Item Name="use_sframe_weight" Value="false" />
         

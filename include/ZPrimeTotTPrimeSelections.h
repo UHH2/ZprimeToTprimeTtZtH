@@ -3,6 +3,8 @@
 #include "UHH2/core/include/fwd.h"
 #include "UHH2/core/include/Selection.h"
 #include <UHH2/common/include/TTbarGen.h>
+#include <UHH2/ZprimeToTprimeTtZtH/include/BackgroundGenSelection.h>
+#include <UHH2/ZprimeToTprimeTtZtH/include/ZPrimeTotTPrimeGenSelections.h>
 #include "UHH2/ZprimeToTprimeTtZtH/include/ZPrimeTotTPrimeReconstructionHypothesis.h"
 #include "UHH2/ZprimeToTprimeTtZtH/include/ZPrimeTotTPrimeGenSelections.h"
 #include "UHH2/ZprimeToTprimeTtZtH/include/ZPrimeTotTPrimeReconstructionHypothesisDiscriminators.h"
@@ -14,18 +16,32 @@
 
 namespace uhh2examples {
     
-  /* Select events with at least two jets in which the leading two jets have deltaphi > 2.7 and the third jet pt is
-   * below 20% of the average of the leading two jets, where the minimum deltaphi and
-   * maximum third jet pt fraction can be changed in the constructor.
-   * The jets are assumed to be sorted in pt.
-   */
-  class ZPrimeTotTPrimeDijetSelection: public uhh2::Selection {
+
+  class ElectronTriggerSF: public uhh2::AnalysisModule{
+
   public:
-    ZPrimeTotTPrimeDijetSelection(float dphi_min = 2.7f, float third_frac_max = 0.2f);
-    virtual bool passes(const uhh2::Event & event) override;
+    explicit ElectronTriggerSF(uhh2::Context & ctx);
+    virtual bool process(uhh2::Event & event) override;
+
   private:
-    float dphi_min, third_frac_max;
+    double sf;
+    TString sysdirection;
+
   };
+
+  class MuonTriggerSF: public uhh2::AnalysisModule{
+
+  public:
+    explicit MuonTriggerSF(uhh2::Context & ctx);
+    virtual bool process(uhh2::Event & event) override;
+
+  private:
+    double sf;
+    TString sysdirection;
+
+  };
+
+
 
   class ZPrimeTotTPrimeNJetCut: public uhh2::Selection {
   public:
@@ -44,17 +60,28 @@ namespace uhh2examples {
    
   };
 
-class ElectronTriggerWeights: public uhh2::AnalysisModule{
 
- public:
-  explicit ElectronTriggerWeights(uhh2::Context & ctx, TString path_, TString SysDirection_);
-  virtual bool process(uhh2::Event & event) override;
+ class ZPrimeTotTPrimePartonWCut: public uhh2::Selection {
+  public:
+    ZPrimeTotTPrimePartonWCut(TString filename_);
+    virtual bool passes(const uhh2::Event & event) override;
+  private:
+    TString filename;
+  };
 
- private:
-  TString path, SysDirection;
-  std::unique_ptr<TGraphAsymmErrors> Eff_lowpt_MC, Eff_lowpt_DATA, Eff_highpt_MC, Eff_highpt_DATA;
 
-};
+
+  class ElectronTriggerWeights: public uhh2::AnalysisModule{
+
+  public:
+    explicit ElectronTriggerWeights(uhh2::Context & ctx, TString path_, TString SysDirection_);
+    virtual bool process(uhh2::Event & event) override;
+
+  private:
+    TString path, SysDirection;
+    std::unique_ptr<TGraphAsymmErrors> Eff_lowpt_MC, Eff_lowpt_DATA, Eff_highpt_MC, Eff_highpt_DATA;
+
+  };
 
  class ZPrimeTotTPrimeNTopJetCut: public uhh2::Selection {
   public:
@@ -443,3 +470,52 @@ private:
 
 
 
+//////////////////////////////////////////////////////////////////////////////////////////////////////////
+class MuonTrkWeights{
+ public:
+  explicit MuonTrkWeights(uhh2::Context & ctx, TString path_, TString SysDirection_);
+  bool process(uhh2::Event & event);
+
+ private:
+  TString path,SysDirection;
+  std::unique_ptr<TGraphAsymmErrors> Trk_SF;
+
+};
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////
+class MistagRateSF{
+
+ public:
+  explicit MistagRateSF(uhh2::Context & ctx,TString file_,TString SysDirection_ );
+  bool process(uhh2::Event & event, TString tagger);
+
+ private: 
+  std::vector<std::vector<std::string>> input;
+  TString SysDirection;
+  
+  uhh2::Event::Handle<std::vector<TopJet> > h_toptag;
+  uhh2::Event::Handle<std::vector<TopJet> > h_higgstag;
+  uhh2::Event::Handle<std::vector<TopJet> > h_higgstag_1b;
+  uhh2::Event::Handle<std::vector<TopJet> > h_ZWtag;
+  bool berror;
+
+};
+//////////////////////////////////////////////////////////////////////////////////////////////////////////
+class IsMistag{
+
+ public:
+  explicit IsMistag(uhh2::Context & ctx);
+  bool process(uhh2::Event & event,TString tagger);
+
+ private:
+    uhh2::Event::Handle<ZPrimeGen> h_zprimegen;
+    uhh2::Event::Handle<BackgroundGen> h_background;
+    uhh2::Event::Handle<TTbarGen> h_ttbar;
+  
+    uhh2::Event::Handle<std::vector<TopJet> > h_toptag;
+    uhh2::Event::Handle<std::vector<TopJet> > h_higgstag;
+    uhh2::Event::Handle<std::vector<TopJet> > h_higgstag_1b;
+    uhh2::Event::Handle<std::vector<TopJet> > h_ZWtag;
+
+};
+//////////////////////////////////////////////////////////////////////////////////////////////////////////

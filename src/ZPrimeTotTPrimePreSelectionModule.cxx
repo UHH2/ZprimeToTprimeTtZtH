@@ -78,6 +78,7 @@ private:
 
   //Selections
   std::unique_ptr<uhh2::Selection> lumi_sel;
+  std::unique_ptr<uhh2::AnalysisModule> lumiweight;
 
   //selections
   std::unique_ptr<uhh2::Selection> muo1_sel;
@@ -128,6 +129,12 @@ private:
   const int runnr_G = 280385;
   bool isMC;
 
+
+  std::unique_ptr<AnalysisModule> syst_module;
+  bool do_scale_variation;
+
+  Event::Handle<std::vector<Jet>> h_myAK8Genjets;
+
 };
 
 ZPrimeTotTPrimePreSelectionModule::ZPrimeTotTPrimePreSelectionModule(uhh2::Context& ctx){
@@ -165,6 +172,8 @@ ZPrimeTotTPrimePreSelectionModule::ZPrimeTotTPrimePreSelectionModule(uhh2::Conte
     JEC_AK8_H =  JERFiles::Summer16_23Sep2016_V4_H_L123_AK8PFchs_DATA;
   }
 
+  h_myAK8Genjets = ctx.get_handle<std::vector<Jet>>("slimmedGenJetsAK8");
+
   if(isMC){ 
     jet_corrector.reset(new JetCorrector(ctx, JEC_AK4));
     topjet_corrector.reset(new TopJetCorrector(ctx, JEC_AK8));
@@ -172,7 +181,8 @@ ZPrimeTotTPrimePreSelectionModule::ZPrimeTotTPrimePreSelectionModule(uhh2::Conte
     jetlepton_cleaner.reset(new JetLeptonCleaner(ctx,JEC_AK4));
     jetlepton_cleaner->set_drmax(.4);
     jetER_smearer.reset(new JetResolutionSmearer(ctx));
-    topjetER_smearer.reset(new GenericJetResolutionSmearer(ctx,"topjets","gentopjets"));
+    topjetER_smearer.reset(new GenericJetResolutionSmearer(ctx,"topjets","slimmedGenJetsAK8"));
+    lumiweight.reset(new MCLumiWeight(ctx));
   }
   else {
    
@@ -255,6 +265,10 @@ ZPrimeTotTPrimePreSelectionModule::ZPrimeTotTPrimePreSelectionModule(uhh2::Conte
   ZprimeTotTPrimeprod.reset(new ZPrimeGenProducer(ctx, ZprimeTotTPrime_gen_label, false));
 
 
+  syst_module.reset(new MCScaleVariation(ctx));
+
+  do_scale_variation = (ctx.get("ScaleVariationMuR") == "up" || ctx.get("ScaleVariationMuR") == "down") || (ctx.get("ScaleVariationMuF") == "up" || ctx.get("ScaleVariationMuF") == "down");
+
 
 }
 
@@ -273,6 +287,10 @@ bool ZPrimeTotTPrimePreSelectionModule::process(Event & event) {
   if(filename.find("MC_ZPrime")!=std::string::npos){
     ZprimeTotTPrimeprod->process(event); 
   }
+
+  if(!event.isRealData)  lumiweight->process(event);
+
+  if(do_scale_variation) syst_module->process(event); 
 
   // dump input content
   input_h_event ->fill(event);

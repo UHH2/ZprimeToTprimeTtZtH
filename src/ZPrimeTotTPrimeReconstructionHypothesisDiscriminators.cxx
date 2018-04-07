@@ -24,18 +24,18 @@ const ZPrimeTotTPrimeReconstructionHypothesis * get_best_hypothesis(const std::v
     const ZPrimeTotTPrimeReconstructionHypothesis * best = nullptr;
     float current_best_disc = numeric_limits<float>::infinity();
     for(const auto & hyp : hyps){
-      //   std::cout <<"in for " << std::endl;
+         // std::cout <<"in for " << std::endl;
         if(!hyp.has_discriminator(label)) continue;
-	//		std::cout << "hypothesis if" << std::endl;
         auto disc = hyp.discriminator(label);
+	// std::cout << "hypothesis if  "<< disc << std::endl;
         if(disc < current_best_disc){
             best = &hyp;
             current_best_disc = disc;
         }
     }
-    //       std::cout << "current best" << current_best_disc << std::endl;
+    // std::cout << "current best  " << current_best_disc << std::endl;
     if(std::isfinite(current_best_disc)){
-      //          std::cout << "is finite"<< std::endl;
+      // std::cout << "is finite "<< std::endl;
         return best;
     }
     else{

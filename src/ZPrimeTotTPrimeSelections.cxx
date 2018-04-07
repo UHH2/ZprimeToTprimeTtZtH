@@ -2,40 +2,185 @@
 #include <limits>
 #include <cmath>
 #include "TH2.h"
+#include "TF1.h"
 #include "TFile.h"
 #include "TH1F.h"
 #include <stdexcept>
 #include <iostream>
 #include <memory>
 #include <fstream>
+#include <sstream>
 
 #include "UHH2/core/include/Hists.h"
 using namespace uhh2examples;
 using namespace uhh2;
 using namespace std;
 
-ZPrimeTotTPrimeDijetSelection::ZPrimeTotTPrimeDijetSelection(float dphi_min_, float third_frac_max_): dphi_min(dphi_min_), third_frac_max(third_frac_max_){}
-    
-bool ZPrimeTotTPrimeDijetSelection::passes(const Event & event){
-    assert(event.jets); // if this fails, it probably means jets are not read in
-    if(event.jets->size() < 2) return false;
-    const auto & jet0 = event.jets->at(0);
-    const auto & jet1 = event.jets->at(1);
-    auto dphi = deltaPhi(jet0, jet1);
-    if(dphi < dphi_min) return false;
-    if(event.jets->size() == 2) return true;
-    const auto & jet2 = event.jets->at(2);
-    auto third_jet_frac = jet2.pt() / (0.5 * (jet0.pt() + jet1.pt()));
-    return third_jet_frac < third_frac_max;
+////////////////////////////////////////////////////////                                                                                                                             
+
+ElectronTriggerSF::ElectronTriggerSF(Context & ctx){
+  sysdirection=ctx.get("Systematic_EleTrigger");
 }
 
+bool   ElectronTriggerSF::process(uhh2::Event & event){
+  Particle elec = event.electrons->at(0);
+  double elec_pt=elec.pt();
+  double elec_eta =abs(elec.eta());
+  double add_unc=0.01;
 
-// MuonptSlection:: MuonptSlection(float ptmin){}
+  if(elec_pt<=140){
+    sf=0.9802;
+    if(sysdirection == "up")sf=sqrt(pow(0.9834,2) + pow(add_unc,2));
+    if(sysdirection == "down")sf=sqrt(pow(0.977,2)-pow(add_unc,2));
 
-// bool  MuonptSlection::passes(const Event & event){
-//   assert(event.muons);
-//   if(event.muons)
-// }
+  }else if(elec_pt<=160){
+    sf=0.9873;
+    if(sysdirection == "up")sf=sqrt(pow(0.9909,2) + pow(add_unc,2));
+    if(sysdirection == "down")sf=sqrt(pow(0.9835,2)-pow(add_unc,2));
+
+  }else if(elec_pt<=180){
+    sf=0.9867;
+    if(sysdirection == "up")sf=sqrt(pow(0.9911,2) + pow(add_unc,2));
+    if(sysdirection == "down")sf=sqrt(pow(0.9818,2)-pow(add_unc,2));
+
+  }else if(elec_pt<=200){
+    sf =0.9905;
+    if(sysdirection == "up")sf=sqrt(pow(0.9959,2) + pow(add_unc,2));
+    if(sysdirection == "down")sf=sqrt(pow(0.9845,2)-pow(add_unc,2));
+  }else if(elec_pt<=250){
+    sf =0.979421;
+    if(sysdirection == "up")sf=sqrt(pow(0.9852,2) + pow(add_unc,2));
+    if(sysdirection == "down")sf=sqrt(pow(0.9731,2)-pow(add_unc,2));
+  }else if(elec_pt<=400){
+    sf=0.996993;
+    if(sysdirection == "up")sf=sqrt(pow(0.9989,2) + pow(add_unc,2));
+    if(sysdirection == "down")sf=sqrt(pow(0.9939,2)-pow(add_unc,2));
+
+  }else{
+    sf=1;
+    if(sysdirection == "up")sf=sqrt(pow(1.001,2) + pow(add_unc,2));
+    if(sysdirection == "down")sf=sqrt(pow(0.9837,2)-pow(add_unc,2));
+
+  }
+  double weight= event.weight *sf;
+  event.weight = weight;
+
+
+  return true;
+}
+
+////////////////////////////////////////////////////////                                                                                                                            
+                                                                                                                                                                                     
+
+MuonTriggerSF::MuonTriggerSF(Context & ctx){
+  sysdirection=ctx.get("Systematic_MuonTrigger");
+}
+
+bool   MuonTriggerSF::process(uhh2::Event & event){
+  Particle muon = event.muons->at(0);
+  double muon_pt=muon.pt();
+  double muon_eta =abs(muon.eta());
+
+  //pT eta dependency
+  if(muon_pt<=100){
+    if(muon_eta<=0.9){
+      sf = 0.972;
+      if(sysdirection == "up")sf+= 0.002;
+      if(sysdirection == "down")sf-= 0.002;
+    }else if(muon_eta<=1.2){
+      sf = 0.947;
+      if(sysdirection == "up")sf+= 0.003;
+      if(sysdirection == "down")sf-= 0.003;
+    }else if(muon_eta<=1.7){
+      sf = 1.002;
+      if(sysdirection == "up")sf+= 0.004;
+      if(sysdirection == "down")sf-= 0.004;
+    }else if(muon_eta<=2.4){
+      sf = 0.957;
+      if(sysdirection == "up")sf+= 0.005;
+      if(sysdirection == "down")sf-= 0.005;
+    }
+  }else if(muon_pt<=180){
+    if(muon_eta<=0.9){
+      sf = 0.975;
+      if(sysdirection == "up")sf+= 0.003;
+      if(sysdirection == "down")sf-= 0.003;
+    }else if(muon_eta<=1.2){
+      sf = 0.935;
+      if(sysdirection == "up")sf+= 0.004;
+      if(sysdirection == "down")sf-= 0.004;
+    }else if(muon_eta<=1.7){
+      sf = 0.982;
+      if(sysdirection == "up")sf+= 0.006;
+      if(sysdirection == "down")sf-= 0.006;
+    }else if(muon_eta<=2.4){
+      sf = 0.945;
+      if(sysdirection == "up")sf+= 0.007;
+      if(sysdirection == "down")sf-= 0.007;
+    }
+  }else if(muon_pt<=210){
+    if(muon_eta<=0.9){
+      sf = 0.937;
+      if(sysdirection == "up")sf+= 0.011;
+      if(sysdirection == "down")sf-= 0.011;
+    }else if(muon_eta<=1.2){
+      sf = 0.947;
+      if(sysdirection == "up")sf+= 0.024;
+      if(sysdirection == "down")sf-= 0.024;
+    }else if(muon_eta<=1.7){
+      sf = 0.954;
+      if(sysdirection == "up")sf+= 0.022;
+      if(sysdirection == "down")sf-= 0.022;
+    }else if(muon_eta<=2.4){
+      sf = 0.949;
+      if(sysdirection == "up")sf+= 0.033;
+      if(sysdirection == "down")sf-= 0.033;
+    }
+  }else if(muon_pt<=300){
+    if(muon_eta<=0.9){
+      sf = 0.951;
+      if(sysdirection == "up")sf+= 0.017;
+      if(sysdirection == "down")sf-= 0.017;
+    }else if(muon_eta<=1.2){
+      sf = 0.898;
+      if(sysdirection == "up")sf+= 0.032;
+      if(sysdirection == "down")sf-= 0.032;
+    }else if(muon_eta<=1.7){
+      sf = 0.906;
+      if(sysdirection == "up")sf+= 0.031;
+      if(sysdirection == "down")sf-= 0.031;
+    }else if(muon_eta<=2.4){
+      sf = 0.833;
+      if(sysdirection == "up")sf+= 0.048;
+      if(sysdirection == "down")sf-= 0.048;
+    }
+  }else if(muon_pt>300){
+    if(muon_eta<=0.9){
+      sf = 0.981;
+      if(sysdirection == "up")sf+= 0.045;
+      if(sysdirection == "down")sf-= 0.045;
+    }else if(muon_eta<=1.2){
+      sf = 0.884;
+      if(sysdirection == "up")sf+= 0.048;
+      if(sysdirection == "down")sf-= 0.048;
+    }else if(muon_eta<=1.7){
+      sf = 0.984;
+      if(sysdirection == "up")sf+= 0.082;
+      if(sysdirection == "down")sf-= 0.082;
+    }else if(muon_eta<=2.4){
+      sf = 0.775;
+      if(sysdirection == "up")sf+= 0.086;
+      if(sysdirection == "down")sf-= 0.086;
+    }
+  }
+
+
+  double weight= event.weight *sf;
+  event.weight = weight;
+
+
+  return true;
+}
 
 
 
@@ -74,6 +219,30 @@ bool ZPrimeTotTPrimePartonW::passes(const uhh2::Event& event){
  }
  // cout<<Wpt<<endl;
  return Wpt<100;
+}
+////////////////////////////////////////////////////////
+ZPrimeTotTPrimePartonWCut::ZPrimeTotTPrimePartonWCut(TString filename_){
+  filename = filename_;
+}
+
+bool ZPrimeTotTPrimePartonWCut::passes(const uhh2::Event& event){
+  std::vector<GenParticle> & genparticles = *event.genparticles;
+  double Wpt=10000;
+
+ 
+ for(const auto & gp : genparticles){
+   if(abs(gp.pdgId())==24) Wpt = gp.pt();
+ }
+
+
+ if(filename.Contains("100") && filename.Contains("250")) return 100<Wpt && Wpt<250;
+ else if(filename.Contains("250") && filename.Contains("400")) return 250<Wpt && Wpt<400;
+ else if(filename.Contains("400") && filename.Contains("600")) return 400<Wpt && Wpt<600;
+ else if(filename.Contains("600")) return 600<Wpt;
+ else if(filename.Contains("50") && filename.Contains("100")) return 50<Wpt && Wpt<100;
+ else return true;
+
+ return true;
 }
 
 ////////////////////////////////////////////////////////
@@ -706,4 +875,242 @@ bool uhh2::TriangularCuts::passes(const uhh2::Event& event){
   bool pass_tc_jet = fabs(fabs(deltaPhi(*event.met, *jet1)) - a_) < a_/b_ * event.met->pt();
 
   return pass_tc_lep && pass_tc_jet;
+}
+
+
+
+MuonTrkWeights::MuonTrkWeights(Context & ctx, TString path_, TString SysDirection_): path(path_), SysDirection(SysDirection_){
+
+  auto dataset_type = ctx.get("dataset_type");
+  bool is_mc = dataset_type == "MC";
+  if(!is_mc){
+    cout << "Warning: MuonTrkWeights will not have an effect on this non-MC sample (dataset_type = '" + dataset_type + "')" << endl;
+    return;
+  }
+  
+  unique_ptr<TFile> file;												 
+  file.reset(new TFile(path,"READ"));											 
+  
+  Trk_SF.reset((TGraphAsymmErrors*)file->Get("ratio_eff_eta3_dr030e030_corr"));					 
+  
+  if(SysDirection != "none" && SysDirection != "up" && SysDirection != "down") throw runtime_error("In LQToTopMuModules.cxx, ElectronTriggerWeights.process(): Invalid SysDirection specified.");
+  
+}
+
+bool MuonTrkWeights::process(Event & event){
+
+  if(event.isRealData) return true;
+
+  double SF = 1.0;
+  for(const auto & mu : *event.muons){
+    double eta = mu.eta();
+    if(fabs(eta) > 2.4) throw runtime_error("In LQToTopMuModules.cxx, MuonTrkWeights::process(): Mu-|eta| > 2.4 is not supported at the moment.");
+    
+    //find right bin in eta
+    int idx = 0;
+    bool keep_going = true;
+    while(keep_going){
+      double x,y;
+      Trk_SF->GetPoint(idx,x,y);
+      keep_going = eta > x + Trk_SF->GetErrorXhigh(idx);
+      if(keep_going) idx++;
+    }
+    
+    double eff_fnl = 1., dummy_x;
+    Trk_SF->GetPoint(idx,dummy_x,eff_fnl);
+    
+    SF *= eff_fnl;
+    if(SysDirection == "up"){
+      SF *= 1.005;
+    }
+    if(SysDirection == "down"){
+      SF *= 0.995;
+    }
+  
+  }
+
+  event.weight *= SF;
+
+  return true;
+
+}
+
+MistagRateSF::MistagRateSF(Context & ctx,TString file_,TString SysDirection_ ):SysDirection(SysDirection_){
+
+  h_toptag = ctx.get_handle<std::vector<TopJet>>("TopTag");
+  h_higgstag = ctx.get_handle<std::vector<TopJet>>("HiggsTag");
+  h_higgstag_1b = ctx.get_handle<std::vector<TopJet>>("HiggsTag_one_btag");
+  h_ZWtag = ctx.get_handle<std::vector<TopJet>>("ZWTag");
+  //define vetor with the different functions that are used to calculate the error
+  //[[func1,params],[func2,params],...]
+  ifstream test(file_);
+  if (test.is_open()) {
+    while (!test.eof() ) {
+      std::string line;
+      getline (test,line);
+      std::istringstream iss(line);
+      std::vector<std::string> params;
+      do {
+	std::string sub;
+  	iss >> sub; 
+	params.push_back(sub);
+      } 
+      while (iss);
+      input.push_back(params);
+    }
+  }
+
+  test.close();
+  berror =false;
+
+}
+
+bool MistagRateSF::process(Event & event, TString tagger){
+
+  TopJet topjet;
+  double error;
+  if(tagger == "higgs"){
+    const auto & higgstagevt = event.get(h_higgstag);
+    topjet = higgstagevt.at(0);
+  }else if(tagger=="higgs_one"){
+    const auto & higgstagevt = event.get(h_higgstag_1b);
+    topjet = higgstagevt.at(0);
+  }else if(tagger=="zw"){
+    const auto & higgstagevt = event.get(h_ZWtag);
+    topjet = higgstagevt.at(0);
+  }else if(tagger=="top"){
+    const auto & higgstagevt = event.get(h_toptag);
+   topjet = higgstagevt.at(0);
+ }else throw runtime_error("in ZPrimeTotTPrimeSelections tagger not spezified. Only 'higgs', 'higgs_one' , 'zw', 'top' are spezified.");
+  
+  if(berror)std::cout<<"============================================= Ganz am Anfang"<<std::endl;
+  double pt = topjet.pt();
+  if(berror)std::cout<<"pt  "<<pt<<std::endl;
+  double resulting_error=0;
+  Double_t rangemin = stod(input[0][1]);
+  Double_t rangemax = stod(input[0][2]);
+  TString function = input[0][0];
+
+  //define first default function
+  TF1* func_default = new TF1("Ratio",function ,rangemin,  rangemax);
+  //Hier
+  func_default->FixParameter(0,stod(input[0][3]));
+
+  resulting_error = pow(stod(input[0][4]),2);
+  if(berror)std::cout<< "error_default  " << stod(input[0][4])<<std::endl;
+
+  //define one function for each other function than the default in vector
+  for(unsigned int i=1;i<input.size()-1;i++){
+    Double_t rangemin = stod(input[i][1]);
+    Double_t rangemax = stod(input[i][2]);
+    TString function =input[i][0] ;
+    TF1* func = new TF1("Ratio",function ,rangemin,  rangemax);
+    for(unsigned int k=3;k<input[i].size()-1;k++)  func->FixParameter(k-3,stod(input[i][k]));
+    
+    if(berror)std::cout<<"Eval func_Default  "<<func_default->Eval(pt)<<"  Eval func  "<<func->Eval(pt)<<std::endl;
+    if(berror)std::cout<<"substract values such that |func1.eval-func2.eval|  "<<func_default->Eval(pt)-func->Eval(pt)<<std::endl;
+
+    //Hier
+    //substract values such that |func1.eval-func2.eval|^2 
+    //When pt of topjet out of range use func->Eval(rangemax)
+    if(pt>rangemax) error = pow(func_default->Eval(rangemax)-func->Eval(rangemax),2);
+    else error = pow(func_default->Eval(pt)-func->Eval(pt),2);
+
+    // add difference to error
+    resulting_error += error;
+  }
+  if(berror)std::cout<<"resulting error with all errors  "<<resulting_error <<std::endl;
+  //take sqrt for getting error
+  resulting_error = sqrt(resulting_error);
+  if(berror)std::cout<<"Final resulting error  "<<resulting_error <<std::endl;
+
+  //apply one SF or SF plus error to event.weight
+  double sf = stod(input[0][3]);
+  if(berror)std::cout<<"SF  "<<sf<<std::endl;
+  if(SysDirection == "up") sf+=resulting_error;
+  if(berror)std::cout<<"SF up  "<<sf<<std::endl;
+  if(SysDirection == "down") sf-=resulting_error;
+  if(berror)std::cout<<"SF down "<<sf<<std::endl;
+
+
+  event.weight *= sf;
+  return true;
+}
+
+
+IsMistag::IsMistag(Context & ctx){
+  h_zprimegen = ctx.get_handle<ZPrimeGen>("zprimegen");
+  h_background = ctx.get_handle<BackgroundGen>("background");
+  h_ttbar = ctx.get_handle<TTbarGen>("ttbar");
+
+  h_toptag = ctx.get_handle<std::vector<TopJet>>("TopTag");
+  h_higgstag = ctx.get_handle<std::vector<TopJet>>("HiggsTag");
+  h_higgstag_1b = ctx.get_handle<std::vector<TopJet>>("HiggsTag_one_btag");
+  h_ZWtag = ctx.get_handle<std::vector<TopJet>>("ZWTag");
+}
+
+//signal samples
+bool IsMistag::process(uhh2::Event & event, TString tagger){
+
+  //if(!event.is_valid(h_zprimegen) && !event.is_valid(h_background)&& !event.is_valid(h_ttbar))throw runtime_error("in ZPrimeTotTPrimeSelections GenSelection not spezified.");
+  
+ if(!(tagger=="higgs"||tagger=="higgs_one" || tagger== "zw" ||  tagger== "top"))throw runtime_error("in ZPrimeTotTPrimeSelections tagger not spezified. Only 'higgs', 'higgs_one' , 'zw', 'top' are spezified.");
+
+ TopJet topjet;
+ if(tagger == "higgs"){
+   const auto & higgstagevt = event.get(h_higgstag);
+   topjet = higgstagevt.at(0);
+ }else if(tagger=="higgs_one"){
+   const auto & higgstagevt = event.get(h_higgstag_1b);
+   topjet = higgstagevt.at(0);
+ }else if(tagger=="zw"){
+   const auto & higgstagevt = event.get(h_ZWtag);
+   topjet = higgstagevt.at(0);
+ }else if(tagger=="top"){
+   const auto & higgstagevt = event.get(h_toptag);
+   topjet = higgstagevt.at(0);
+ }else throw runtime_error("in ZPrimeTotTPrimeSelections tagger not spezified. Only 'higgs', 'higgs_one' , 'zw', 'top' are spezified.");
+
+  if(event.is_valid(h_zprimegen)){
+    const auto & zprimegen = event.get(h_zprimegen);
+    double deltar_higgs_Q1 = deltaR(topjet,zprimegen.HQ1());
+    double deltar_higgs_Q2 = deltaR(topjet,zprimegen.HQ2());
+    double deltar_higgs = deltaR(topjet,zprimegen.Higgs());
+    double deltar_z_Q1 = deltaR(topjet,zprimegen.ZQ1());
+    double deltar_z_Q2 = deltaR(topjet,zprimegen.ZQ2());
+    double deltar_w_Q1 = deltaR(topjet,zprimegen.WQ1());
+    double deltar_w_Q2 = deltaR(topjet,zprimegen.WQ2());
+    double deltar_top_bhad = deltaR(topjet,zprimegen.BHad());
+    double deltar_top_WQ1 = deltaR(topjet,zprimegen.WHadQ1());
+    double deltar_top_WQ2 = deltaR(topjet,zprimegen.WHadQ2());
+
+   
+
+
+    if((tagger == "higgs") && deltar_higgs_Q1<=0.8 && deltar_higgs_Q2<=0.8) return false;
+    else if((tagger== "zw") &&( (deltar_z_Q1<=0.8 &&deltar_z_Q2<=0.8) || (deltar_w_Q1<=0.8 &&deltar_w_Q2<=0.8) ) ) return false;
+    else if((tagger== "top") && deltar_top_bhad <=0.8 && deltar_top_WQ1<=0.8 && deltar_top_WQ2<=0.8) return false;
+    else return true;
+    
+  }// valid h_zprimegen
+  else if (event.is_valid(h_background)){
+    const auto & background = event.get(h_background);
+    double deltar_z_Q1 = deltaR(topjet,background.Quark1_v4());
+    double deltar_z_Q2 = deltaR(topjet,background.Quark2_v4());
+ 
+    if((tagger== "zw") && (deltar_z_Q1<=0.8 &&deltar_z_Q2<=0.8)  ) return false;
+    else return true;
+  }//valid h_backgrounds
+  else if(event.is_valid(h_ttbar)){
+    const auto & ttbar = event.get(h_ttbar);
+    double deltar_w_Q1 = deltaR(topjet,ttbar.Q1());
+    double deltar_w_Q2 = deltaR(topjet,ttbar.Q2());
+    double deltar_top_bhad = deltaR(topjet,ttbar.BHad());
+    if((tagger== "zw") && deltar_w_Q1<=0.8 && deltar_w_Q2 <=0.8)return false;
+    else if(tagger == "top" && deltar_w_Q1<=0.8 && deltar_w_Q2 <=0.8 && deltar_top_bhad <=0.8) return false;
+    else return true;
+
+  }//valid h_ttbar
+  
+   return true;
 }
