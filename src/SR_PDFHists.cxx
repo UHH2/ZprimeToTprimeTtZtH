@@ -36,12 +36,16 @@ SR_PDFHists::SR_PDFHists(uhh2::Context & ctx, const std::string & dirname, const
 
 
   if(dirnames.find("chi2cut")!= std::string::npos|| dirnames.find("btag")!= std::string::npos){
+    std::vector<TString> hists = {"M_ZPrime_rec", "Pt_toplep_rec"};
+
+    for(TString obs:hists){
+
     for(int i=0; i<100; i++){
       stringstream ss_name;
-      ss_name << "M_ZPrime_rec_PDF_"  << i+1 ;
+      ss_name << obs<<"_PDF_"  << i+1 ;
     
       stringstream ss_title;
-      ss_title << "M_{ZPrime}^{rec} [GeV/c^{2}] for PDF No. "  << i+1 << " out of 100" ;
+      ss_title << obs<<" [GeV/c^{2}] for PDF No. "  << i+1 << " out of 100" ;
    
 
       string s_name = ss_name.str();
@@ -50,10 +54,13 @@ SR_PDFHists::SR_PDFHists(uhh2::Context & ctx, const std::string & dirname, const
       const char* char_name = s_name.c_str();
       const char* char_title = s_title.c_str();
    
-      histo_names[i] = s_name;
-   
-      book<TH1F>(char_name, char_title, 40,600,4000);
-    }
+      if(obs=="M_ZPrime_rec")histo_names[i] = s_name;
+      else if(obs=="Pt_toplep_rec")histo_names_toppt[i] = s_name;
+
+      if(obs=="M_ZPrime_rec")book<TH1F>(char_name, char_title, 50,600,5000);
+      else if(obs=="Pt_toplep_rec")book<TH1F>(char_name, char_title,60, 0, 1200);
+    }//for loop
+    }//observables
 
     h_hyps = ctx.get_handle<std::vector<ZPrimeTotTPrimeReconstructionHypothesis>>(hyps_name);
   }else if(dirnames.find("twodcut")!= std::string::npos){
@@ -128,13 +135,18 @@ void SR_PDFHists::fill(const Event & event){
 	mZPrime_rec = sqrt( -(hyp->HZW_v4()+ hyp->top_v4()+ hyp->antitop_v4()).mass2());
       }
 
-  
+      
+      double pt_toplep_rec=(hyp->toplep_v4()).Pt();
+      
+
       std::vector<double> weights = m_pdfweights->GetWeightList(event);
       for(int i=0; i<100; i++){
 	if(use_pdf_weights){
 	  double fillweight = weight*weights[i]; // LQ PDF
 	  const char* name = histo_names[i].c_str();
+	  const char* name_toppt = histo_names_toppt[i].c_str();
 	  hist(name)->Fill(mZPrime_rec, fillweight);
+	  hist(name_toppt)->Fill(pt_toplep_rec, fillweight);
 	}//if use pdf weights
       }//over all 100 possibilities
     } //is_mc

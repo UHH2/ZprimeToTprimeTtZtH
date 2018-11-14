@@ -2,9 +2,11 @@
 <!DOCTYPE JobConfiguration PUBLIC "" "JobConfig.dtd" [
 
 	  <!ENTITY NEVT "10">
-	  <!ENTITY PRESELdir "/nfs/dust/cms/user/abenecke/ZPrimeTotTPrime/CMSSW_8X/PreSelection/rootfiles/mistag/none"> 
-<!--	  <!ENTITY SELdir "/nfs/dust/cms/user/abenecke/ZPrimeTotTPrime/CMSSW_8X/rootfiles/mistag/toptag">-->
- <!ENTITY SELdir "/nfs/dust/cms/user/abenecke/ZPrimeTotTPrime/CMSSW_8X/rootfiles/mistag/h2btag">
+
+	  <!ENTITY PRESELdir "/nfs/dust/cms/user/abenecke/ZPrimeTotTPrime/CMSSW_8X/PreSelection/rootfiles/mistag/none">
+	  <!ENTITY SELdir "/nfs/dust/cms/user/abenecke/ZPrimeTotTPrime/CMSSW_8X/rootfiles/mistag/h2btag">
+ <!-- 	  <!ENTITY PRESELdir "/nfs/dust/cms/user/abenecke/ZPrimeTotTPrime/CMSSW_8X/PreSelection/rootfiles/mistag/htbiastest"> -->
+ <!-- <!ENTITY SELdir "/nfs/dust/cms/user/abenecke/ZPrimeTotTPrime/CMSSW_8X/rootfiles/mistag/htbiastest/h1b"> -->
 	  <!ENTITY PROOFdir  "/nfs/dust/cms/user/abenecke/PROOF">
 	  <!ENTITY b_Cacheable  "False">
 
@@ -51,7 +53,7 @@
   <!--   <Cycle Name="uhh2::AnalysisModuleRunner" OutputDirectory="&SELdir;/" PostFix="" TargetLumi="2521.8" RunMode="PROOF" ProofServer="lite://" ProofWorkDir="&PROOFdir;/" ProofNodes="10" > -->
 
 
-<!--
+
 <InputData Lumi="1" NEventsMax="-1" Type="DATA" Version="DATA_JetHT_Run2016B_03Feb" Cacheable="False">
          <In FileName="&DATA_JetHT_Run2016B_03Feb;" Lumi="0.0"/> <InputTree Name="AnalysisTree" /> <OutputTree Name="AnalysisTree" />  </InputData>
 <InputData Lumi="1" NEventsMax="-1" Type="DATA" Version="DATA_JetHT_Run2016C_03Feb" Cacheable="False">
@@ -68,24 +70,15 @@
         <In FileName="&DATA_JetHT_Run2016H_03Feb_v2;" Lumi="0.0"/> <InputTree Name="AnalysisTree" /> <OutputTree Name="AnalysisTree" />  </InputData>
 <InputData Lumi="1" NEventsMax="-1" Type="DATA" Version="DATA_JetHT_Run2016H_03Feb_v3" Cacheable="False">
         <In FileName="&DATA_JetHT_Run2016H_03Feb_v3;" Lumi="0.0"/> <InputTree Name="AnalysisTree" /> <OutputTree Name="AnalysisTree" />  </InputData>
--->  
 
 
-<InputData Lumi="2.872" NEventsMax="-1" Type="MC" Version="QCD_HT100to200" Cacheable="False">
-    <In FileName="&MC_QCD_HT100to200;" Lumi="0.0"/>
-    <InputTree Name="AnalysisTree" /> 
-    <OutputTree Name="AnalysisTree" /> 
-</InputData>
-<InputData Lumi="33.615" NEventsMax="-1" Type="MC" Version="QCD_HT200to300" Cacheable="False">
-    <In FileName="&MC_QCD_HT200to300;" Lumi="0.0"/>
-    <InputTree Name="AnalysisTree" /> 
-    <OutputTree Name="AnalysisTree" /> 
-</InputData>
+
 <InputData Lumi="107.894" NEventsMax="-1" Type="MC" Version="QCD_HT300to500" Cacheable="False">
     <In FileName="&MC_QCD_HT300to500;" Lumi="0.0"/>
     <InputTree Name="AnalysisTree" /> 
     <OutputTree Name="AnalysisTree" /> 
 </InputData>
+
 <InputData Lumi="1938.622" NEventsMax="-1" Type="MC" Version="QCD_HT500to700" Cacheable="False">
     <In FileName="&MC_QCD_HT500to700;" Lumi="0.0"/>
     <InputTree Name="AnalysisTree" /> 
@@ -114,6 +107,18 @@
 
 
 <!--
+
+<InputData Lumi="2.872" NEventsMax="-1" Type="MC" Version="QCD_HT100to200" Cacheable="False">
+    <In FileName="&MC_QCD_HT100to200;" Lumi="0.0"/>
+    <InputTree Name="AnalysisTree" /> 
+    <OutputTree Name="AnalysisTree" /> 
+</InputData>
+<InputData Lumi="33.615" NEventsMax="-1" Type="MC" Version="QCD_HT200to300" Cacheable="False">
+    <In FileName="&MC_QCD_HT200to300;" Lumi="0.0"/>
+    <InputTree Name="AnalysisTree" /> 
+    <OutputTree Name="AnalysisTree" /> 
+</InputData>
+
 
 <InputData Lumi="0.005" NEventsMax="-1" Type="MC" Version="QCD_Flat" Cacheable="False">
     <In FileName="&MC_QCD_Flat;" Lumi="0.0"/>
@@ -166,11 +171,15 @@
 	
 	<Item Name="lumihists_lumi_per_bin" Value="500"/> 
 
+	<Item Name="modifiedJEC" Value="false" />
+        <Item Name="modifiedCut" Value="8" />
+        <Item Name="htbiastest" Value="false" />
+
+
 	<Item Name="ScaleVariationMuR" Value="none" />
 	<Item Name="ScaleVariationMuF" Value="none" />
 	<Item Name="triggervariation" Value="none" />
 	<Item Name="puVariation" Value="none" />
-
 	<Item Name="AnalysisModule" Value="ZPrimeTotTPrimeMisstagModule" />
       </UserConfig>
 

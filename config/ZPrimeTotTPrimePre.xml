@@ -116,6 +116,10 @@
 <!ENTITY  MC_STneg_tW_inc SYSTEM "/nfs/dust/cms/user/abenecke/CMSSW_8_0_24_patch1/src/UHH2/common/datasets/RunII_80X_v3/ST_tW_antitop_5f_inclusiveDecays_13TeV.xml">
 <!ENTITY  MC_ST_s-channel_4f_leptonDecays SYSTEM "/nfs/dust/cms/user/abenecke/CMSSW_8_0_24_patch1/src/UHH2/common/datasets/RunII_80X_v3/ST_s-channel_4f_leptonDecays_13TeV.xml">
 
+
+<!ENTITY  MC_ZTT SYSTEM "/nfs/dust/cms/user/abenecke/CMSSW_8_0_24_patch1/src/UHH2/common/datasets/RunII_80X_v3/MC_TTZ.xml">
+<!ENTITY  MC_WTT SYSTEM "/nfs/dust/cms/user/abenecke/CMSSW_8_0_24_patch1/src/UHH2/common/datasets/RunII_80X_v3/MC_TTW.xml">
+
  
  
  
@@ -157,10 +161,10 @@
 
 
     <!--                     Signal                      -->
-
+<!--
  <InputData Version= "MC_ZPrime1500ToTPrime700T_TPrimeToHT" Lumi="207419" Type="MC" NEventsMax="&NEVT;" Cacheable="&b_Cacheable;">
       &MC_ZPrime1500ToTPrime700T_TPrimeToHT; <InputTree Name="AnalysisTree"/> <OutputTree Name="AnalysisTree"/> </InputData>
-<!--  <InputData Version= "MC_ZPrime1500ToTPrime900T_TPrimeToHT" Lumi="205787" Type="MC" NEventsMax="&NEVT;" Cacheable="&b_Cacheable;">
+  <InputData Version= "MC_ZPrime1500ToTPrime900T_TPrimeToHT" Lumi="205787" Type="MC" NEventsMax="&NEVT;" Cacheable="&b_Cacheable;">
       &MC_ZPrime1500ToTPrime900T_TPrimeToHT; <InputTree Name="AnalysisTree"/> <OutputTree Name="AnalysisTree"/> </InputData>
     <InputData Version= "MC_ZPrime1500ToTPrime1200T_TPrimeToHT" Lumi="203617" Type="MC" NEventsMax="&NEVT;" Cacheable="&b_Cacheable;">
       &MC_ZPrime1500ToTPrime1200T_TPrimeToHT; <InputTree Name="AnalysisTree"/> <OutputTree Name="AnalysisTree"/> </InputData> 
@@ -316,6 +320,13 @@
     <InputData Version="MC_ST_s-channel_4f_leptonDecays" Lumi="1003149.359" Type="MC" NEventsMax="&NEVT;" Cacheable="&b_Cacheable;">
       &MC_ST_s-channel_4f_leptonDecays; <InputTree Name="AnalysisTree"/> <OutputTree Name="AnalysisTree"/> </InputData>
 -->
+
+    <InputData Version="MC_ZTT" Lumi="13875840.3" Type="MC" NEventsMax="&NEVT;" Cacheable="&b_Cacheable;">
+      &MC_ZTT; <InputTree Name="AnalysisTree"/> <OutputTree Name="AnalysisTree"/> </InputData>
+
+    <InputData Version="MC_WTT" Lumi="8643416.5" Type="MC" NEventsMax="&NEVT;" Cacheable="&b_Cacheable;">
+      &MC_WTT; <InputTree Name="AnalysisTree"/> <OutputTree Name="AnalysisTree"/> </InputData>
+
 
 
       <UserConfig>

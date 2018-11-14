@@ -5,12 +5,12 @@
 
 // extern variables
 std::vector<int> n_vector= {0,0,0,0,0,0,0,0,0,0,0,0,0,0};
-
+bool 	  b_semileptonic = false;
 using namespace uhh2;
 using namespace std;
 
 ZPrimeGen::ZPrimeGen(const vector<GenParticle> & genparticles){
-  
+  throw_failure= false;  
   //allparticles.reseve(genparticles->size());
 
   //find the first gluon and top and not one later on
@@ -18,18 +18,21 @@ ZPrimeGen::ZPrimeGen(const vector<GenParticle> & genparticles){
    bool oncegluon = true;
  
   //Go over all Particles of the event to find the first Z', T', Top and Gluon(which should belong to a ZPrime if the ZPrime is not listet)
+   if(throw_failure)   std::cout<<"size of genparticles "<<genparticles.size()<<std::endl;
   for(unsigned int i=0; i<genparticles.size(); i++){
     const GenParticle & genp = genparticles[i];
+    if(throw_failure)    std::cout<<"genparticle id "<<abs(genp.pdgId())<<std::endl;
     // allparticles.push_back(*genp);
     if(abs(genp.pdgId()) ==9900113){ZPrime = genp;}
     if(abs(genp.pdgId()) ==9000010){ZPrime = genp;}
+    if(abs(genp.pdgId()) ==9000003){TPrime = genp;}
     if(abs(genp.pdgId())==8000001){TPrime = genp;}
     if(abs(genp.pdgId())==6 && oncetop){main_top = genp;oncetop=false;}
     if(abs(genp.pdgId())==21 && i>1 && oncegluon && genp.mother(&genparticles,1)-> index() == 0){ZPrimeGluon = genp;oncegluon= false;}
   }
 
   //Check if there is a ZPrime in the event
-  if(abs(ZPrime.pdgId()) ==9900113){
+  if(abs(ZPrime.pdgId()) ==9900113 || abs(ZPrime.pdgId()) ==9000010 || abs(ZPrime.pdgId()) ==9000003){
 
     //Check if one of the daughters of the Z' is the T'
     if(abs(ZPrime.daughter(&genparticles,1)->pdgId())==8000001 || abs(ZPrime.daughter(&genparticles,2)->pdgId())==8000001){
@@ -96,6 +99,7 @@ void ZPrimeGen::assign(GenParticle  daughter1, GenParticle  daughter2,const vect
   //Initiate all countervariables
   int  n_TPrime=0, n_t =0;
 
+
   if (abs(daughter1.pdgId()) ==8000001 ){
     TPrime = daughter1;
     n_TPrime++;
@@ -118,6 +122,7 @@ void ZPrimeGen::assign(GenParticle  daughter1, GenParticle  daughter2,const vect
     }
   }
 
+
   if(abs(daughter2.pdgId()) == 8000001){ 
     TPrime = daughter2;
     n_TPrime++;
@@ -137,6 +142,7 @@ void ZPrimeGen::assign(GenParticle  daughter1, GenParticle  daughter2,const vect
     case 25:H   =  *TPrime.daughter(&genparticles,2);if(H.daughter(&genparticles,1)&&H.daughter(&genparticles,2)){decaydaughterH1 = *H.daughter(&genparticles,1) ; decaydaughterH2 = *H.daughter(&genparticles,2);};break;
     default :;// cout << "L135: Zerfall der nicht bedacht wurde" <<endl;
     }}
+
 
   //Check if the decay product is a top and collect the decay products of it
   if(abs(daughter1.pdgId())==6){
@@ -167,6 +173,7 @@ void ZPrimeGen::assign(GenParticle  daughter1, GenParticle  daughter2,const vect
       top_b = *main_top.daughter(&genparticles,1);
     }
   }
+
 }
 
 
@@ -196,11 +203,11 @@ void ZPrimeGen::recoTPrime( const vector<GenParticle> & genparticles){
       Top1 = genpa;
       firstTop = false;
     }
-    if(abs(genpa.pdgId())== 21 && k>1 &&( abs(genpa.mother(&genparticles,1)->pdgId())==9900113 || abs(genpa.mother(&genparticles,1)->index()) == 0 ) && firstGluon){
+    if(abs(genpa.pdgId())== 21 && k>1 &&( abs(genpa.mother(&genparticles,1)->pdgId())==9900113 || abs(genpa.mother(&genparticles,1)->index()) == 0 ||abs(genpa.mother(&genparticles,1)->pdgId())== 9000010 || abs(genpa.mother(&genparticles,1)->pdgId())==9000003 ) && firstGluon){
       Gluon = genpa;
       firstGluon = false;
     }
-    if(abs(genpa.pdgId())== 5 && (abs(genpa.mother(&genparticles,1)->pdgId())==9900113 || abs(genpa.mother(&genparticles,1)->index()) == 0 ) && firstBottom){
+    if(abs(genpa.pdgId())== 5 && (abs(genpa.mother(&genparticles,1)->pdgId())==9900113 || abs(genpa.mother(&genparticles,1)->index()) == 0 ||abs(genpa.mother(&genparticles,1)->pdgId())== 9000010 || abs(genpa.mother(&genparticles,1)->pdgId())==9000003) && firstBottom){
       Bottom = genpa;
       firstBottom = false;
     }
@@ -267,7 +274,9 @@ void ZPrimeGen::recoZPrime(GenParticle TPrime ,GenParticle  main_top){
 
 
 void ZPrimeGen::DecayChannel( const vector<GenParticle> & genparticles ){
-  
+
+  b_semileptonic = false;
+
   if(topHiggs.daughter(&genparticles,1) && topHiggs.daughter(&genparticles,2) ){
     if(abs(topHiggs.daughter(&genparticles,1)-> pdgId()) == 24){
       WHiggsTop1 = *topHiggs.daughter(&genparticles,1);
@@ -369,12 +378,14 @@ void ZPrimeGen::DecayChannel( const vector<GenParticle> & genparticles ){
 	    cout << "Top Higgs hadronisch" << endl;
 	  } 
 	  n_H++;
+	  //hier
+	  //	  b_semileptonic = true;
 	  hadtop = topHiggs;
 	  switch(abs(H.daughter(&genparticles,1)->pdgId())){
 	  case 21: n_TllThgg++;	n_TllTh++; break;
 	  case 23: n_TllThZZ++;	n_TllTh++; break;
 	  case 24: n_TllThWW++;	n_TllTh++;break;
-	  case 5: n_TllThbb++;	n_TllTh++;break;
+	  case 5: 	  b_semileptonic = true;n_TllThbb++;	n_TllTh++;break;
 	  default:;// cout<<"L493: Zerfall nicht bedacht, pdgID "<< abs(H.daughter(&genparticles,1)->pdgId())<<endl;break;
 	  }
 	}
@@ -389,6 +400,7 @@ void ZPrimeGen::DecayChannel( const vector<GenParticle> & genparticles ){
 	  bhad = BZTop1;
 
 	  n_Z++;
+	  b_semileptonic = true;
 	  hadtop = topZ;
 	  if(abs(Z.daughter(&genparticles,1)->pdgId())<=6){
 	    n_TllThZh++;
@@ -407,6 +419,7 @@ void ZPrimeGen::DecayChannel( const vector<GenParticle> & genparticles ){
 	  cout << "(Top leptonisch) WTochter pdgId()" << abs(W.daughter(&genparticles,1)->pdgId()) << endl;
 	}
 	  n_W++;
+	  b_semileptonic = true;
 	if(abs(W.daughter(&genparticles,1)->pdgId())<=6){
 	  n_TllWh++;
 	  
@@ -764,6 +777,10 @@ float ZPrimeGen::TPrimeHAntiT_R()const{return deltaR(TPrimedaughter3,Top1);}
 float ZPrimeGen::Higgs_R()const{return deltaR(decaydaughterH1,decaydaughterH2);}
 float ZPrimeGen::ZBoson_R()const{return deltaR(decaydaughterZ1,decaydaughterZ2);}
 float ZPrimeGen::WBoson_R()const{return deltaR(decaydaughterW1,decaydaughterW2);}
+//hier
+bool ZPrimeGen::IsSemiLeptonicDecay() const{
+  return b_semileptonic;
+}
 
 
 

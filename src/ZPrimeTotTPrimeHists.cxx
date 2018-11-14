@@ -377,8 +377,6 @@ void ZPrimeTotTPrimeHists::fill(const Event & event){
 	hist("MissMatched")->Fill("H matched",weight);
 	hist("Tau32H")->Fill(jets->at(0).tau3() /jets->at(0).tau2() ,weight);
 	hist("Tau21H")->Fill(jets->at(0).tau2() /jets->at(0).tau1() ,weight);
-	//	std::cout << "(Hists) L:163 Masse Higgs und DeltaRH "<<jets->at(0).v4().M() <<"    "<< deltaRH << std::endl;
-	//	std::cout << "(Hists) L:163 Und zum ATOp "<< deltaRTop1 << std::endl;
       }else{
 	hist("MissMatched")->Fill("H miss",weight);
       }

@@ -10,6 +10,7 @@ extern bool bZPrime, bTPrime;
 extern int ZPrimeMass;
 extern bool throw_failure;
 extern   std::vector<int> n_vector;
+extern bool b_semileptonic;
 
 class ZPrimeGen{
  public:
@@ -131,7 +132,7 @@ GenParticle WHiggsTopD2()const;
   float Higgs_R()const;
   float ZBoson_R()const;
   float WBoson_R()const;
-
+  bool IsSemiLeptonicDecay()const;
   
 
  private:

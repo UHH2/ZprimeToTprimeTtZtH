@@ -878,6 +878,42 @@ bool uhh2::TriangularCuts::passes(const uhh2::Event& event){
 }
 
 
+reweightingHT::reweightingHT(Context & ctx){
+
+  //set HT handle
+  h_ht = ctx.get_handle<double>("HT");
+  
+}//reweigthingHT end
+
+void reweightingHT::process(Event & event){
+
+
+  //read in nominal file (muon channel)
+  unique_ptr<TFile> file_nominal;
+  file_nominal.reset(new TFile("/nfs/dust/cms/user/abenecke/ZPrimeTotTPrime/CMSSW_8X/rootfiles/uncertainties/muon/none/uhh2.AnalysisModuleRunner.MC.backgrounds.root","READ"));
+  nominal_hist = ((TH1F*)file_nominal->Get("event_twodcut/HT"));
+  
+  //read in QCD enriched hist
+  unique_ptr<TFile> file_QCD;
+  file_QCD.reset(new TFile("/nfs/dust/cms/user/abenecke/ZPrimeTotTPrime/CMSSW_8X/rootfiles/mistag/htbiastest/zw/uhh2.AnalysisModuleRunner.MC.QCD.root","READ"));
+  QCD_hist = ((TH1F*)file_QCD->Get("output_Event/HT"));
+  
+  //divide them by each other
+  nominal_hist->Divide(QCD_hist);
+  // use new histogram to reweight event.weight
+  //1. get HT
+  if(event.is_valid(h_ht)){
+    ht = event.get(h_ht);
+  }
+  //2. based on HT choose SF
+  TAxis *xaxis = nominal_hist->GetXaxis();
+  Int_t binx = xaxis->FindBin(ht);
+  float sf = nominal_hist->GetBinContent(binx);
+  //3. scale event.weight
+  event.weight *=sf; 
+
+}
+
 
 MuonTrkWeights::MuonTrkWeights(Context & ctx, TString path_, TString SysDirection_): path(path_), SysDirection(SysDirection_){
 
@@ -967,6 +1003,7 @@ MistagRateSF::MistagRateSF(Context & ctx,TString file_,TString SysDirection_ ):S
 
 bool MistagRateSF::process(Event & event, TString tagger){
 
+
   TopJet topjet;
   double error;
   if(tagger == "higgs"){
@@ -976,6 +1013,7 @@ bool MistagRateSF::process(Event & event, TString tagger){
     const auto & higgstagevt = event.get(h_higgstag_1b);
     topjet = higgstagevt.at(0);
   }else if(tagger=="zw"){
+    if(berror)std::cout<<"------------------------- ZW"<<std::endl;
     const auto & higgstagevt = event.get(h_ZWtag);
     topjet = higgstagevt.at(0);
   }else if(tagger=="top"){
@@ -1020,9 +1058,39 @@ bool MistagRateSF::process(Event & event, TString tagger){
     resulting_error += error;
   }
   if(berror)std::cout<<"resulting error with all errors  "<<resulting_error <<std::endl;
+  //add an additional uncertainty for h2b and top tagger
+  //  if(tagger == "higgs_one") resulting_error += pow(0.175,2);
+  //  if(tagger == "top") resulting_error += pow(0.022,2);
+  //  if(tagger == "zw") resulting_error += pow(0.5,2);
+
   //take sqrt for getting error
   resulting_error = sqrt(resulting_error);
   if(berror)std::cout<<"Final resulting error  "<<resulting_error <<std::endl;
+
+  if(tagger == "zw"){
+    TFile* file = new TFile("/nfs/dust/cms/user/abenecke/CMSSW_8_0_24_patch1/src/UHH2/ZprimeToTprimeTtZtH/hist/corrections/Correction_zw.root");
+    TH1F* hist_up = (TH1F*) file->Get("up");
+    resulting_error = hist_up->GetBinContent(hist_up->FindBin(pt))-1;
+    if(pt>rangemax) resulting_error = hist_up->GetBinContent(hist_up->FindBin(rangemax))-1;
+    file->Close();
+  }
+
+  if(tagger == "h1b"){
+    TFile* file = new TFile("/nfs/dust/cms/user/abenecke/CMSSW_8_0_24_patch1/src/UHH2/ZprimeToTprimeTtZtH/hist/corrections/Correction_h1b.root");
+    TH1F* hist_up = (TH1F*) file->Get("up");
+    resulting_error = hist_up->GetBinContent(hist_up->FindBin(pt))-1;
+    if(pt>rangemax) resulting_error = hist_up->GetBinContent(hist_up->FindBin(rangemax))-1;
+    file->Close();
+  }
+  //  if(tagger == "higgs_one") resulting_error += pow(0.175,2);
+
+  if(tagger == "top"){
+    TFile* file = new TFile("/nfs/dust/cms/user/abenecke/CMSSW_8_0_24_patch1/src/UHH2/ZprimeToTprimeTtZtH/hist/corrections/Correction_top.root");
+    TH1F* hist_up = (TH1F*) file->Get("up");
+    resulting_error = hist_up->GetBinContent(hist_up->FindBin(pt))-1;
+    if(pt>rangemax) resulting_error = hist_up->GetBinContent(hist_up->FindBin(rangemax))-1;
+    file->Close();
+  }
 
   //apply one SF or SF plus error to event.weight
   double sf = stod(input[0][3]);
@@ -1087,7 +1155,7 @@ bool IsMistag::process(uhh2::Event & event, TString tagger){
    
 
 
-    if((tagger == "higgs") && deltar_higgs_Q1<=0.8 && deltar_higgs_Q2<=0.8) return false;
+    if((tagger.Contains("higgs")) && deltar_higgs_Q1<=0.8 && deltar_higgs_Q2<=0.8) return false;
     else if((tagger== "zw") &&( (deltar_z_Q1<=0.8 &&deltar_z_Q2<=0.8) || (deltar_w_Q1<=0.8 &&deltar_w_Q2<=0.8) ) ) return false;
     else if((tagger== "top") && deltar_top_bhad <=0.8 && deltar_top_WQ1<=0.8 && deltar_top_WQ2<=0.8) return false;
     else return true;

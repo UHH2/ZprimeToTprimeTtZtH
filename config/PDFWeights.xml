@@ -8,6 +8,153 @@
 	  <!ENTITY NEVT         "-1"> 
 
 
+ <!ENTITY MC_ZPrime3500WIDToTPrime2500T_TPrimeToZT SYSTEM  "/nfs/dust/cms/user/abenecke/CMSSW_8_0_24_patch1/src/UHH2/ZprimeToTprimeTtZtH/datasets/GStar/ZprimeToTprimeT_TprimeToZT_Zp3500WID_Tp2500Nar_LH_TuneCUETP8M2T4_13TeV-madgraph-pythia8_V2.xml"> 
+  <!ENTITY MC_ZPrime2500WIDToTPrime1500T_TPrimeToHT SYSTEM  "/nfs/dust/cms/user/abenecke/CMSSW_8_0_24_patch1/src/UHH2/ZprimeToTprimeTtZtH/datasets/GStar/ZprimeToTprimeT_TprimeToHT_Zp2500WID_Tp1500Nar_LH_TuneCUETP8M2T4_13TeV-madgraph-pythia8_V2.xml"> 
+  <!ENTITY MC_ZPrime1500WIDToTPrime1300T_TPrimeToWB SYSTEM  "/nfs/dust/cms/user/abenecke/CMSSW_8_0_24_patch1/src/UHH2/ZprimeToTprimeTtZtH/datasets/GStar/ZprimeToTprimeT_TprimeToWB_Zp1500WID_Tp1300Nar_LH_TuneCUETP8M2T4_13TeV-madgraph-pythia8_V2.xml"> 
+  <!ENTITY MC_ZPrime3500WIDToTPrime1800T_TPrimeToHT SYSTEM  "/nfs/dust/cms/user/abenecke/CMSSW_8_0_24_patch1/src/UHH2/ZprimeToTprimeTtZtH/datasets/GStar/ZprimeToTprimeT_TprimeToHT_Zp3500WID_Tp1800Nar_LH_TuneCUETP8M2T4_13TeV-madgraph-pythia8_V2.xml"> 
+  <!ENTITY MC_ZPrime1500WIDToTPrime1000T_TPrimeToHT SYSTEM  "/nfs/dust/cms/user/abenecke/CMSSW_8_0_24_patch1/src/UHH2/ZprimeToTprimeTtZtH/datasets/GStar/ZprimeToTprimeT_TprimeToHT_Zp1500WID_Tp1000Nar_LH_TuneCUETP8M2T4_13TeV-madgraph-pythia8_V2.xml"> 
+  <!ENTITY MC_ZPrime1500WIDToTPrime1300T_TPrimeToHT SYSTEM  "/nfs/dust/cms/user/abenecke/CMSSW_8_0_24_patch1/src/UHH2/ZprimeToTprimeTtZtH/datasets/GStar/ZprimeToTprimeT_TprimeToHT_Zp1500WID_Tp1300Nar_LH_TuneCUETP8M2T4_13TeV-madgraph-pythia8_V2.xml"> 
+  <!ENTITY MC_ZPrime4000WIDToTPrime2500T_TPrimeToHT SYSTEM  "/nfs/dust/cms/user/abenecke/CMSSW_8_0_24_patch1/src/UHH2/ZprimeToTprimeTtZtH/datasets/GStar/ZprimeToTprimeT_TprimeToHT_Zp4000WID_Tp2500Nar_LH_TuneCUETP8M2T4_13TeV-madgraph-pythia8_V2.xml"> 
+  <!ENTITY MC_ZPrime3500WIDToTPrime1800T_TPrimeToWB SYSTEM  "/nfs/dust/cms/user/abenecke/CMSSW_8_0_24_patch1/src/UHH2/ZprimeToTprimeTtZtH/datasets/GStar/ZprimeToTprimeT_TprimeToWB_Zp3500WID_Tp1800Nar_LH_TuneCUETP8M2T4_13TeV-madgraph-pythia8_V2.xml"> 
+  <!ENTITY MC_ZPrime1500WIDToTPrime800T_TPrimeToHT SYSTEM  "/nfs/dust/cms/user/abenecke/CMSSW_8_0_24_patch1/src/UHH2/ZprimeToTprimeTtZtH/datasets/GStar/ZprimeToTprimeT_TprimeToHT_Zp1500WID_Tp800Nar_LH_TuneCUETP8M2T4_13TeV-madgraph-pythia8_V2.xml"> 
+  <!ENTITY MC_ZPrime3500WIDToTPrime2500T_TPrimeToWB SYSTEM  "/nfs/dust/cms/user/abenecke/CMSSW_8_0_24_patch1/src/UHH2/ZprimeToTprimeTtZtH/datasets/GStar/ZprimeToTprimeT_TprimeToWB_Zp3500WID_Tp2500Nar_LH_TuneCUETP8M2T4_13TeV-madgraph-pythia8_V2.xml"> 
+  <!ENTITY MC_ZPrime1500WIDToTPrime1000T_TPrimeToZT SYSTEM  "/nfs/dust/cms/user/abenecke/CMSSW_8_0_24_patch1/src/UHH2/ZprimeToTprimeTtZtH/datasets/GStar/ZprimeToTprimeT_TprimeToZT_Zp1500WID_Tp1000Nar_LH_TuneCUETP8M2T4_13TeV-madgraph-pythia8_V2.xml"> 
+  <!ENTITY MC_ZPrime1500WIDToTPrime800T_TPrimeToZT SYSTEM  "/nfs/dust/cms/user/abenecke/CMSSW_8_0_24_patch1/src/UHH2/ZprimeToTprimeTtZtH/datasets/GStar/ZprimeToTprimeT_TprimeToZT_Zp1500WID_Tp800Nar_LH_TuneCUETP8M2T4_13TeV-madgraph-pythia8_V2.xml"> 
+  <!ENTITY MC_ZPrime2500WIDToTPrime1500T_TPrimeToWB SYSTEM  "/nfs/dust/cms/user/abenecke/CMSSW_8_0_24_patch1/src/UHH2/ZprimeToTprimeTtZtH/datasets/GStar/ZprimeToTprimeT_TprimeToWB_Zp2500WID_Tp1500Nar_LH_TuneCUETP8M2T4_13TeV-madgraph-pythia8_V2.xml"> 
+  <!ENTITY MC_ZPrime2500WIDToTPrime1500T_TPrimeToZT SYSTEM  "/nfs/dust/cms/user/abenecke/CMSSW_8_0_24_patch1/src/UHH2/ZprimeToTprimeTtZtH/datasets/GStar/ZprimeToTprimeT_TprimeToZT_Zp2500WID_Tp1500Nar_LH_TuneCUETP8M2T4_13TeV-madgraph-pythia8_V2.xml"> 
+  <!ENTITY MC_ZPrime4000NarToTPrime2500T_TPrimeToHT SYSTEM  "/nfs/dust/cms/user/abenecke/CMSSW_8_0_24_patch1/src/UHH2/ZprimeToTprimeTtZtH/datasets/GStar/ZprimeToTprimeT_TprimeToHT_Zp4000Nar_Tp2500Nar_LH_TuneCUETP8M2T4_13TeV-madgraph-pythia8_V2.xml"> 
+  <!ENTITY MC_ZPrime1500WIDToTPrime1000T_TPrimeToWB SYSTEM  "/nfs/dust/cms/user/abenecke/CMSSW_8_0_24_patch1/src/UHH2/ZprimeToTprimeTtZtH/datasets/GStar/ZprimeToTprimeT_TprimeToWB_Zp1500WID_Tp1000Nar_LH_TuneCUETP8M2T4_13TeV-madgraph-pythia8_V2.xml"> 
+
+
+ <!ENTITY MC_ZPrime1500NarToTPrime1000T_TPrimeToHT SYSTEM "/nfs/dust/cms/user/abenecke/CMSSW_8_0_24_patch1/src/UHH2/ZprimeToTprimeTtZtH/datasets/GStar/new2/ZprimeToTprimeT_TprimeToHT_Zp1500Nar_Tp1000Nar_LH_TuneCUETP8M2T4_13TeV-madgraph-pythia8_V2.xml">
+ <!ENTITY MC_ZPrime1500NarToTPrime1300T_TPrimeToHT SYSTEM "/nfs/dust/cms/user/abenecke/CMSSW_8_0_24_patch1/src/UHH2/ZprimeToTprimeTtZtH/datasets/GStar/new2/ZprimeToTprimeT_TprimeToHT_Zp1500Nar_Tp1300Nar_LH_TuneCUETP8M2T4_13TeV-madgraph-pythia8_V2.xml">
+ <!ENTITY MC_ZPrime1500NarToTPrime800T_TPrimeToHT SYSTEM "/nfs/dust/cms/user/abenecke/CMSSW_8_0_24_patch1/src/UHH2/ZprimeToTprimeTtZtH/datasets/GStar/new2/ZprimeToTprimeT_TprimeToHT_Zp1500Nar_Tp800Nar_LH_TuneCUETP8M2T4_13TeV-madgraph-pythia8_V2.xml">
+ <!ENTITY MC_ZPrime2000NarToTPrime1000T_TPrimeToHT SYSTEM "/nfs/dust/cms/user/abenecke/CMSSW_8_0_24_patch1/src/UHH2/ZprimeToTprimeTtZtH/datasets/GStar/new2/ZprimeToTprimeT_TprimeToHT_Zp2000Nar_Tp1000Nar_LH_TuneCUETP8M2T4_13TeV-madgraph-pythia8_V2.xml">
+ <!ENTITY MC_ZPrime2000NarToTPrime1300T_TPrimeToHT SYSTEM "/nfs/dust/cms/user/abenecke/CMSSW_8_0_24_patch1/src/UHH2/ZprimeToTprimeTtZtH/datasets/GStar/ZprimeToTprimeT_TprimeToHT_Zp2000Nar_Tp1300Nar_LH_TuneCUETP8M2T4_13TeV-madgraph-pythia8_V2.xml">
+ <!ENTITY MC_ZPrime1500NarToTPrime1000T_TPrimeToWB SYSTEM "/nfs/dust/cms/user/abenecke/CMSSW_8_0_24_patch1/src/UHH2/ZprimeToTprimeTtZtH/datasets/GStar/new2/ZprimeToTprimeT_TprimeToWB_Zp1500Nar_Tp1000Nar_LH_TuneCUETP8M2T4_13TeV-madgraph-pythia8_V2.xml">
+ <!ENTITY MC_ZPrime1500NarToTPrime1300T_TPrimeToWB SYSTEM "/nfs/dust/cms/user/abenecke/CMSSW_8_0_24_patch1/src/UHH2/ZprimeToTprimeTtZtH/datasets/GStar/new2/ZprimeToTprimeT_TprimeToWB_Zp1500Nar_Tp1300Nar_LH_TuneCUETP8M2T4_13TeV-madgraph-pythia8_V2.xml">
+ <!ENTITY MC_ZPrime1500NarToTPrime800T_TPrimeToWB SYSTEM "/nfs/dust/cms/user/abenecke/CMSSW_8_0_24_patch1/src/UHH2/ZprimeToTprimeTtZtH/datasets/GStar/new2/ZprimeToTprimeT_TprimeToWB_Zp1500Nar_Tp800Nar_LH_TuneCUETP8M2T4_13TeV-madgraph-pythia8_V2.xml">
+ <!ENTITY MC_ZPrime2500NarToTPrime1300T_TPrimeToWB SYSTEM "/nfs/dust/cms/user/abenecke/CMSSW_8_0_24_patch1/src/UHH2/ZprimeToTprimeTtZtH/datasets/GStar/new2/ZprimeToTprimeT_TprimeToWB_Zp2500Nar_Tp1300Nar_LH_TuneCUETP8M2T4_13TeV-madgraph-pythia8_V2.xml">
+ <!ENTITY MC_ZPrime3500NarToTPrime2100T_TPrimeToWB SYSTEM "/nfs/dust/cms/user/abenecke/CMSSW_8_0_24_patch1/src/UHH2/ZprimeToTprimeTtZtH/datasets/GStar/new2/ZprimeToTprimeT_TprimeToWB_Zp3500Nar_Tp2100Nar_LH_TuneCUETP8M2T4_13TeV-madgraph-pythia8_V2.xml">
+ <!ENTITY MC_ZPrime1500NarToTPrime1000T_TPrimeToZT SYSTEM "/nfs/dust/cms/user/abenecke/CMSSW_8_0_24_patch1/src/UHH2/ZprimeToTprimeTtZtH/datasets/GStar/new2/ZprimeToTprimeT_TprimeToZT_Zp1500Nar_Tp1000Nar_LH_TuneCUETP8M2T4_13TeV-madgraph-pythia8_V2.xml">
+ <!ENTITY MC_ZPrime1500NarToTPrime1300T_TPrimeToZT SYSTEM "/nfs/dust/cms/user/abenecke/CMSSW_8_0_24_patch1/src/UHH2/ZprimeToTprimeTtZtH/datasets/GStar/new2/ZprimeToTprimeT_TprimeToZT_Zp1500Nar_Tp1300Nar_LH_TuneCUETP8M2T4_13TeV-madgraph-pythia8_V2.xml">
+ <!ENTITY MC_ZPrime1500NarToTPrime800T_TPrimeToZT SYSTEM "/nfs/dust/cms/user/abenecke/CMSSW_8_0_24_patch1/src/UHH2/ZprimeToTprimeTtZtH/datasets/GStar/new2/ZprimeToTprimeT_TprimeToZT_Zp1500Nar_Tp800Nar_LH_TuneCUETP8M2T4_13TeV-madgraph-pythia8_V2.xml">
+ <!ENTITY MC_ZPrime3500NarToTPrime1800T_TPrimeToZT SYSTEM "/nfs/dust/cms/user/abenecke/CMSSW_8_0_24_patch1/src/UHH2/ZprimeToTprimeTtZtH/datasets/GStar/new2/ZprimeToTprimeT_TprimeToZT_Zp3500Nar_Tp1800Nar_LH_TuneCUETP8M2T4_13TeV-madgraph-pythia8_V2.xml">
+ <!ENTITY MC_ZPrime1750NarToTPrime1300T_TPrimeToZT SYSTEM  "/nfs/dust/cms/user/abenecke/CMSSW_8_0_24_patch1/src/UHH2/ZprimeToTprimeTtZtH/datasets/GStar/ZprimeToTprimeT_TprimeToZT_Zp1750Nar_Tp1300Nar_LH_TuneCUETP8M2T4_13TeV-madgraph-pythia8_V2.xml"> 
+  <!ENTITY MC_ZPrime1750NarToTPrime1300T_TPrimeToHT SYSTEM  "/nfs/dust/cms/user/abenecke/CMSSW_8_0_24_patch1/src/UHH2/ZprimeToTprimeTtZtH/datasets/GStar/ZprimeToTprimeT_TprimeToHT_Zp1750Nar_Tp1300Nar_LH_TuneCUETP8M2T4_13TeV-madgraph-pythia8_V2.xml"> 
+  <!ENTITY MC_ZPrime2250NarToTPrime1500T_TPrimeToZT SYSTEM  "/nfs/dust/cms/user/abenecke/CMSSW_8_0_24_patch1/src/UHH2/ZprimeToTprimeTtZtH/datasets/GStar/ZprimeToTprimeT_TprimeToZT_Zp2250Nar_Tp1500Nar_LH_TuneCUETP8M2T4_13TeV-madgraph-pythia8_V2.xml"> 
+  <!ENTITY MC_ZPrime2750NarToTPrime1500T_TPrimeToZT SYSTEM  "/nfs/dust/cms/user/abenecke/CMSSW_8_0_24_patch1/src/UHH2/ZprimeToTprimeTtZtH/datasets/GStar/ZprimeToTprimeT_TprimeToZT_Zp2750Nar_Tp1500Nar_LH_TuneCUETP8M2T4_13TeV-madgraph-pythia8_V2.xml"> 
+  <!ENTITY MC_ZPrime2250NarToTPrime1300T_TPrimeToZT SYSTEM  "/nfs/dust/cms/user/abenecke/CMSSW_8_0_24_patch1/src/UHH2/ZprimeToTprimeTtZtH/datasets/GStar/ZprimeToTprimeT_TprimeToZT_Zp2250Nar_Tp1300Nar_LH_TuneCUETP8M2T4_13TeV-madgraph-pythia8_V2.xml"> 
+  <!ENTITY MC_ZPrime2250NarToTPrime1300T_TPrimeToWB SYSTEM  "/nfs/dust/cms/user/abenecke/CMSSW_8_0_24_patch1/src/UHH2/ZprimeToTprimeTtZtH/datasets/GStar/ZprimeToTprimeT_TprimeToWB_Zp2250Nar_Tp1300Nar_LH_TuneCUETP8M2T4_13TeV-madgraph-pythia8_V2.xml"> 
+  <!ENTITY MC_ZPrime2750NarToTPrime1500T_TPrimeToWB SYSTEM  "/nfs/dust/cms/user/abenecke/CMSSW_8_0_24_patch1/src/UHH2/ZprimeToTprimeTtZtH/datasets/GStar/ZprimeToTprimeT_TprimeToWB_Zp2750Nar_Tp1500Nar_LH_TuneCUETP8M2T4_13TeV-madgraph-pythia8_V2.xml"> 
+  <!ENTITY MC_ZPrime1750NarToTPrime1300T_TPrimeToWB SYSTEM  "/nfs/dust/cms/user/abenecke/CMSSW_8_0_24_patch1/src/UHH2/ZprimeToTprimeTtZtH/datasets/GStar/ZprimeToTprimeT_TprimeToWB_Zp1750Nar_Tp1300Nar_LH_TuneCUETP8M2T4_13TeV-madgraph-pythia8_V2.xml"> 
+  <!ENTITY MC_ZPrime1500WIDToTPrime1300T_TPrimeToZT SYSTEM  "/nfs/dust/cms/user/abenecke/CMSSW_8_0_24_patch1/src/UHH2/ZprimeToTprimeTtZtH/datasets/GStar/ZprimeToTprimeT_TprimeToZT_Zp1500WID_Tp1300Nar_LH_TuneCUETP8M2T4_13TeV-madgraph-pythia8_V2.xml"> 
+  <!ENTITY MC_ZPrime2750NarToTPrime1500T_TPrimeToHT SYSTEM  "/nfs/dust/cms/user/abenecke/CMSSW_8_0_24_patch1/src/UHH2/ZprimeToTprimeTtZtH/datasets/GStar/ZprimeToTprimeT_TprimeToHT_Zp2750Nar_Tp1500Nar_LH_TuneCUETP8M2T4_13TeV-madgraph-pythia8_V2.xml"> 
+  <!ENTITY MC_ZPrime2250NarToTPrime1500T_TPrimeToHT SYSTEM  "/nfs/dust/cms/user/abenecke/CMSSW_8_0_24_patch1/src/UHH2/ZprimeToTprimeTtZtH/datasets/GStar/ZprimeToTprimeT_TprimeToHT_Zp2250Nar_Tp1500Nar_LH_TuneCUETP8M2T4_13TeV-madgraph-pythia8_V2.xml"> 
+  <!ENTITY MC_ZPrime2250NarToTPrime1500T_TPrimeToWB SYSTEM  "/nfs/dust/cms/user/abenecke/CMSSW_8_0_24_patch1/src/UHH2/ZprimeToTprimeTtZtH/datasets/GStar/ZprimeToTprimeT_TprimeToWB_Zp2250Nar_Tp1500Nar_LH_TuneCUETP8M2T4_13TeV-madgraph-pythia8_V2.xml"> 
+  <!ENTITY MC_ZPrime1500WIDToTPrime800T_TPrimeToWB SYSTEM  "/nfs/dust/cms/user/abenecke/CMSSW_8_0_24_patch1/src/UHH2/ZprimeToTprimeTtZtH/datasets/GStar/ZprimeToTprimeT_TprimeToWB_Zp1500WID_Tp800Nar_LH_TuneCUETP8M2T4_13TeV-madgraph-pythia8_V2.xml"> 
+  <!ENTITY MC_ZPrime2250NarToTPrime1300T_TPrimeToHT SYSTEM  "/nfs/dust/cms/user/abenecke/CMSSW_8_0_24_patch1/src/UHH2/ZprimeToTprimeTtZtH/datasets/GStar/ZprimeToTprimeT_TprimeToHT_Zp2250Nar_Tp1300Nar_LH_TuneCUETP8M2T4_13TeV-madgraph-pythia8_V2.xml"> 
+
+
+<!--   HT -->
+
+
+ <!ENTITY MC_ZPrime3500NarToTPrime1800T_TPrimeToHT SYSTEM "/nfs/dust/cms/user/abenecke/CMSSW_8_0_24_patch1/src/UHH2/ZprimeToTprimeTtZtH/datasets/GStar/ZprimeToTprimeT_TprimeToHT_Zp3500Nar_Tp1800Nar_LH_TuneCUETP8M2T4_13TeV-madgraph-pythia8_V2.xml">
+
+ <!ENTITY MC_ZPrime3000NarToTPrime1500T_TPrimeToHT SYSTEM "/nfs/dust/cms/user/abenecke/CMSSW_8_0_24_patch1/src/UHH2/ZprimeToTprimeTtZtH/datasets/GStar/ZprimeToTprimeT_TprimeToHT_Zp3000Nar_Tp1500Nar_LH_TuneCUETP8M2T4_13TeV-madgraph-pythia8_V2.xml">
+ <!ENTITY MC_ZPrime3000NarToTPrime1800T_TPrimeToHT SYSTEM "/nfs/dust/cms/user/abenecke/CMSSW_8_0_24_patch1/src/UHH2/ZprimeToTprimeTtZtH/datasets/GStar/ZprimeToTprimeT_TprimeToHT_Zp3000Nar_Tp1800Nar_LH_TuneCUETP8M2T4_13TeV-madgraph-pythia8_V2.xml">
+ <!ENTITY MC_ZPrime3000NarToTPrime2100T_TPrimeToHT SYSTEM "/nfs/dust/cms/user/abenecke/CMSSW_8_0_24_patch1/src/UHH2/ZprimeToTprimeTtZtH/datasets/GStar/ZprimeToTprimeT_TprimeToHT_Zp3000Nar_Tp2100Nar_LH_TuneCUETP8M2T4_13TeV-madgraph-pythia8_V2.xml">
+ <!ENTITY MC_ZPrime3000WIDToTPrime1500T_TPrimeToHT SYSTEM "/nfs/dust/cms/user/abenecke/CMSSW_8_0_24_patch1/src/UHH2/ZprimeToTprimeTtZtH/datasets/GStar/ZprimeToTprimeT_TprimeToHT_Zp3000WID_Tp1500Nar_LH_TuneCUETP8M2T4_13TeV-madgraph-pythia8_V2.xml">
+ <!ENTITY MC_ZPrime3000WIDToTPrime1800T_TPrimeToHT SYSTEM "/nfs/dust/cms/user/abenecke/CMSSW_8_0_24_patch1/src/UHH2/ZprimeToTprimeTtZtH/datasets/GStar/ZprimeToTprimeT_TprimeToHT_Zp3000WID_Tp1800Nar_LH_TuneCUETP8M2T4_13TeV-madgraph-pythia8_V2.xml">
+ <!ENTITY MC_ZPrime3000WIDToTPrime2100T_TPrimeToHT SYSTEM "/nfs/dust/cms/user/abenecke/CMSSW_8_0_24_patch1/src/UHH2/ZprimeToTprimeTtZtH/datasets/GStar/ZprimeToTprimeT_TprimeToHT_Zp3000WID_Tp2100Nar_LH_TuneCUETP8M2T4_13TeV-madgraph-pythia8_V2.xml">
+ <!ENTITY MC_ZPrime4000NarToTPrime2100T_TPrimeToHT SYSTEM "/nfs/dust/cms/user/abenecke/CMSSW_8_0_24_patch1/src/UHH2/ZprimeToTprimeTtZtH/datasets/GStar/ZprimeToTprimeT_TprimeToHT_Zp4000Nar_Tp2100Nar_LH_TuneCUETP8M2T4_13TeV-madgraph-pythia8_V2.xml">
+ <!ENTITY MC_ZPrime4000NarToTPrime3000T_TPrimeToHT SYSTEM "/nfs/dust/cms/user/abenecke/CMSSW_8_0_24_patch1/src/UHH2/ZprimeToTprimeTtZtH/datasets/GStar/ZprimeToTprimeT_TprimeToHT_Zp4000Nar_Tp3000Nar_LH_TuneCUETP8M2T4_13TeV-madgraph-pythia8_V2.xml">
+ <!ENTITY MC_ZPrime4000WIDToTPrime2100T_TPrimeToHT SYSTEM "/nfs/dust/cms/user/abenecke/CMSSW_8_0_24_patch1/src/UHH2/ZprimeToTprimeTtZtH/datasets/GStar/ZprimeToTprimeT_TprimeToHT_Zp4000WID_Tp2100Nar_LH_TuneCUETP8M2T4_13TeV-madgraph-pythia8_V2.xml">
+ <!ENTITY MC_ZPrime4000WIDToTPrime3000T_TPrimeToHT SYSTEM "/nfs/dust/cms/user/abenecke/CMSSW_8_0_24_patch1/src/UHH2/ZprimeToTprimeTtZtH/datasets/GStar/ZprimeToTprimeT_TprimeToHT_Zp4000WID_Tp3000Nar_LH_TuneCUETP8M2T4_13TeV-madgraph-pythia8_V2.xml">
+
+
+<!--  WB -->
+ <!ENTITY MC_ZPrime3000NarToTPrime1500T_TPrimeToWB SYSTEM "/nfs/dust/cms/user/abenecke/CMSSW_8_0_24_patch1/src/UHH2/ZprimeToTprimeTtZtH/datasets/GStar/ZprimeToTprimeT_TprimeToWB_Zp3000Nar_Tp1500Nar_LH_TuneCUETP8M2T4_13TeV-madgraph-pythia8_V2.xml">
+ <!ENTITY MC_ZPrime3000NarToTPrime1800T_TPrimeToWB SYSTEM "/nfs/dust/cms/user/abenecke/CMSSW_8_0_24_patch1/src/UHH2/ZprimeToTprimeTtZtH/datasets/GStar/ZprimeToTprimeT_TprimeToWB_Zp3000Nar_Tp1800Nar_LH_TuneCUETP8M2T4_13TeV-madgraph-pythia8_V2.xml">
+ <!ENTITY MC_ZPrime3000NarToTPrime2100T_TPrimeToWB SYSTEM "/nfs/dust/cms/user/abenecke/CMSSW_8_0_24_patch1/src/UHH2/ZprimeToTprimeTtZtH/datasets/GStar/ZprimeToTprimeT_TprimeToWB_Zp3000Nar_Tp2100Nar_LH_TuneCUETP8M2T4_13TeV-madgraph-pythia8_V2.xml">
+ <!ENTITY MC_ZPrime3000WIDToTPrime1500T_TPrimeToWB SYSTEM "/nfs/dust/cms/user/abenecke/CMSSW_8_0_24_patch1/src/UHH2/ZprimeToTprimeTtZtH/datasets/GStar/ZprimeToTprimeT_TprimeToWB_Zp3000WID_Tp1500Nar_LH_TuneCUETP8M2T4_13TeV-madgraph-pythia8_V2.xml">
+ <!ENTITY MC_ZPrime3000WIDToTPrime1800T_TPrimeToWB SYSTEM "/nfs/dust/cms/user/abenecke/CMSSW_8_0_24_patch1/src/UHH2/ZprimeToTprimeTtZtH/datasets/GStar/ZprimeToTprimeT_TprimeToWB_Zp3000WID_Tp1800Nar_LH_TuneCUETP8M2T4_13TeV-madgraph-pythia8_V2.xml">
+ <!ENTITY MC_ZPrime3000WIDToTPrime2100T_TPrimeToWB SYSTEM "/nfs/dust/cms/user/abenecke/CMSSW_8_0_24_patch1/src/UHH2/ZprimeToTprimeTtZtH/datasets/GStar/ZprimeToTprimeT_TprimeToWB_Zp3000WID_Tp2100Nar_LH_TuneCUETP8M2T4_13TeV-madgraph-pythia8_V2.xml">
+ <!ENTITY MC_ZPrime4000NarToTPrime2100T_TPrimeToWB SYSTEM "/nfs/dust/cms/user/abenecke/CMSSW_8_0_24_patch1/src/UHH2/ZprimeToTprimeTtZtH/datasets/GStar/ZprimeToTprimeT_TprimeToWB_Zp4000Nar_Tp2100Nar_LH_TuneCUETP8M2T4_13TeV-madgraph-pythia8_V2.xml">
+ <!ENTITY MC_ZPrime4000NarToTPrime2500T_TPrimeToWB SYSTEM "/nfs/dust/cms/user/abenecke/CMSSW_8_0_24_patch1/src/UHH2/ZprimeToTprimeTtZtH/datasets/GStar/ZprimeToTprimeT_TprimeToWB_Zp4000Nar_Tp2500Nar_LH_TuneCUETP8M2T4_13TeV-madgraph-pythia8_V2.xml">
+ <!ENTITY MC_ZPrime4000NarToTPrime3000T_TPrimeToWB SYSTEM "/nfs/dust/cms/user/abenecke/CMSSW_8_0_24_patch1/src/UHH2/ZprimeToTprimeTtZtH/datasets/GStar/ZprimeToTprimeT_TprimeToWB_Zp4000Nar_Tp3000Nar_LH_TuneCUETP8M2T4_13TeV-madgraph-pythia8_V2.xml">
+ <!ENTITY MC_ZPrime4000WIDToTPrime2100T_TPrimeToWB SYSTEM "/nfs/dust/cms/user/abenecke/CMSSW_8_0_24_patch1/src/UHH2/ZprimeToTprimeTtZtH/datasets/GStar/ZprimeToTprimeT_TprimeToWB_Zp4000WID_Tp2100Nar_LH_TuneCUETP8M2T4_13TeV-madgraph-pythia8_V2.xml">
+ <!ENTITY MC_ZPrime4000WIDToTPrime2500T_TPrimeToWB SYSTEM "/nfs/dust/cms/user/abenecke/CMSSW_8_0_24_patch1/src/UHH2/ZprimeToTprimeTtZtH/datasets/GStar/ZprimeToTprimeT_TprimeToWB_Zp4000WID_Tp2500Nar_LH_TuneCUETP8M2T4_13TeV-madgraph-pythia8_V2.xml">
+ <!ENTITY MC_ZPrime4000WIDToTPrime3000T_TPrimeToWB SYSTEM "/nfs/dust/cms/user/abenecke/CMSSW_8_0_24_patch1/src/UHH2/ZprimeToTprimeTtZtH/datasets/GStar/ZprimeToTprimeT_TprimeToWB_Zp4000WID_Tp3000Nar_LH_TuneCUETP8M2T4_13TeV-madgraph-pythia8_V2.xml">
+
+
+<!--   ZT -->
+ <!ENTITY MC_ZPrime3000NarToTPrime1500T_TPrimeToZT SYSTEM "/nfs/dust/cms/user/abenecke/CMSSW_8_0_24_patch1/src/UHH2/ZprimeToTprimeTtZtH/datasets/GStar/ZprimeToTprimeT_TprimeToZT_Zp3000Nar_Tp1500Nar_LH_TuneCUETP8M2T4_13TeV-madgraph-pythia8_V2.xml">
+ <!ENTITY MC_ZPrime3000NarToTPrime1800T_TPrimeToZT SYSTEM "/nfs/dust/cms/user/abenecke/CMSSW_8_0_24_patch1/src/UHH2/ZprimeToTprimeTtZtH/datasets/GStar/ZprimeToTprimeT_TprimeToZT_Zp3000Nar_Tp1800Nar_LH_TuneCUETP8M2T4_13TeV-madgraph-pythia8_V2.xml">
+ <!ENTITY MC_ZPrime3000NarToTPrime2100T_TPrimeToZT SYSTEM "/nfs/dust/cms/user/abenecke/CMSSW_8_0_24_patch1/src/UHH2/ZprimeToTprimeTtZtH/datasets/GStar/ZprimeToTprimeT_TprimeToZT_Zp3000Nar_Tp2100Nar_LH_TuneCUETP8M2T4_13TeV-madgraph-pythia8_V2.xml">
+ <!ENTITY MC_ZPrime3000WIDToTPrime1800T_TPrimeToZT SYSTEM "/nfs/dust/cms/user/abenecke/CMSSW_8_0_24_patch1/src/UHH2/ZprimeToTprimeTtZtH/datasets/GStar/ZprimeToTprimeT_TprimeToZT_Zp3000WID_Tp1800Nar_LH_TuneCUETP8M2T4_13TeV-madgraph-pythia8_V2.xml">
+ <!ENTITY MC_ZPrime3000WIDToTPrime2100T_TPrimeToZT SYSTEM "/nfs/dust/cms/user/abenecke/CMSSW_8_0_24_patch1/src/UHH2/ZprimeToTprimeTtZtH/datasets/GStar/ZprimeToTprimeT_TprimeToZT_Zp3000WID_Tp2100Nar_LH_TuneCUETP8M2T4_13TeV-madgraph-pythia8_V2.xml">
+ <!ENTITY MC_ZPrime4000NarToTPrime2100T_TPrimeToZT SYSTEM "/nfs/dust/cms/user/abenecke/CMSSW_8_0_24_patch1/src/UHH2/ZprimeToTprimeTtZtH/datasets/GStar/ZprimeToTprimeT_TprimeToZT_Zp4000Nar_Tp2100Nar_LH_TuneCUETP8M2T4_13TeV-madgraph-pythia8_V2.xml">
+ <!ENTITY MC_ZPrime4000NarToTPrime2500T_TPrimeToZT SYSTEM "/nfs/dust/cms/user/abenecke/CMSSW_8_0_24_patch1/src/UHH2/ZprimeToTprimeTtZtH/datasets/GStar/ZprimeToTprimeT_TprimeToZT_Zp4000Nar_Tp2500Nar_LH_TuneCUETP8M2T4_13TeV-madgraph-pythia8_V2.xml">
+ <!ENTITY MC_ZPrime4000NarToTPrime3000T_TPrimeToZT SYSTEM "/nfs/dust/cms/user/abenecke/CMSSW_8_0_24_patch1/src/UHH2/ZprimeToTprimeTtZtH/datasets/GStar/ZprimeToTprimeT_TprimeToZT_Zp4000Nar_Tp3000Nar_LH_TuneCUETP8M2T4_13TeV-madgraph-pythia8_V2.xml">
+ <!ENTITY MC_ZPrime4000WIDToTPrime2100T_TPrimeToZT SYSTEM "/nfs/dust/cms/user/abenecke/CMSSW_8_0_24_patch1/src/UHH2/ZprimeToTprimeTtZtH/datasets/GStar/ZprimeToTprimeT_TprimeToZT_Zp4000WID_Tp2100Nar_LH_TuneCUETP8M2T4_13TeV-madgraph-pythia8_V2.xml">
+ <!ENTITY MC_ZPrime4000WIDToTPrime2500T_TPrimeToZT SYSTEM "/nfs/dust/cms/user/abenecke/CMSSW_8_0_24_patch1/src/UHH2/ZprimeToTprimeTtZtH/datasets/GStar/ZprimeToTprimeT_TprimeToZT_Zp4000WID_Tp2500Nar_LH_TuneCUETP8M2T4_13TeV-madgraph-pythia8_V2.xml">
+ <!ENTITY MC_ZPrime4000WIDToTPrime3000T_TPrimeToZT SYSTEM "/nfs/dust/cms/user/abenecke/CMSSW_8_0_24_patch1/src/UHH2/ZprimeToTprimeTtZtH/datasets/GStar/ZprimeToTprimeT_TprimeToZT_Zp4000WID_Tp3000Nar_LH_TuneCUETP8M2T4_13TeV-madgraph-pythia8_V2.xml">
+
+
+
+ <!ENTITY MC_ZPrime4000NarToTPrime2100T_TPrimeToHT SYSTEM "/nfs/dust/cms/user/abenecke/CMSSW_8_0_24_patch1/src/UHH2/ZprimeToTprimeTtZtH/datasets/GStar/new/ZprimeToTprimeT_TprimeToHT_Zp4000Nar_Tp2100Nar_LH_TuneCUETP8M2T4_13TeV-madgraph-pythia8_V2.xml">
+ <!ENTITY MC_ZPrime4000WIDToTPrime2100T_TPrimeToHT SYSTEM "/nfs/dust/cms/user/abenecke/CMSSW_8_0_24_patch1/src/UHH2/ZprimeToTprimeTtZtH/datasets/GStar/new/ZprimeToTprimeT_TprimeToHT_Zp4000WID_Tp2100Nar_LH_TuneCUETP8M2T4_13TeV-madgraph-pythia8_V2.xml">
+ <!ENTITY MC_ZPrime3000WIDToTPrime1500T_TPrimeToZT SYSTEM "/nfs/dust/cms/user/abenecke/CMSSW_8_0_24_patch1/src/UHH2/ZprimeToTprimeTtZtH/datasets/GStar/new/ZprimeToTprimeT_TprimeToZT_Zp3000WID_Tp1500Nar_LH_TuneCUETP8M2T4_13TeV-madgraph-pythia8_V2.xml">
+ <!ENTITY MC_ZPrime2500NarToTPrime1300T_TPrimeToHT SYSTEM "/nfs/dust/cms/user/abenecke/CMSSW_8_0_24_patch1/src/UHH2/ZprimeToTprimeTtZtH/datasets/GStar/new/ZprimeToTprimeT_TprimeToHT_Zp2500Nar_Tp1300Nar_LH_TuneCUETP8M2T4_13TeV-madgraph-pythia8_V2.xml">
+ <!ENTITY MC_ZPrime2500NarToTPrime1500T_TPrimeToHT SYSTEM "/nfs/dust/cms/user/abenecke/CMSSW_8_0_24_patch1/src/UHH2/ZprimeToTprimeTtZtH/datasets/GStar/new/ZprimeToTprimeT_TprimeToHT_Zp2500Nar_Tp1500Nar_LH_TuneCUETP8M2T4_13TeV-madgraph-pythia8_V2.xml">
+ <!ENTITY MC_ZPrime2500NarToTPrime1800T_TPrimeToHT SYSTEM "/nfs/dust/cms/user/abenecke/CMSSW_8_0_24_patch1/src/UHH2/ZprimeToTprimeTtZtH/datasets/GStar/ZprimeToTprimeT_TprimeToHT_Zp2500Nar_Tp1800Nar_LH_TuneCUETP8M2T4_13TeV-madgraph-pythia8_V2.xml">
+ <!ENTITY MC_ZPrime2500WIDToTPrime1300T_TPrimeToHT SYSTEM "/nfs/dust/cms/user/abenecke/CMSSW_8_0_24_patch1/src/UHH2/ZprimeToTprimeTtZtH/datasets/GStar/new/ZprimeToTprimeT_TprimeToHT_Zp2500WID_Tp1300Nar_LH_TuneCUETP8M2T4_13TeV-madgraph-pythia8_V2.xml">
+ <!ENTITY MC_ZPrime2500WIDToTPrime1800T_TPrimeToHT SYSTEM "/nfs/dust/cms/user/abenecke/CMSSW_8_0_24_patch1/src/UHH2/ZprimeToTprimeTtZtH/datasets/GStar/new/ZprimeToTprimeT_TprimeToHT_Zp2500WID_Tp1800Nar_LH_TuneCUETP8M2T4_13TeV-madgraph-pythia8_V2.xml">
+ <!ENTITY MC_ZPrime2500NarToTPrime1500T_TPrimeToWB SYSTEM "/nfs/dust/cms/user/abenecke/CMSSW_8_0_24_patch1/src/UHH2/ZprimeToTprimeTtZtH/datasets/GStar/new/ZprimeToTprimeT_TprimeToWB_Zp2500Nar_Tp1500Nar_LH_TuneCUETP8M2T4_13TeV-madgraph-pythia8_V2.xml">
+ <!ENTITY MC_ZPrime2500NarToTPrime1800T_TPrimeToWB SYSTEM "/nfs/dust/cms/user/abenecke/CMSSW_8_0_24_patch1/src/UHH2/ZprimeToTprimeTtZtH/datasets/GStar/new/ZprimeToTprimeT_TprimeToWB_Zp2500Nar_Tp1800Nar_LH_TuneCUETP8M2T4_13TeV-madgraph-pythia8_V2.xml">
+ <!ENTITY MC_ZPrime2500WIDToTPrime1300T_TPrimeToWB SYSTEM "/nfs/dust/cms/user/abenecke/CMSSW_8_0_24_patch1/src/UHH2/ZprimeToTprimeTtZtH/datasets/GStar/new/ZprimeToTprimeT_TprimeToWB_Zp2500WID_Tp1300Nar_LH_TuneCUETP8M2T4_13TeV-madgraph-pythia8_V2.xml">
+ <!ENTITY MC_ZPrime2500WIDToTPrime1800T_TPrimeToWB SYSTEM "/nfs/dust/cms/user/abenecke/CMSSW_8_0_24_patch1/src/UHH2/ZprimeToTprimeTtZtH/datasets/GStar/new/ZprimeToTprimeT_TprimeToWB_Zp2500WID_Tp1800Nar_LH_TuneCUETP8M2T4_13TeV-madgraph-pythia8_V2.xml">
+ <!ENTITY MC_ZPrime2500NarToTPrime1300T_TPrimeToZT SYSTEM "/nfs/dust/cms/user/abenecke/CMSSW_8_0_24_patch1/src/UHH2/ZprimeToTprimeTtZtH/datasets/GStar/new/ZprimeToTprimeT_TprimeToZT_Zp2500Nar_Tp1300Nar_LH_TuneCUETP8M2T4_13TeV-madgraph-pythia8_V2.xml">
+ <!ENTITY MC_ZPrime2500NarToTPrime1800T_TPrimeToZT SYSTEM "/nfs/dust/cms/user/abenecke/CMSSW_8_0_24_patch1/src/UHH2/ZprimeToTprimeTtZtH/datasets/GStar/new/ZprimeToTprimeT_TprimeToZT_Zp2500Nar_Tp1800Nar_LH_TuneCUETP8M2T4_13TeV-madgraph-pythia8_V2.xml">
+ <!ENTITY MC_ZPrime2500WIDToTPrime1300T_TPrimeToZT SYSTEM "/nfs/dust/cms/user/abenecke/CMSSW_8_0_24_patch1/src/UHH2/ZprimeToTprimeTtZtH/datasets/GStar/new/ZprimeToTprimeT_TprimeToZT_Zp2500WID_Tp1300Nar_LH_TuneCUETP8M2T4_13TeV-madgraph-pythia8_V2.xml">
+ <!ENTITY MC_ZPrime2500WIDToTPrime1800T_TPrimeToZT SYSTEM "/nfs/dust/cms/user/abenecke/CMSSW_8_0_24_patch1/src/UHH2/ZprimeToTprimeTtZtH/datasets/GStar/new/ZprimeToTprimeT_TprimeToZT_Zp2500WID_Tp1800Nar_LH_TuneCUETP8M2T4_13TeV-madgraph-pythia8_V2.xml">
+ <!ENTITY MC_ZPrime3500NarToTPrime2100T_TPrimeToHT SYSTEM "/nfs/dust/cms/user/abenecke/CMSSW_8_0_24_patch1/src/UHH2/ZprimeToTprimeTtZtH/datasets/GStar/new/ZprimeToTprimeT_TprimeToHT_Zp3500Nar_Tp2100Nar_LH_TuneCUETP8M2T4_13TeV-madgraph-pythia8_V2.xml">
+ <!ENTITY MC_ZPrime3500NarToTPrime2500T_TPrimeToHT SYSTEM "/nfs/dust/cms/user/abenecke/CMSSW_8_0_24_patch1/src/UHH2/ZprimeToTprimeTtZtH/datasets/GStar/new/ZprimeToTprimeT_TprimeToHT_Zp3500Nar_Tp2500Nar_LH_TuneCUETP8M2T4_13TeV-madgraph-pythia8_V2.xml">
+ <!ENTITY MC_ZPrime3500WIDToTPrime2100T_TPrimeToHT SYSTEM "/nfs/dust/cms/user/abenecke/CMSSW_8_0_24_patch1/src/UHH2/ZprimeToTprimeTtZtH/datasets/GStar/new/ZprimeToTprimeT_TprimeToHT_Zp3500WID_Tp2100Nar_LH_TuneCUETP8M2T4_13TeV-madgraph-pythia8_V2.xml">
+ <!ENTITY MC_ZPrime3500WIDToTPrime2500T_TPrimeToHT SYSTEM "/nfs/dust/cms/user/abenecke/CMSSW_8_0_24_patch1/src/UHH2/ZprimeToTprimeTtZtH/datasets/GStar/new/ZprimeToTprimeT_TprimeToHT_Zp3500WID_Tp2500Nar_LH_TuneCUETP8M2T4_13TeV-madgraph-pythia8_V2.xml">
+ <!ENTITY MC_ZPrime3500NarToTPrime1800T_TPrimeToWB SYSTEM "/nfs/dust/cms/user/abenecke/CMSSW_8_0_24_patch1/src/UHH2/ZprimeToTprimeTtZtH/datasets/GStar/new/ZprimeToTprimeT_TprimeToWB_Zp3500Nar_Tp1800Nar_LH_TuneCUETP8M2T4_13TeV-madgraph-pythia8_V2.xml">
+ <!ENTITY MC_ZPrime3500NarToTPrime2500T_TPrimeToWB SYSTEM "/nfs/dust/cms/user/abenecke/CMSSW_8_0_24_patch1/src/UHH2/ZprimeToTprimeTtZtH/datasets/GStar/new/ZprimeToTprimeT_TprimeToWB_Zp3500Nar_Tp2500Nar_LH_TuneCUETP8M2T4_13TeV-madgraph-pythia8_V2.xml">
+ <!ENTITY MC_ZPrime3500WIDToTPrime2100T_TPrimeToWB SYSTEM "/nfs/dust/cms/user/abenecke/CMSSW_8_0_24_patch1/src/UHH2/ZprimeToTprimeTtZtH/datasets/GStar/new/ZprimeToTprimeT_TprimeToWB_Zp3500WID_Tp2100Nar_LH_TuneCUETP8M2T4_13TeV-madgraph-pythia8_V2.xml">
+ <!ENTITY MC_ZPrime3500NarToTPrime2100T_TPrimeToZT SYSTEM "/nfs/dust/cms/user/abenecke/CMSSW_8_0_24_patch1/src/UHH2/ZprimeToTprimeTtZtH/datasets/GStar/new/ZprimeToTprimeT_TprimeToZT_Zp3500Nar_Tp2100Nar_LH_TuneCUETP8M2T4_13TeV-madgraph-pythia8_V2.xml">
+ <!ENTITY MC_ZPrime3500NarToTPrime2500T_TPrimeToZT SYSTEM "/nfs/dust/cms/user/abenecke/CMSSW_8_0_24_patch1/src/UHH2/ZprimeToTprimeTtZtH/datasets/GStar/new/ZprimeToTprimeT_TprimeToZT_Zp3500Nar_Tp2500Nar_LH_TuneCUETP8M2T4_13TeV-madgraph-pythia8_V2.xml">
+ <!ENTITY MC_ZPrime3500WIDToTPrime1800T_TPrimeToZT SYSTEM "/nfs/dust/cms/user/abenecke/CMSSW_8_0_24_patch1/src/UHH2/ZprimeToTprimeTtZtH/datasets/GStar/new/ZprimeToTprimeT_TprimeToZT_Zp3500WID_Tp1800Nar_LH_TuneCUETP8M2T4_13TeV-madgraph-pythia8_V2.xml">
+ <!ENTITY MC_ZPrime2000NarToTPrime1500T_TPrimeToHT SYSTEM "/nfs/dust/cms/user/abenecke/CMSSW_8_0_24_patch1/src/UHH2/ZprimeToTprimeTtZtH/datasets/GStar/new/ZprimeToTprimeT_TprimeToHT_Zp2000Nar_Tp1500Nar_LH_TuneCUETP8M2T4_13TeV-madgraph-pythia8_V2.xml">
+ <!ENTITY MC_ZPrime2000WIDToTPrime1000T_TPrimeToHT SYSTEM "/nfs/dust/cms/user/abenecke/CMSSW_8_0_24_patch1/src/UHH2/ZprimeToTprimeTtZtH/datasets/GStar/new/ZprimeToTprimeT_TprimeToHT_Zp2000WID_Tp1000Nar_LH_TuneCUETP8M2T4_13TeV-madgraph-pythia8_V2.xml">
+ <!ENTITY MC_ZPrime2000WIDToTPrime1300T_TPrimeToHT SYSTEM "/nfs/dust/cms/user/abenecke/CMSSW_8_0_24_patch1/src/UHH2/ZprimeToTprimeTtZtH/datasets/GStar/new/ZprimeToTprimeT_TprimeToHT_Zp2000WID_Tp1300Nar_LH_TuneCUETP8M2T4_13TeV-madgraph-pythia8_V2.xml">
+ <!ENTITY MC_ZPrime2000WIDToTPrime1500T_TPrimeToHT SYSTEM "/nfs/dust/cms/user/abenecke/CMSSW_8_0_24_patch1/src/UHH2/ZprimeToTprimeTtZtH/datasets/GStar/new/ZprimeToTprimeT_TprimeToHT_Zp2000WID_Tp1500Nar_LH_TuneCUETP8M2T4_13TeV-madgraph-pythia8_V2.xml">
+ <!ENTITY MC_ZPrime2000NarToTPrime1000T_TPrimeToWB SYSTEM "/nfs/dust/cms/user/abenecke/CMSSW_8_0_24_patch1/src/UHH2/ZprimeToTprimeTtZtH/datasets/GStar/new/ZprimeToTprimeT_TprimeToWB_Zp2000Nar_Tp1000Nar_LH_TuneCUETP8M2T4_13TeV-madgraph-pythia8_V2.xml">
+ <!ENTITY MC_ZPrime2000NarToTPrime1300T_TPrimeToWB SYSTEM "/nfs/dust/cms/user/abenecke/CMSSW_8_0_24_patch1/src/UHH2/ZprimeToTprimeTtZtH/datasets/GStar/new/ZprimeToTprimeT_TprimeToWB_Zp2000Nar_Tp1300Nar_LH_TuneCUETP8M2T4_13TeV-madgraph-pythia8_V2.xml">
+ <!ENTITY MC_ZPrime2000NarToTPrime1500T_TPrimeToWB SYSTEM "/nfs/dust/cms/user/abenecke/CMSSW_8_0_24_patch1/src/UHH2/ZprimeToTprimeTtZtH/datasets/GStar/new/ZprimeToTprimeT_TprimeToWB_Zp2000Nar_Tp1500Nar_LH_TuneCUETP8M2T4_13TeV-madgraph-pythia8_V2.xml">
+ <!ENTITY MC_ZPrime2000WIDToTPrime1000T_TPrimeToWB SYSTEM "/nfs/dust/cms/user/abenecke/CMSSW_8_0_24_patch1/src/UHH2/ZprimeToTprimeTtZtH/datasets/GStar/new/ZprimeToTprimeT_TprimeToWB_Zp2000WID_Tp1000Nar_LH_TuneCUETP8M2T4_13TeV-madgraph-pythia8_V2.xml">
+ <!ENTITY MC_ZPrime2000WIDToTPrime1300T_TPrimeToWB SYSTEM "/nfs/dust/cms/user/abenecke/CMSSW_8_0_24_patch1/src/UHH2/ZprimeToTprimeTtZtH/datasets/GStar/new/ZprimeToTprimeT_TprimeToWB_Zp2000WID_Tp1300Nar_LH_TuneCUETP8M2T4_13TeV-madgraph-pythia8_V2.xml">
+ <!ENTITY MC_ZPrime2000WIDToTPrime1500T_TPrimeToWB SYSTEM "/nfs/dust/cms/user/abenecke/CMSSW_8_0_24_patch1/src/UHH2/ZprimeToTprimeTtZtH/datasets/GStar/new/ZprimeToTprimeT_TprimeToWB_Zp2000WID_Tp1500Nar_LH_TuneCUETP8M2T4_13TeV-madgraph-pythia8_V2.xml">
+ <!ENTITY MC_ZPrime2000NarToTPrime1000T_TPrimeToZT SYSTEM "/nfs/dust/cms/user/abenecke/CMSSW_8_0_24_patch1/src/UHH2/ZprimeToTprimeTtZtH/datasets/GStar/new/ZprimeToTprimeT_TprimeToZT_Zp2000Nar_Tp1000Nar_LH_TuneCUETP8M2T4_13TeV-madgraph-pythia8_V2.xml">
+ <!ENTITY MC_ZPrime2000NarToTPrime1300T_TPrimeToZT SYSTEM "/nfs/dust/cms/user/abenecke/CMSSW_8_0_24_patch1/src/UHH2/ZprimeToTprimeTtZtH/datasets/GStar/new/ZprimeToTprimeT_TprimeToZT_Zp2000Nar_Tp1300Nar_LH_TuneCUETP8M2T4_13TeV-madgraph-pythia8_V2.xml">
+ <!ENTITY MC_ZPrime2000NarToTPrime1500T_TPrimeToZT SYSTEM "/nfs/dust/cms/user/abenecke/CMSSW_8_0_24_patch1/src/UHH2/ZprimeToTprimeTtZtH/datasets/GStar/new/ZprimeToTprimeT_TprimeToZT_Zp2000Nar_Tp1500Nar_LH_TuneCUETP8M2T4_13TeV-madgraph-pythia8_V2.xml">
+ <!ENTITY MC_ZPrime2000WIDToTPrime1000T_TPrimeToZT SYSTEM "/nfs/dust/cms/user/abenecke/CMSSW_8_0_24_patch1/src/UHH2/ZprimeToTprimeTtZtH/datasets/GStar/new/ZprimeToTprimeT_TprimeToZT_Zp2000WID_Tp1000Nar_LH_TuneCUETP8M2T4_13TeV-madgraph-pythia8_V2.xml">
+ <!ENTITY MC_ZPrime2000WIDToTPrime1300T_TPrimeToZT SYSTEM "/nfs/dust/cms/user/abenecke/CMSSW_8_0_24_patch1/src/UHH2/ZprimeToTprimeTtZtH/datasets/GStar/new/ZprimeToTprimeT_TprimeToZT_Zp2000WID_Tp1300Nar_LH_TuneCUETP8M2T4_13TeV-madgraph-pythia8_V2.xml">
+ <!ENTITY MC_ZPrime2000WIDToTPrime1500T_TPrimeToZT SYSTEM "/nfs/dust/cms/user/abenecke/CMSSW_8_0_24_patch1/src/UHH2/ZprimeToTprimeTtZtH/datasets/GStar/new/ZprimeToTprimeT_TprimeToZT_Zp2000WID_Tp1500Nar_LH_TuneCUETP8M2T4_13TeV-madgraph-pythia8_V2.xml">
+
+
+ <!ENTITY MC_ZPrime2500NarToTPrime1500T_TPrimeToZT SYSTEM "/nfs/dust/cms/user/abenecke/CMSSW_8_0_24_patch1/src/UHH2/ZprimeToTprimeTtZtH/datasets/GStar/new2/ZprimeToTprimeT_TprimeToZT_Zp2500Nar_Tp1500Nar_LH_TuneCUETP8M2T4_13TeV-madgraph-pythia8_V2.xml"> 
+
+ <!ENTITY MC_ZPrime3500WIDToTPrime2100T_TPrimeToZT SYSTEM "/nfs/dust/cms/user/abenecke/CMSSW_8_0_24_patch1/src/UHH2/ZprimeToTprimeTtZtH/datasets/GStar/newsample/ZprimeToTprimeT_TprimeToZT_Zp3500WID_Tp2100Nar_LH_TuneCUETP8M2T4_13TeV-madgraph-pythia8_V2.xml">
+
+
+
+<!-- old samples -->
+
  <!ENTITY MC_ZPrime1500ToTPrime700T_TPrimeToHT SYSTEM "/nfs/dust/cms/user/abenecke/CMSSW_8_0_24_patch1/src/UHH2/common/datasets/RunII_80X_v3/ZPrimeToTPrimeT/ZprimeToTprimeT_TprimeToHT_MZp-1500Nar_MTp-700Nar_LH.xml" >
  <!ENTITY MC_ZPrime1500ToTPrime900T_TPrimeToHT SYSTEM "/nfs/dust/cms/user/abenecke/CMSSW_8_0_24_patch1/src/UHH2/common/datasets/RunII_80X_v3/ZPrimeToTPrimeT/ZprimeToTprimeT_TprimeToHT_MZp-1500Nar_MTp-900Nar_LH.xml" >
  <!ENTITY MC_ZPrime1500ToTPrime1200T_TPrimeToHT SYSTEM "/nfs/dust/cms/user/abenecke/CMSSW_8_0_24_patch1/src/UHH2/common/datasets/RunII_80X_v3/ZPrimeToTPrimeT/ZprimeToTprimeT_TprimeToHT_MZp-1500Nar_MTp-1200Nar_LH.xml" >
@@ -112,8 +259,169 @@
 
    <Cycle Name="uhh2::AnalysisModuleRunner" OutputDirectory="&OUTPUT;/" PostFix="" TargetLumi="1" >
 
+<InputData Version= "MC_ZPrime3500WIDToTPrime2500T_TPrimeToZT" Lumi="207419" Type="MC" NEventsMax="&NEVT;" Cacheable="&b_Cacheable;"> &MC_ZPrime3500WIDToTPrime2500T_TPrimeToZT; <InputTree Name="AnalysisTree"/> <OutputTree Name="AnalysisTree"/> </InputData> 
+<InputData Version= "MC_ZPrime2500WIDToTPrime1500T_TPrimeToHT" Lumi="207419" Type="MC" NEventsMax="&NEVT;" Cacheable="&b_Cacheable;"> &MC_ZPrime2500WIDToTPrime1500T_TPrimeToHT; <InputTree Name="AnalysisTree"/> <OutputTree Name="AnalysisTree"/> </InputData> 
+<InputData Version= "MC_ZPrime1500WIDToTPrime1300T_TPrimeToWB" Lumi="207419" Type="MC" NEventsMax="&NEVT;" Cacheable="&b_Cacheable;"> &MC_ZPrime1500WIDToTPrime1300T_TPrimeToWB; <InputTree Name="AnalysisTree"/> <OutputTree Name="AnalysisTree"/> </InputData> 
+<InputData Version= "MC_ZPrime3500WIDToTPrime1800T_TPrimeToHT" Lumi="207419" Type="MC" NEventsMax="&NEVT;" Cacheable="&b_Cacheable;"> &MC_ZPrime3500WIDToTPrime1800T_TPrimeToHT; <InputTree Name="AnalysisTree"/> <OutputTree Name="AnalysisTree"/> </InputData> 
+<InputData Version= "MC_ZPrime1500WIDToTPrime1000T_TPrimeToHT" Lumi="207419" Type="MC" NEventsMax="&NEVT;" Cacheable="&b_Cacheable;"> &MC_ZPrime1500WIDToTPrime1000T_TPrimeToHT; <InputTree Name="AnalysisTree"/> <OutputTree Name="AnalysisTree"/> </InputData> 
+<InputData Version= "MC_ZPrime1500WIDToTPrime1300T_TPrimeToHT" Lumi="207419" Type="MC" NEventsMax="&NEVT;" Cacheable="&b_Cacheable;"> &MC_ZPrime1500WIDToTPrime1300T_TPrimeToHT; <InputTree Name="AnalysisTree"/> <OutputTree Name="AnalysisTree"/> </InputData> 
+<InputData Version= "MC_ZPrime4000WIDToTPrime2500T_TPrimeToHT" Lumi="207419" Type="MC" NEventsMax="&NEVT;" Cacheable="&b_Cacheable;"> &MC_ZPrime4000WIDToTPrime2500T_TPrimeToHT; <InputTree Name="AnalysisTree"/> <OutputTree Name="AnalysisTree"/> </InputData> 
+<InputData Version= "MC_ZPrime3500WIDToTPrime1800T_TPrimeToWB" Lumi="207419" Type="MC" NEventsMax="&NEVT;" Cacheable="&b_Cacheable;"> &MC_ZPrime3500WIDToTPrime1800T_TPrimeToWB; <InputTree Name="AnalysisTree"/> <OutputTree Name="AnalysisTree"/> </InputData> 
+<InputData Version= "MC_ZPrime1500WIDToTPrime800T_TPrimeToHT" Lumi="207419" Type="MC" NEventsMax="&NEVT;" Cacheable="&b_Cacheable;"> &MC_ZPrime1500WIDToTPrime800T_TPrimeToHT; <InputTree Name="AnalysisTree"/> <OutputTree Name="AnalysisTree"/> </InputData> 
+<InputData Version= "MC_ZPrime3500WIDToTPrime2500T_TPrimeToWB" Lumi="207419" Type="MC" NEventsMax="&NEVT;" Cacheable="&b_Cacheable;"> &MC_ZPrime3500WIDToTPrime2500T_TPrimeToWB; <InputTree Name="AnalysisTree"/> <OutputTree Name="AnalysisTree"/> </InputData> 
+<InputData Version= "MC_ZPrime1500WIDToTPrime1000T_TPrimeToZT" Lumi="207419" Type="MC" NEventsMax="&NEVT;" Cacheable="&b_Cacheable;"> &MC_ZPrime1500WIDToTPrime1000T_TPrimeToZT; <InputTree Name="AnalysisTree"/> <OutputTree Name="AnalysisTree"/> </InputData> 
+<InputData Version= "MC_ZPrime1500WIDToTPrime800T_TPrimeToZT" Lumi="207419" Type="MC" NEventsMax="&NEVT;" Cacheable="&b_Cacheable;"> &MC_ZPrime1500WIDToTPrime800T_TPrimeToZT; <InputTree Name="AnalysisTree"/> <OutputTree Name="AnalysisTree"/> </InputData> 
+<InputData Version= "MC_ZPrime2500WIDToTPrime1500T_TPrimeToWB" Lumi="207419" Type="MC" NEventsMax="&NEVT;" Cacheable="&b_Cacheable;"> &MC_ZPrime2500WIDToTPrime1500T_TPrimeToWB; <InputTree Name="AnalysisTree"/> <OutputTree Name="AnalysisTree"/> </InputData> 
+<InputData Version= "MC_ZPrime2500WIDToTPrime1500T_TPrimeToZT" Lumi="207419" Type="MC" NEventsMax="&NEVT;" Cacheable="&b_Cacheable;"> &MC_ZPrime2500WIDToTPrime1500T_TPrimeToZT; <InputTree Name="AnalysisTree"/> <OutputTree Name="AnalysisTree"/> </InputData> 
+<InputData Version= "MC_ZPrime4000NarToTPrime2500T_TPrimeToHT" Lumi="207419" Type="MC" NEventsMax="&NEVT;" Cacheable="&b_Cacheable;"> &MC_ZPrime4000NarToTPrime2500T_TPrimeToHT; <InputTree Name="AnalysisTree"/> <OutputTree Name="AnalysisTree"/> </InputData> 
+<InputData Version= "MC_ZPrime1500WIDToTPrime1000T_TPrimeToWB" Lumi="207419" Type="MC" NEventsMax="&NEVT;" Cacheable="&b_Cacheable;"> &MC_ZPrime1500WIDToTPrime1000T_TPrimeToWB; <InputTree Name="AnalysisTree"/> <OutputTree Name="AnalysisTree"/> </InputData> 
 
-<!-- <InputData Version= "MC_ZPrime1500ToTPrime700T_TPrimeToHT" Lumi="207419" Type="MC" NEventsMax="&NEVT;" Cacheable="&b_Cacheable;">
+<!--
+
+<InputData Version= "MC_ZPrime1750NarToTPrime1300T_TPrimeToZT" Lumi="207419" Type="MC" NEventsMax="&NEVT;" Cacheable="&b_Cacheable;"> &MC_ZPrime1750NarToTPrime1300T_TPrimeToZT; <InputTree Name="AnalysisTree"/> <OutputTree Name="AnalysisTree"/> </InputData> 
+<InputData Version= "MC_ZPrime1750NarToTPrime1300T_TPrimeToHT" Lumi="207419" Type="MC" NEventsMax="&NEVT;" Cacheable="&b_Cacheable;"> &MC_ZPrime1750NarToTPrime1300T_TPrimeToHT; <InputTree Name="AnalysisTree"/> <OutputTree Name="AnalysisTree"/> </InputData> 
+<InputData Version= "MC_ZPrime2250NarToTPrime1500T_TPrimeToZT" Lumi="207419" Type="MC" NEventsMax="&NEVT;" Cacheable="&b_Cacheable;"> &MC_ZPrime2250NarToTPrime1500T_TPrimeToZT; <InputTree Name="AnalysisTree"/> <OutputTree Name="AnalysisTree"/> </InputData> 
+<InputData Version= "MC_ZPrime2750NarToTPrime1500T_TPrimeToZT" Lumi="207419" Type="MC" NEventsMax="&NEVT;" Cacheable="&b_Cacheable;"> &MC_ZPrime2750NarToTPrime1500T_TPrimeToZT; <InputTree Name="AnalysisTree"/> <OutputTree Name="AnalysisTree"/> </InputData> 
+<InputData Version= "MC_ZPrime2250NarToTPrime1300T_TPrimeToZT" Lumi="207419" Type="MC" NEventsMax="&NEVT;" Cacheable="&b_Cacheable;"> &MC_ZPrime2250NarToTPrime1300T_TPrimeToZT; <InputTree Name="AnalysisTree"/> <OutputTree Name="AnalysisTree"/> </InputData> 
+<InputData Version= "MC_ZPrime2250NarToTPrime1300T_TPrimeToWB" Lumi="207419" Type="MC" NEventsMax="&NEVT;" Cacheable="&b_Cacheable;"> &MC_ZPrime2250NarToTPrime1300T_TPrimeToWB; <InputTree Name="AnalysisTree"/> <OutputTree Name="AnalysisTree"/> </InputData> 
+<InputData Version= "MC_ZPrime2750NarToTPrime1500T_TPrimeToWB" Lumi="207419" Type="MC" NEventsMax="&NEVT;" Cacheable="&b_Cacheable;"> &MC_ZPrime2750NarToTPrime1500T_TPrimeToWB; <InputTree Name="AnalysisTree"/> <OutputTree Name="AnalysisTree"/> </InputData> 
+<InputData Version= "MC_ZPrime1750NarToTPrime1300T_TPrimeToWB" Lumi="207419" Type="MC" NEventsMax="&NEVT;" Cacheable="&b_Cacheable;"> &MC_ZPrime1750NarToTPrime1300T_TPrimeToWB; <InputTree Name="AnalysisTree"/> <OutputTree Name="AnalysisTree"/> </InputData> 
+<InputData Version= "MC_ZPrime1500WIDToTPrime1300T_TPrimeToZT" Lumi="207419" Type="MC" NEventsMax="&NEVT;" Cacheable="&b_Cacheable;"> &MC_ZPrime1500WIDToTPrime1300T_TPrimeToZT; <InputTree Name="AnalysisTree"/> <OutputTree Name="AnalysisTree"/> </InputData> 
+<InputData Version= "MC_ZPrime2750NarToTPrime1500T_TPrimeToHT" Lumi="207419" Type="MC" NEventsMax="&NEVT;" Cacheable="&b_Cacheable;"> &MC_ZPrime2750NarToTPrime1500T_TPrimeToHT; <InputTree Name="AnalysisTree"/> <OutputTree Name="AnalysisTree"/> </InputData> 
+<InputData Version= "MC_ZPrime2250NarToTPrime1500T_TPrimeToHT" Lumi="207419" Type="MC" NEventsMax="&NEVT;" Cacheable="&b_Cacheable;"> &MC_ZPrime2250NarToTPrime1500T_TPrimeToHT; <InputTree Name="AnalysisTree"/> <OutputTree Name="AnalysisTree"/> </InputData> 
+<InputData Version= "MC_ZPrime2250NarToTPrime1500T_TPrimeToWB" Lumi="207419" Type="MC" NEventsMax="&NEVT;" Cacheable="&b_Cacheable;"> &MC_ZPrime2250NarToTPrime1500T_TPrimeToWB; <InputTree Name="AnalysisTree"/> <OutputTree Name="AnalysisTree"/> </InputData> 
+<InputData Version= "MC_ZPrime1500WIDToTPrime800T_TPrimeToWB" Lumi="207419" Type="MC" NEventsMax="&NEVT;" Cacheable="&b_Cacheable;"> &MC_ZPrime1500WIDToTPrime800T_TPrimeToWB; <InputTree Name="AnalysisTree"/> <OutputTree Name="AnalysisTree"/> </InputData> 
+<InputData Version= "MC_ZPrime2250NarToTPrime1300T_TPrimeToHT" Lumi="207419" Type="MC" NEventsMax="&NEVT;" Cacheable="&b_Cacheable;"> &MC_ZPrime2250NarToTPrime1300T_TPrimeToHT; <InputTree Name="AnalysisTree"/> <OutputTree Name="AnalysisTree"/> </InputData> 
+
+
+<InputData Version= "MC_ZPrime1500NarToTPrime1000T_TPrimeToHT" Lumi="207419" Type="MC" NEventsMax="&NEVT;" Cacheable="&b_Cacheable;"> &MC_ZPrime1500NarToTPrime1000T_TPrimeToHT; <InputTree Name="AnalysisTree"/> <OutputTree Name="AnalysisTree"/> </InputData>
+<InputData Version= "MC_ZPrime1500NarToTPrime1300T_TPrimeToHT" Lumi="207419" Type="MC" NEventsMax="&NEVT;" Cacheable="&b_Cacheable;"> &MC_ZPrime1500NarToTPrime1300T_TPrimeToHT; <InputTree Name="AnalysisTree"/> <OutputTree Name="AnalysisTree"/> </InputData>
+<InputData Version= "MC_ZPrime1500NarToTPrime800T_TPrimeToHT" Lumi="207419" Type="MC" NEventsMax="&NEVT;" Cacheable="&b_Cacheable;"> &MC_ZPrime1500NarToTPrime800T_TPrimeToHT; <InputTree Name="AnalysisTree"/> <OutputTree Name="AnalysisTree"/> </InputData>
+<InputData Version= "MC_ZPrime2000NarToTPrime1000T_TPrimeToHT" Lumi="207419" Type="MC" NEventsMax="&NEVT;" Cacheable="&b_Cacheable;"> &MC_ZPrime2000NarToTPrime1000T_TPrimeToHT; <InputTree Name="AnalysisTree"/> <OutputTree Name="AnalysisTree"/> </InputData>
+
+<InputData Version= "MC_ZPrime2000NarToTPrime1300T_TPrimeToHT" Lumi="207419" Type="MC" NEventsMax="&NEVT;" Cacheable="&b_Cacheable;"> &MC_ZPrime2000NarToTPrime1300T_TPrimeToHT; <InputTree Name="AnalysisTree"/> <OutputTree Name="AnalysisTree"/> </InputData>
+
+<InputData Version= "MC_ZPrime1500NarToTPrime1000T_TPrimeToWB" Lumi="207419" Type="MC" NEventsMax="&NEVT;" Cacheable="&b_Cacheable;"> &MC_ZPrime1500NarToTPrime1000T_TPrimeToWB; <InputTree Name="AnalysisTree"/> <OutputTree Name="AnalysisTree"/> </InputData>
+<InputData Version= "MC_ZPrime1500NarToTPrime1300T_TPrimeToWB" Lumi="207419" Type="MC" NEventsMax="&NEVT;" Cacheable="&b_Cacheable;"> &MC_ZPrime1500NarToTPrime1300T_TPrimeToWB; <InputTree Name="AnalysisTree"/> <OutputTree Name="AnalysisTree"/> </InputData>
+<InputData Version= "MC_ZPrime1500NarToTPrime800T_TPrimeToWB" Lumi="207419" Type="MC" NEventsMax="&NEVT;" Cacheable="&b_Cacheable;"> &MC_ZPrime1500NarToTPrime800T_TPrimeToWB; <InputTree Name="AnalysisTree"/> <OutputTree Name="AnalysisTree"/> </InputData>
+<InputData Version= "MC_ZPrime2500NarToTPrime1300T_TPrimeToWB" Lumi="207419" Type="MC" NEventsMax="&NEVT;" Cacheable="&b_Cacheable;"> &MC_ZPrime2500NarToTPrime1300T_TPrimeToWB; <InputTree Name="AnalysisTree"/> <OutputTree Name="AnalysisTree"/> </InputData>
+<InputData Version= "MC_ZPrime3500NarToTPrime2100T_TPrimeToWB" Lumi="207419" Type="MC" NEventsMax="&NEVT;" Cacheable="&b_Cacheable;"> &MC_ZPrime3500NarToTPrime2100T_TPrimeToWB; <InputTree Name="AnalysisTree"/> <OutputTree Name="AnalysisTree"/> </InputData>
+<InputData Version= "MC_ZPrime1500NarToTPrime1000T_TPrimeToZT" Lumi="207419" Type="MC" NEventsMax="&NEVT;" Cacheable="&b_Cacheable;"> &MC_ZPrime1500NarToTPrime1000T_TPrimeToZT; <InputTree Name="AnalysisTree"/> <OutputTree Name="AnalysisTree"/> </InputData>
+<InputData Version= "MC_ZPrime1500NarToTPrime1300T_TPrimeToZT" Lumi="207419" Type="MC" NEventsMax="&NEVT;" Cacheable="&b_Cacheable;"> &MC_ZPrime1500NarToTPrime1300T_TPrimeToZT; <InputTree Name="AnalysisTree"/> <OutputTree Name="AnalysisTree"/> </InputData>
+<InputData Version= "MC_ZPrime1500NarToTPrime800T_TPrimeToZT" Lumi="207419" Type="MC" NEventsMax="&NEVT;" Cacheable="&b_Cacheable;"> &MC_ZPrime1500NarToTPrime800T_TPrimeToZT; <InputTree Name="AnalysisTree"/> <OutputTree Name="AnalysisTree"/> </InputData>
+<InputData Version= "MC_ZPrime3500NarToTPrime1800T_TPrimeToZT" Lumi="207419" Type="MC" NEventsMax="&NEVT;" Cacheable="&b_Cacheable;"> &MC_ZPrime3500NarToTPrime1800T_TPrimeToZT; <InputTree Name="AnalysisTree"/> <OutputTree Name="AnalysisTree"/> </InputData>
+-->
+
+
+
+<!--  HT -->
+<!--
+<InputData Version= "MC_ZPrime3000NarToTPrime1500T_TPrimeToHT" Lumi="207419" Type="MC" NEventsMax="&NEVT;" Cacheable="&b_Cacheable;"> &MC_ZPrime3000NarToTPrime1500T_TPrimeToHT; <InputTree Name="AnalysisTree"/> <OutputTree Name="AnalysisTree"/> </InputData>
+<InputData Version= "MC_ZPrime3000NarToTPrime1800T_TPrimeToHT" Lumi="207419" Type="MC" NEventsMax="&NEVT;" Cacheable="&b_Cacheable;"> &MC_ZPrime3000NarToTPrime1800T_TPrimeToHT; <InputTree Name="AnalysisTree"/> <OutputTree Name="AnalysisTree"/> </InputData>
+<InputData Version= "MC_ZPrime3000NarToTPrime2100T_TPrimeToHT" Lumi="207419" Type="MC" NEventsMax="&NEVT;" Cacheable="&b_Cacheable;"> &MC_ZPrime3000NarToTPrime2100T_TPrimeToHT; <InputTree Name="AnalysisTree"/> <OutputTree Name="AnalysisTree"/> </InputData>
+<InputData Version= "MC_ZPrime3000WIDToTPrime1500T_TPrimeToHT" Lumi="207419" Type="MC" NEventsMax="&NEVT;" Cacheable="&b_Cacheable;"> &MC_ZPrime3000WIDToTPrime1500T_TPrimeToHT; <InputTree Name="AnalysisTree"/> <OutputTree Name="AnalysisTree"/> </InputData>
+<InputData Version= "MC_ZPrime3000WIDToTPrime1800T_TPrimeToHT" Lumi="207419" Type="MC" NEventsMax="&NEVT;" Cacheable="&b_Cacheable;"> &MC_ZPrime3000WIDToTPrime1800T_TPrimeToHT; <InputTree Name="AnalysisTree"/> <OutputTree Name="AnalysisTree"/> </InputData>
+<InputData Version= "MC_ZPrime3000WIDToTPrime2100T_TPrimeToHT" Lumi="207419" Type="MC" NEventsMax="&NEVT;" Cacheable="&b_Cacheable;"> &MC_ZPrime3000WIDToTPrime2100T_TPrimeToHT; <InputTree Name="AnalysisTree"/> <OutputTree Name="AnalysisTree"/> </InputData>
+<InputData Version= "MC_ZPrime4000NarToTPrime2100T_TPrimeToHT" Lumi="207419" Type="MC" NEventsMax="&NEVT;" Cacheable="&b_Cacheable;"> &MC_ZPrime4000NarToTPrime2100T_TPrimeToHT; <InputTree Name="AnalysisTree"/> <OutputTree Name="AnalysisTree"/> </InputData>
+<InputData Version= "MC_ZPrime4000NarToTPrime3000T_TPrimeToHT" Lumi="207419" Type="MC" NEventsMax="&NEVT;" Cacheable="&b_Cacheable;"> &MC_ZPrime4000NarToTPrime3000T_TPrimeToHT; <InputTree Name="AnalysisTree"/> <OutputTree Name="AnalysisTree"/> </InputData>
+<InputData Version= "MC_ZPrime4000WIDToTPrime2100T_TPrimeToHT" Lumi="207419" Type="MC" NEventsMax="&NEVT;" Cacheable="&b_Cacheable;"> &MC_ZPrime4000WIDToTPrime2100T_TPrimeToHT; <InputTree Name="AnalysisTree"/> <OutputTree Name="AnalysisTree"/> </InputData>
+<InputData Version= "MC_ZPrime4000WIDToTPrime3000T_TPrimeToHT" Lumi="207419" Type="MC" NEventsMax="&NEVT;" Cacheable="&b_Cacheable;"> &MC_ZPrime4000WIDToTPrime3000T_TPrimeToHT; <InputTree Name="AnalysisTree"/> <OutputTree Name="AnalysisTree"/> </InputData>
+-->
+
+
+<!--  WB -->
+<!--
+<InputData Version= "MC_ZPrime3000NarToTPrime1500T_TPrimeToWB" Lumi="207419" Type="MC" NEventsMax="&NEVT;" Cacheable="&b_Cacheable;"> &MC_ZPrime3000NarToTPrime1500T_TPrimeToWB; <InputTree Name="AnalysisTree"/> <OutputTree Name="AnalysisTree"/> </InputData>
+<InputData Version= "MC_ZPrime3000NarToTPrime1800T_TPrimeToWB" Lumi="207419" Type="MC" NEventsMax="&NEVT;" Cacheable="&b_Cacheable;"> &MC_ZPrime3000NarToTPrime1800T_TPrimeToWB; <InputTree Name="AnalysisTree"/> <OutputTree Name="AnalysisTree"/> </InputData>
+<InputData Version= "MC_ZPrime3000NarToTPrime2100T_TPrimeToWB" Lumi="207419" Type="MC" NEventsMax="&NEVT;" Cacheable="&b_Cacheable;"> &MC_ZPrime3000NarToTPrime2100T_TPrimeToWB; <InputTree Name="AnalysisTree"/> <OutputTree Name="AnalysisTree"/> </InputData>
+<InputData Version= "MC_ZPrime3000WIDToTPrime1500T_TPrimeToWB" Lumi="207419" Type="MC" NEventsMax="&NEVT;" Cacheable="&b_Cacheable;"> &MC_ZPrime3000WIDToTPrime1500T_TPrimeToWB; <InputTree Name="AnalysisTree"/> <OutputTree Name="AnalysisTree"/> </InputData>
+<InputData Version= "MC_ZPrime3000WIDToTPrime1800T_TPrimeToWB" Lumi="207419" Type="MC" NEventsMax="&NEVT;" Cacheable="&b_Cacheable;"> &MC_ZPrime3000WIDToTPrime1800T_TPrimeToWB; <InputTree Name="AnalysisTree"/> <OutputTree Name="AnalysisTree"/> </InputData>
+<InputData Version= "MC_ZPrime3000WIDToTPrime2100T_TPrimeToWB" Lumi="207419" Type="MC" NEventsMax="&NEVT;" Cacheable="&b_Cacheable;"> &MC_ZPrime3000WIDToTPrime2100T_TPrimeToWB; <InputTree Name="AnalysisTree"/> <OutputTree Name="AnalysisTree"/> </InputData>
+<InputData Version= "MC_ZPrime4000NarToTPrime2100T_TPrimeToWB" Lumi="207419" Type="MC" NEventsMax="&NEVT;" Cacheable="&b_Cacheable;"> &MC_ZPrime4000NarToTPrime2100T_TPrimeToWB; <InputTree Name="AnalysisTree"/> <OutputTree Name="AnalysisTree"/> </InputData>
+<InputData Version= "MC_ZPrime4000NarToTPrime2500T_TPrimeToWB" Lumi="207419" Type="MC" NEventsMax="&NEVT;" Cacheable="&b_Cacheable;"> &MC_ZPrime4000NarToTPrime2500T_TPrimeToWB; <InputTree Name="AnalysisTree"/> <OutputTree Name="AnalysisTree"/> </InputData>
+<InputData Version= "MC_ZPrime4000NarToTPrime3000T_TPrimeToWB" Lumi="207419" Type="MC" NEventsMax="&NEVT;" Cacheable="&b_Cacheable;"> &MC_ZPrime4000NarToTPrime3000T_TPrimeToWB; <InputTree Name="AnalysisTree"/> <OutputTree Name="AnalysisTree"/> </InputData>
+<InputData Version= "MC_ZPrime4000WIDToTPrime2100T_TPrimeToWB" Lumi="207419" Type="MC" NEventsMax="&NEVT;" Cacheable="&b_Cacheable;"> &MC_ZPrime4000WIDToTPrime2100T_TPrimeToWB; <InputTree Name="AnalysisTree"/> <OutputTree Name="AnalysisTree"/> </InputData>
+<InputData Version= "MC_ZPrime4000WIDToTPrime2500T_TPrimeToWB" Lumi="207419" Type="MC" NEventsMax="&NEVT;" Cacheable="&b_Cacheable;"> &MC_ZPrime4000WIDToTPrime2500T_TPrimeToWB; <InputTree Name="AnalysisTree"/> <OutputTree Name="AnalysisTree"/> </InputData>
+<InputData Version= "MC_ZPrime4000WIDToTPrime3000T_TPrimeToWB" Lumi="207419" Type="MC" NEventsMax="&NEVT;" Cacheable="&b_Cacheable;"> &MC_ZPrime4000WIDToTPrime3000T_TPrimeToWB; <InputTree Name="AnalysisTree"/> <OutputTree Name="AnalysisTree"/> </InputData>
+-->
+
+<!--  ZT -->
+<!--
+<InputData Version= "MC_ZPrime3000NarToTPrime1500T_TPrimeToZT" Lumi="207419" Type="MC" NEventsMax="&NEVT;" Cacheable="&b_Cacheable;"> &MC_ZPrime3000NarToTPrime1500T_TPrimeToZT; <InputTree Name="AnalysisTree"/> <OutputTree Name="AnalysisTree"/> </InputData>
+<InputData Version= "MC_ZPrime3000NarToTPrime1800T_TPrimeToZT" Lumi="207419" Type="MC" NEventsMax="&NEVT;" Cacheable="&b_Cacheable;"> &MC_ZPrime3000NarToTPrime1800T_TPrimeToZT; <InputTree Name="AnalysisTree"/> <OutputTree Name="AnalysisTree"/> </InputData>
+<InputData Version= "MC_ZPrime3000NarToTPrime2100T_TPrimeToZT" Lumi="207419" Type="MC" NEventsMax="&NEVT;" Cacheable="&b_Cacheable;"> &MC_ZPrime3000NarToTPrime2100T_TPrimeToZT; <InputTree Name="AnalysisTree"/> <OutputTree Name="AnalysisTree"/> </InputData>
+<InputData Version= "MC_ZPrime3000WIDToTPrime1800T_TPrimeToZT" Lumi="207419" Type="MC" NEventsMax="&NEVT;" Cacheable="&b_Cacheable;"> &MC_ZPrime3000WIDToTPrime1800T_TPrimeToZT; <InputTree Name="AnalysisTree"/> <OutputTree Name="AnalysisTree"/> </InputData>
+<InputData Version= "MC_ZPrime3000WIDToTPrime2100T_TPrimeToZT" Lumi="207419" Type="MC" NEventsMax="&NEVT;" Cacheable="&b_Cacheable;"> &MC_ZPrime3000WIDToTPrime2100T_TPrimeToZT; <InputTree Name="AnalysisTree"/> <OutputTree Name="AnalysisTree"/> </InputData>
+<InputData Version= "MC_ZPrime4000NarToTPrime2100T_TPrimeToZT" Lumi="207419" Type="MC" NEventsMax="&NEVT;" Cacheable="&b_Cacheable;"> &MC_ZPrime4000NarToTPrime2100T_TPrimeToZT; <InputTree Name="AnalysisTree"/> <OutputTree Name="AnalysisTree"/> </InputData>
+<InputData Version= "MC_ZPrime4000NarToTPrime2500T_TPrimeToZT" Lumi="207419" Type="MC" NEventsMax="&NEVT;" Cacheable="&b_Cacheable;"> &MC_ZPrime4000NarToTPrime2500T_TPrimeToZT; <InputTree Name="AnalysisTree"/> <OutputTree Name="AnalysisTree"/> </InputData>
+<InputData Version= "MC_ZPrime4000NarToTPrime3000T_TPrimeToZT" Lumi="207419" Type="MC" NEventsMax="&NEVT;" Cacheable="&b_Cacheable;"> &MC_ZPrime4000NarToTPrime3000T_TPrimeToZT; <InputTree Name="AnalysisTree"/> <OutputTree Name="AnalysisTree"/> </InputData>
+<InputData Version= "MC_ZPrime4000WIDToTPrime2100T_TPrimeToZT" Lumi="207419" Type="MC" NEventsMax="&NEVT;" Cacheable="&b_Cacheable;"> &MC_ZPrime4000WIDToTPrime2100T_TPrimeToZT; <InputTree Name="AnalysisTree"/> <OutputTree Name="AnalysisTree"/> </InputData>
+<InputData Version= "MC_ZPrime4000WIDToTPrime2500T_TPrimeToZT" Lumi="207419" Type="MC" NEventsMax="&NEVT;" Cacheable="&b_Cacheable;"> &MC_ZPrime4000WIDToTPrime2500T_TPrimeToZT; <InputTree Name="AnalysisTree"/> <OutputTree Name="AnalysisTree"/> </InputData>
+<InputData Version= "MC_ZPrime4000WIDToTPrime3000T_TPrimeToZT" Lumi="207419" Type="MC" NEventsMax="&NEVT;" Cacheable="&b_Cacheable;"> &MC_ZPrime4000WIDToTPrime3000T_TPrimeToZT; <InputTree Name="AnalysisTree"/> <OutputTree Name="AnalysisTree"/> </InputData>
+-->
+
+
+<!--
+<InputData Version= "MC_ZPrime4000NarToTPrime2100T_TPrimeToHT" Lumi="207419" Type="MC" NEventsMax="&NEVT;" Cacheable="&b_Cacheable;"> &MC_ZPrime4000NarToTPrime2100T_TPrimeToHT; <InputTree Name="AnalysisTree"/> <OutputTree Name="AnalysisTree"/> </InputData>
+<InputData Version= "MC_ZPrime4000WIDToTPrime2100T_TPrimeToHT" Lumi="207419" Type="MC" NEventsMax="&NEVT;" Cacheable="&b_Cacheable;"> &MC_ZPrime4000WIDToTPrime2100T_TPrimeToHT; <InputTree Name="AnalysisTree"/> <OutputTree Name="AnalysisTree"/> </InputData>
+<InputData Version= "MC_ZPrime3000WIDToTPrime1500T_TPrimeToZT" Lumi="207419" Type="MC" NEventsMax="&NEVT;" Cacheable="&b_Cacheable;"> &MC_ZPrime3000WIDToTPrime1500T_TPrimeToZT; <InputTree Name="AnalysisTree"/> <OutputTree Name="AnalysisTree"/> </InputData>
+<InputData Version= "MC_ZPrime2500NarToTPrime1300T_TPrimeToHT" Lumi="207419" Type="MC" NEventsMax="&NEVT;" Cacheable="&b_Cacheable;"> &MC_ZPrime2500NarToTPrime1300T_TPrimeToHT; <InputTree Name="AnalysisTree"/> <OutputTree Name="AnalysisTree"/> </InputData>
+<InputData Version= "MC_ZPrime2500NarToTPrime1500T_TPrimeToHT" Lumi="207419" Type="MC" NEventsMax="&NEVT;" Cacheable="&b_Cacheable;"> &MC_ZPrime2500NarToTPrime1500T_TPrimeToHT; <InputTree Name="AnalysisTree"/> <OutputTree Name="AnalysisTree"/> </InputData>
+
+<InputData Version= "MC_ZPrime2500NarToTPrime1800T_TPrimeToHT" Lumi="207419" Type="MC" NEventsMax="&NEVT;" Cacheable="&b_Cacheable;"> &MC_ZPrime2500NarToTPrime1800T_TPrimeToHT; <InputTree Name="AnalysisTree"/> <OutputTree Name="AnalysisTree"/> </InputData>
+
+
+<InputData Version= "MC_ZPrime3500NarToTPrime1800T_TPrimeToHT" Lumi="207419" Type="MC" NEventsMax="&NEVT;" Cacheable="&b_Cacheable;"> &MC_ZPrime3500NarToTPrime1800T_TPrimeToHT; <InputTree Name="AnalysisTree"/> <OutputTree Name="AnalysisTree"/> </InputData>
+
+
+
+<InputData Version= "MC_ZPrime2500WIDToTPrime1300T_TPrimeToHT" Lumi="207419" Type="MC" NEventsMax="&NEVT;" Cacheable="&b_Cacheable;"> &MC_ZPrime2500WIDToTPrime1300T_TPrimeToHT; <InputTree Name="AnalysisTree"/> <OutputTree Name="AnalysisTree"/> </InputData> 
+<InputData Version= "MC_ZPrime2500WIDToTPrime1800T_TPrimeToHT" Lumi="207419" Type="MC" NEventsMax="&NEVT;" Cacheable="&b_Cacheable;"> &MC_ZPrime2500WIDToTPrime1800T_TPrimeToHT; <InputTree Name="AnalysisTree"/> <OutputTree Name="AnalysisTree"/> </InputData>
+<InputData Version= "MC_ZPrime2500NarToTPrime1500T_TPrimeToWB" Lumi="207419" Type="MC" NEventsMax="&NEVT;" Cacheable="&b_Cacheable;"> &MC_ZPrime2500NarToTPrime1500T_TPrimeToWB; <InputTree Name="AnalysisTree"/> <OutputTree Name="AnalysisTree"/> </InputData>
+<InputData Version= "MC_ZPrime2500NarToTPrime1800T_TPrimeToWB" Lumi="207419" Type="MC" NEventsMax="&NEVT;" Cacheable="&b_Cacheable;"> &MC_ZPrime2500NarToTPrime1800T_TPrimeToWB; <InputTree Name="AnalysisTree"/> <OutputTree Name="AnalysisTree"/> </InputData>
+<InputData Version= "MC_ZPrime2500WIDToTPrime1300T_TPrimeToWB" Lumi="207419" Type="MC" NEventsMax="&NEVT;" Cacheable="&b_Cacheable;"> &MC_ZPrime2500WIDToTPrime1300T_TPrimeToWB; <InputTree Name="AnalysisTree"/> <OutputTree Name="AnalysisTree"/> </InputData>
+<InputData Version= "MC_ZPrime2500WIDToTPrime1800T_TPrimeToWB" Lumi="207419" Type="MC" NEventsMax="&NEVT;" Cacheable="&b_Cacheable;"> &MC_ZPrime2500WIDToTPrime1800T_TPrimeToWB; <InputTree Name="AnalysisTree"/> <OutputTree Name="AnalysisTree"/> </InputData>
+<InputData Version= "MC_ZPrime2500NarToTPrime1300T_TPrimeToZT" Lumi="207419" Type="MC" NEventsMax="&NEVT;" Cacheable="&b_Cacheable;"> &MC_ZPrime2500NarToTPrime1300T_TPrimeToZT; <InputTree Name="AnalysisTree"/> <OutputTree Name="AnalysisTree"/> </InputData>
+<InputData Version= "MC_ZPrime2500NarToTPrime1800T_TPrimeToZT" Lumi="207419" Type="MC" NEventsMax="&NEVT;" Cacheable="&b_Cacheable;"> &MC_ZPrime2500NarToTPrime1800T_TPrimeToZT; <InputTree Name="AnalysisTree"/> <OutputTree Name="AnalysisTree"/> </InputData>
+<InputData Version= "MC_ZPrime2500WIDToTPrime1300T_TPrimeToZT" Lumi="207419" Type="MC" NEventsMax="&NEVT;" Cacheable="&b_Cacheable;"> &MC_ZPrime2500WIDToTPrime1300T_TPrimeToZT; <InputTree Name="AnalysisTree"/> <OutputTree Name="AnalysisTree"/> </InputData>
+<InputData Version= "MC_ZPrime2500WIDToTPrime1800T_TPrimeToZT" Lumi="207419" Type="MC" NEventsMax="&NEVT;" Cacheable="&b_Cacheable;"> &MC_ZPrime2500WIDToTPrime1800T_TPrimeToZT; <InputTree Name="AnalysisTree"/> <OutputTree Name="AnalysisTree"/> </InputData>
+<InputData Version= "MC_ZPrime3500NarToTPrime2100T_TPrimeToHT" Lumi="207419" Type="MC" NEventsMax="&NEVT;" Cacheable="&b_Cacheable;"> &MC_ZPrime3500NarToTPrime2100T_TPrimeToHT; <InputTree Name="AnalysisTree"/> <OutputTree Name="AnalysisTree"/> </InputData>
+<InputData Version= "MC_ZPrime3500NarToTPrime2500T_TPrimeToHT" Lumi="207419" Type="MC" NEventsMax="&NEVT;" Cacheable="&b_Cacheable;"> &MC_ZPrime3500NarToTPrime2500T_TPrimeToHT; <InputTree Name="AnalysisTree"/> <OutputTree Name="AnalysisTree"/> </InputData>
+<InputData Version= "MC_ZPrime3500WIDToTPrime2100T_TPrimeToHT" Lumi="207419" Type="MC" NEventsMax="&NEVT;" Cacheable="&b_Cacheable;"> &MC_ZPrime3500WIDToTPrime2100T_TPrimeToHT; <InputTree Name="AnalysisTree"/> <OutputTree Name="AnalysisTree"/> </InputData>
+<InputData Version= "MC_ZPrime3500WIDToTPrime2500T_TPrimeToHT" Lumi="207419" Type="MC" NEventsMax="&NEVT;" Cacheable="&b_Cacheable;"> &MC_ZPrime3500WIDToTPrime2500T_TPrimeToHT; <InputTree Name="AnalysisTree"/> <OutputTree Name="AnalysisTree"/> </InputData>
+<InputData Version= "MC_ZPrime3500NarToTPrime1800T_TPrimeToWB" Lumi="207419" Type="MC" NEventsMax="&NEVT;" Cacheable="&b_Cacheable;"> &MC_ZPrime3500NarToTPrime1800T_TPrimeToWB; <InputTree Name="AnalysisTree"/> <OutputTree Name="AnalysisTree"/> </InputData>
+<InputData Version= "MC_ZPrime3500NarToTPrime2500T_TPrimeToWB" Lumi="207419" Type="MC" NEventsMax="&NEVT;" Cacheable="&b_Cacheable;"> &MC_ZPrime3500NarToTPrime2500T_TPrimeToWB; <InputTree Name="AnalysisTree"/> <OutputTree Name="AnalysisTree"/> </InputData>
+<InputData Version= "MC_ZPrime3500WIDToTPrime2100T_TPrimeToWB" Lumi="207419" Type="MC" NEventsMax="&NEVT;" Cacheable="&b_Cacheable;"> &MC_ZPrime3500WIDToTPrime2100T_TPrimeToWB; <InputTree Name="AnalysisTree"/> <OutputTree Name="AnalysisTree"/> </InputData>
+<InputData Version= "MC_ZPrime3500NarToTPrime2100T_TPrimeToZT" Lumi="207419" Type="MC" NEventsMax="&NEVT;" Cacheable="&b_Cacheable;"> &MC_ZPrime3500NarToTPrime2100T_TPrimeToZT; <InputTree Name="AnalysisTree"/> <OutputTree Name="AnalysisTree"/> </InputData>
+<InputData Version= "MC_ZPrime3500NarToTPrime2500T_TPrimeToZT" Lumi="207419" Type="MC" NEventsMax="&NEVT;" Cacheable="&b_Cacheable;"> &MC_ZPrime3500NarToTPrime2500T_TPrimeToZT; <InputTree Name="AnalysisTree"/> <OutputTree Name="AnalysisTree"/> </InputData>
+<InputData Version= "MC_ZPrime3500WIDToTPrime1800T_TPrimeToZT" Lumi="207419" Type="MC" NEventsMax="&NEVT;" Cacheable="&b_Cacheable;"> &MC_ZPrime3500WIDToTPrime1800T_TPrimeToZT; <InputTree Name="AnalysisTree"/> <OutputTree Name="AnalysisTree"/> </InputData>
+<InputData Version= "MC_ZPrime2000NarToTPrime1500T_TPrimeToHT" Lumi="207419" Type="MC" NEventsMax="&NEVT;" Cacheable="&b_Cacheable;"> &MC_ZPrime2000NarToTPrime1500T_TPrimeToHT; <InputTree Name="AnalysisTree"/> <OutputTree Name="AnalysisTree"/> </InputData>
+<InputData Version= "MC_ZPrime2000WIDToTPrime1000T_TPrimeToHT" Lumi="207419" Type="MC" NEventsMax="&NEVT;" Cacheable="&b_Cacheable;"> &MC_ZPrime2000WIDToTPrime1000T_TPrimeToHT; <InputTree Name="AnalysisTree"/> <OutputTree Name="AnalysisTree"/> </InputData>
+<InputData Version= "MC_ZPrime2000WIDToTPrime1300T_TPrimeToHT" Lumi="207419" Type="MC" NEventsMax="&NEVT;" Cacheable="&b_Cacheable;"> &MC_ZPrime2000WIDToTPrime1300T_TPrimeToHT; <InputTree Name="AnalysisTree"/> <OutputTree Name="AnalysisTree"/> </InputData>
+<InputData Version= "MC_ZPrime2000WIDToTPrime1500T_TPrimeToHT" Lumi="207419" Type="MC" NEventsMax="&NEVT;" Cacheable="&b_Cacheable;"> &MC_ZPrime2000WIDToTPrime1500T_TPrimeToHT; <InputTree Name="AnalysisTree"/> <OutputTree Name="AnalysisTree"/> </InputData>
+<InputData Version= "MC_ZPrime2000NarToTPrime1000T_TPrimeToWB" Lumi="207419" Type="MC" NEventsMax="&NEVT;" Cacheable="&b_Cacheable;"> &MC_ZPrime2000NarToTPrime1000T_TPrimeToWB; <InputTree Name="AnalysisTree"/> <OutputTree Name="AnalysisTree"/> </InputData>
+<InputData Version= "MC_ZPrime2000NarToTPrime1300T_TPrimeToWB" Lumi="207419" Type="MC" NEventsMax="&NEVT;" Cacheable="&b_Cacheable;"> &MC_ZPrime2000NarToTPrime1300T_TPrimeToWB; <InputTree Name="AnalysisTree"/> <OutputTree Name="AnalysisTree"/> </InputData>
+<InputData Version= "MC_ZPrime2000NarToTPrime1500T_TPrimeToWB" Lumi="207419" Type="MC" NEventsMax="&NEVT;" Cacheable="&b_Cacheable;"> &MC_ZPrime2000NarToTPrime1500T_TPrimeToWB; <InputTree Name="AnalysisTree"/> <OutputTree Name="AnalysisTree"/> </InputData>
+<InputData Version= "MC_ZPrime2000WIDToTPrime1000T_TPrimeToWB" Lumi="207419" Type="MC" NEventsMax="&NEVT;" Cacheable="&b_Cacheable;"> &MC_ZPrime2000WIDToTPrime1000T_TPrimeToWB; <InputTree Name="AnalysisTree"/> <OutputTree Name="AnalysisTree"/> </InputData>
+<InputData Version= "MC_ZPrime2000WIDToTPrime1300T_TPrimeToWB" Lumi="207419" Type="MC" NEventsMax="&NEVT;" Cacheable="&b_Cacheable;"> &MC_ZPrime2000WIDToTPrime1300T_TPrimeToWB; <InputTree Name="AnalysisTree"/> <OutputTree Name="AnalysisTree"/> </InputData>
+<InputData Version= "MC_ZPrime2000WIDToTPrime1500T_TPrimeToWB" Lumi="207419" Type="MC" NEventsMax="&NEVT;" Cacheable="&b_Cacheable;"> &MC_ZPrime2000WIDToTPrime1500T_TPrimeToWB; <InputTree Name="AnalysisTree"/> <OutputTree Name="AnalysisTree"/> </InputData>
+<InputData Version= "MC_ZPrime2000NarToTPrime1000T_TPrimeToZT" Lumi="207419" Type="MC" NEventsMax="&NEVT;" Cacheable="&b_Cacheable;"> &MC_ZPrime2000NarToTPrime1000T_TPrimeToZT; <InputTree Name="AnalysisTree"/> <OutputTree Name="AnalysisTree"/> </InputData>
+<InputData Version= "MC_ZPrime2000NarToTPrime1300T_TPrimeToZT" Lumi="207419" Type="MC" NEventsMax="&NEVT;" Cacheable="&b_Cacheable;"> &MC_ZPrime2000NarToTPrime1300T_TPrimeToZT; <InputTree Name="AnalysisTree"/> <OutputTree Name="AnalysisTree"/> </InputData>
+<InputData Version= "MC_ZPrime2000NarToTPrime1500T_TPrimeToZT" Lumi="207419" Type="MC" NEventsMax="&NEVT;" Cacheable="&b_Cacheable;"> &MC_ZPrime2000NarToTPrime1500T_TPrimeToZT; <InputTree Name="AnalysisTree"/> <OutputTree Name="AnalysisTree"/> </InputData>
+<InputData Version= "MC_ZPrime2000WIDToTPrime1000T_TPrimeToZT" Lumi="207419" Type="MC" NEventsMax="&NEVT;" Cacheable="&b_Cacheable;"> &MC_ZPrime2000WIDToTPrime1000T_TPrimeToZT; <InputTree Name="AnalysisTree"/> <OutputTree Name="AnalysisTree"/> </InputData>
+<InputData Version= "MC_ZPrime2000WIDToTPrime1300T_TPrimeToZT" Lumi="207419" Type="MC" NEventsMax="&NEVT;" Cacheable="&b_Cacheable;"> &MC_ZPrime2000WIDToTPrime1300T_TPrimeToZT; <InputTree Name="AnalysisTree"/> <OutputTree Name="AnalysisTree"/> </InputData>
+<InputData Version= "MC_ZPrime2000WIDToTPrime1500T_TPrimeToZT" Lumi="207419" Type="MC" NEventsMax="&NEVT;" Cacheable="&b_Cacheable;"> &MC_ZPrime2000WIDToTPrime1500T_TPrimeToZT; <InputTree Name="AnalysisTree"/> <OutputTree Name="AnalysisTree"/> </InputData>
+
+
+
+
+<InputData Version= "MC_ZPrime2500NarToTPrime1500T_TPrimeToZT" Lumi="207419" Type="MC" NEventsMax="&NEVT;" Cacheable="&b_Cacheable;"> &MC_ZPrime2500NarToTPrime1500T_TPrimeToZT; <InputTree Name="AnalysisTree"/> <OutputTree Name="AnalysisTree"/> </InputData>
+
+
+<InputData Version= "MC_ZPrime3500WIDToTPrime2100T_TPrimeToZT" Lumi="207419" Type="MC" NEventsMax="&NEVT;" Cacheable="&b_Cacheable;"> &MC_ZPrime3500WIDToTPrime2100T_TPrimeToZT; <InputTree Name="AnalysisTree"/> <OutputTree Name="AnalysisTree"/> </InputData>
+
+
+ <InputData Version= "MC_ZPrime1500ToTPrime700T_TPrimeToHT" Lumi="207419" Type="MC" NEventsMax="&NEVT;" Cacheable="&b_Cacheable;">
       &MC_ZPrime1500ToTPrime700T_TPrimeToHT; <InputTree Name="AnalysisTree"/></InputData>
   <InputData Version= "MC_ZPrime1500ToTPrime900T_TPrimeToHT" Lumi="205787" Type="MC" NEventsMax="&NEVT;" Cacheable="&b_Cacheable;">
       &MC_ZPrime1500ToTPrime900T_TPrimeToHT; <InputTree Name="AnalysisTree"/></InputData>
@@ -252,7 +560,7 @@
 	  &WJetsPT600toInf;
 	  <InputTree Name="AnalysisTree" />
 	</InputData>
--->
+
 
 
 	<InputData Lumi="1003149.359" NEventsMax="&NEVT;" Type="MC" Version="others_ST_s-channel_4f_leptonDecays" Cacheable="&b_Cacheable;">
@@ -282,7 +590,7 @@
 
 
 
-<!--
+
 	<InputData Lumi="1.084" NEventsMax="&NEVT;" Type="MC" Version="QCD_Pt15to20_MuEnrichedPt5" Cacheable="&b_Cacheable;">
 	  &QCDPT15to20;
 	  <InputTree Name="AnalysisTree" />

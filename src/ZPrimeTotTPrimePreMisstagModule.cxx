@@ -93,6 +93,7 @@ private:
   std::unique_ptr<uhh2::Selection> ele_sel; //veto on leptons
   std::unique_ptr<uhh2::Selection> topjet2_sel; //two AK8 pT>400GeV eta<2.4 deltaPhi>2.1
   std::unique_ptr<uhh2::Selection> ht_sel; //Ht,jets >1000
+  std::unique_ptr<uhh2::Selection> ht_lower_sel; //Ht,jets >500 for bias test
 
   //Hists
   //input
@@ -141,6 +142,8 @@ private:
   const int runnr_G = 280385;
 
  Event::Handle<std::vector<Jet>> h_myAK8Genjets;
+
+  bool biastest;
 };
 
 ZPrimeTotTPrimePreMisstagModule::ZPrimeTotTPrimePreMisstagModule(uhh2::Context& ctx){ 
@@ -225,14 +228,14 @@ ZPrimeTotTPrimePreMisstagModule::ZPrimeTotTPrimePreMisstagModule(uhh2::Context& 
   htcalc.push_back(std::unique_ptr<AnalysisModule>(new HTlepCalculator(ctx)));
 
   //cleaner
-  topjet_cleaner.reset(new TopJetCleaner(ctx,TopJetId(PtEtaCut(200., 2.5))));
+  topjet_cleaner.reset(new TopJetCleaner(ctx,TopJetId(PtEtaCut(200., 2.4))));
 
   //Selections
   muo_sel.reset(new NMuonSelection(0,0)); 
   ele_sel.reset(new NElectronSelection(0,0));
   topjet2_sel.reset(new NTopJetSelection(2,-1,TopJetId(PtEtaCut( 250., 2.4)))); 
   ht_sel.reset(new HtJetsSelection(1000,-1));
-  
+  ht_lower_sel.reset(new HtJetsSelection(500,-1));
   //Genral
   const std::string ttbar_gen_label ("ttbargen");
   ttgenprod.reset(new TTbarGenProducer(ctx, ttbar_gen_label, false));
@@ -271,6 +274,8 @@ ZPrimeTotTPrimePreMisstagModule::ZPrimeTotTPrimePreMisstagModule(uhh2::Context& 
   output_h_jet.reset(new JetHists     (ctx, "output_Jets"));
   output_h_eff.reset(new ZPrimeTotTPrimeHists(ctx, "output_eff"));
   output_h_topjet.reset(new TopJetHists     (ctx, "output_TopJets"));
+
+  biastest = (ctx.get("htbiastest")=="true");
 
 }
 
@@ -329,7 +334,10 @@ bool ZPrimeTotTPrimePreMisstagModule::process(Event & event) {
   uhh2::Event::TriggerIndex ti_HT;
   ti_HT=event.get_trigger_index("HLT_PFHT900_v*");
   bool HT_trigger = event.passes_trigger(ti_HT);
-  if(!HT_trigger) return false;
+  if(biastest&&isMC){
+  }else{
+    if(!HT_trigger) return false;
+  }
 
   topjet_cleaner->process(event);
   //  std::cout<<"In PreMisstagModule: vor Input"<<std::endl;
@@ -359,9 +367,13 @@ bool ZPrimeTotTPrimePreMisstagModule::process(Event & event) {
   jet_topjet2_h->fill(event);
 
   // std::cout<<"In PreMisstagModule: vor HT"<<std::endl;
-  bool pass_ht = ht_sel->passes(event);
-  if(!pass_ht)return false;
-
+  if(biastest&&isMC){
+    bool pass_ht = ht_lower_sel->passes(event);
+    if(!pass_ht)return false;
+  }else{
+    bool pass_ht = ht_sel->passes(event);
+    if(!pass_ht)return false;
+  }
   output_h_event ->fill(event);
   output_h_muo ->fill(event);
   output_h_ele   ->fill(event);

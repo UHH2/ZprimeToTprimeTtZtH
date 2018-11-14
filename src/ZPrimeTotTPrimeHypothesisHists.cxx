@@ -35,7 +35,7 @@ ZPrimeTotTPrimeHypothesisHists::ZPrimeTotTPrimeHypothesisHists(uhh2::Context & c
 
     M_ttbar_rec = book<TH1F>( "M_ttbar_rec", "M_{t#bar{t}}^{rec} [GeV/c^{2}]", 100, 0, 5000 ) ;
     M_Higgs_rec = book<TH1F>( "M_Higgs_rec", "M_{Higgs}^{rec} [GeV/c^{2}]", 60, 50, 170 ) ;
-    M_ZPrime_rec = book<TH1F>( "M_ZPrime_rec", "M_{ZPrime}^{rec} [GeV/c^{2}]", 40, 600, 4000 ) ;
+    M_ZPrime_rec = book<TH1F>( "M_ZPrime_rec", "M_{ZPrime}^{rec} [GeV/c^{2}]", 50, 600, 5000 ) ;
     M_ZPrime_scaled = book<TH1F>( "M_ZPrime_scaled", "M_{ZPrime}^{rec} [GeV/c^{2}]", 40, 600, 3000 ) ;
     M_TPrime_rec = book<TH1F>( "M_TPrime_rec", "M_{TPrime}^{rec} [GeV/c^{2}]", 50, 500, 1600 ) ;
     M_TPrime_rec2 = book<TH1F>( "M_TPrime_rec2", "M_{TPrime}^{rec} [GeV/c^{2}]", 50, 500, 1600 ) ;
@@ -168,7 +168,7 @@ ZPrimeTotTPrimeHypothesisHists::ZPrimeTotTPrimeHypothesisHists(uhh2::Context & c
     massfithadTop = book<TH1F>("massfithadTop","Mass reco hadTop",200, 50, 400);
     massfitlepTop = book<TH1F>("massfitlepTop","Mass reco lepTop",200, 50, 400);
  
-    missmatch = book<TH1F>("missmatch","Match Rate",8,0,8);
+    missmatch = book<TH1F>("missmatch","Match Rate",15,0,15);
 
     //distance between lepton and bjet of the lep top
     deltar_mu_blep = book<TH1F>("deltar_mu_blep","Distance between the lepton and the jet used for top lep",50,0,5);
@@ -191,7 +191,6 @@ ZPrimeTotTPrimeHypothesisHists::ZPrimeTotTPrimeHypothesisHists(uhh2::Context & c
 void ZPrimeTotTPrimeHypothesisHists::fill(const uhh2::Event & e){
 
   std::vector<ZPrimeTotTPrimeReconstructionHypothesis> hyps = e.get(h_hyps);
-  //  std::cout << "Hier ist es oder"<< std::endl;
   const ZPrimeTotTPrimeReconstructionHypothesis* hyp = get_best_hypothesis( hyps, m_discriminator_name );
   //  const ZPrimeTotTPrimeReconstructionHypothesis* hypHiggs = get_best_hypothesis( hyps, m_discriminator_name+"H" );
   double weight = e.weight;
@@ -253,6 +252,14 @@ void ZPrimeTotTPrimeHypothesisHists::fill(const uhh2::Event & e){
   M_ttbar_rec->Fill(mttbar_rec, weight);
   M_Higgs_rec->Fill(mHiggs_rec, weight);
   M_ZPrime_rec->Fill(mZPrime_rec, weight);
+  //hier
+  // if(mZPrime_rec>4000){
+  //   std::fstream g;
+  //   g.open("masses.txt", ios::out);
+  //   std::cout << e.run<<" "<<e.luminosityBlock<<" "<<e.event  << std::endl;
+  //   g.close();
+  // }
+
   M_ZPrime_scaled->Fill(mZPrime_rec, (0.048 - 0.000038 * hyp->HZW_v4().Pt() ) * weight);
   M_TPrime_rec->Fill(mTPrime_rec, weight);
  M_TPrime_rec2->Fill(mTPrime_rec2, weight);
@@ -408,10 +415,6 @@ M_TPrime_rec4->Fill(mTPrime_rec4, weight);
 
     ////////////////////////////////////////////////////////
 
-    // std::cout <<"L128: TllTh Zerfall (Ja oder Nein)  " << zprimegen.GetDecayChannel().at(16) << std::endl;
-    //  std::cout <<"L128: (Hyo=pothesisHists) TllTh Zerfall (Ja oder Nein)  " << n_vector[16] << std::endl;
-
-
     if(n_vector[16]){
       double lep_pt_gen = zprimegen.Lepton().pt();
       double lep_eta_gen = zprimegen.Lepton().eta();
@@ -435,17 +438,19 @@ M_TPrime_rec4->Fill(mTPrime_rec4, weight);
       eta_neutrino_rec_vs_eta_neutrino_gen->Fill(hyp->neutrino_v4().eta(), nu_eta_gen, weight);
       eta_blep_rec_vs_eta_blep_gen->Fill(hyp->blep_v4().eta(), blep_eta_gen, weight);
     }
-
+    //hier
     if(deltaR(zprimegen.Higgs(), hyp->HZW_v4() )<=0.8){
       massfitHiggs -> Fill(hyp->HZW_v4().M(), weight);
       missmatch->Fill("H matched",1);
     }else missmatch->Fill("H miss",1);
-    // if(deltaR(zprimegen.hadTop(), hyp->HZW_v4() )<=0.8){
-    //   missmatch->Fill("had Top matched",weight);
-    // }else missmatch->Fill("had Top miss",weight);
-    // if(deltaR(zprimegen.lepTop(), hyp->HZW_v4() )<=0.8){
-    //   missmatch->Fill("lep Top matched",weight);
-    // }else missmatch->Fill("lep Top miss",weight);
+    if(zprimegen.IsSemiLeptonicDecay()){
+	if(deltaR(zprimegen.hadTop(), hyp->HZW_v4() )<=0.8){
+	  missmatch->Fill("had Top matched",weight);
+	}else missmatch->Fill("had Top miss",weight);
+      if(deltaR(zprimegen.lepTop(), hyp->HZW_v4() )<=0.8){
+	missmatch->Fill("lep Top matched",weight);
+      }else missmatch->Fill("lep Top miss",weight);
+    }
 
     if(deltaR(zprimegen.ZBoson(), hyp->HZW_v4() )<=0.8){
       massfitZ -> Fill(hyp->HZW_v4().M(), weight);
@@ -461,32 +466,43 @@ M_TPrime_rec4->Fill(mTPrime_rec4, weight);
     bool b_dquark2 = false;
     bool b_dbhad = false;
     //massfit had top  
+    //hier
     for(const auto hadtop : hyp->tophad_jets()){
-      if(deltaR(zprimegen.Quark1(),hadtop)<=0.4) b_dquark1=true;
-      if(deltaR(zprimegen.Quark2(),hadtop)<=0.4) b_dquark2=true;
-      if(deltaR(zprimegen.BHad(),hadtop)<=0.4) b_dbhad=true;
+      if(deltaR(zprimegen.Quark1(),hadtop)<=0.8) b_dquark1=true;
+      if(deltaR(zprimegen.Quark2(),hadtop)<=0.8) b_dquark2=true;
+      if(deltaR(zprimegen.BHad(),hadtop)<=0.8) b_dbhad=true;
     }
 
-    if(b_dquark1 && b_dquark2 && b_dbhad){
-      massfithadTop ->Fill(hyp->tophad_v4().M(), weight);
-      missmatch->Fill("had TopR matched",1);
-    }else  missmatch->Fill("had TopR miss",1);
-    // if(deltaR( zprimegen.lepTop(), hyp->tophad_v4())<=0.8){
-    //   missmatch->Fill("lep TopR matched",weight);
-    // }else  missmatch->Fill("lep TopR miss",weight);
-    // if(deltaR( zprimegen.Higgs(), hyp->tophad_v4())<=0.8){
-    //   missmatch->Fill("HiggsR matched",weight);
-    // }else  missmatch->Fill("HiggsR miss",weight);
+    bool all_with_tophad = (deltaR(zprimegen.Quark1(),hyp->tophad_v4())<0.8)&&(deltaR(zprimegen.Quark2(),hyp->tophad_v4())<0.8)&&(deltaR(zprimegen.BHad(),hyp->tophad_v4())<0.8);
+
+    if(zprimegen.IsSemiLeptonicDecay()){
+      if(b_dquark1 && b_dquark2 && b_dbhad){
+	massfithadTop ->Fill(hyp->tophad_v4().M(), weight);
+	missmatch->Fill("had TopR matched",weight);
+      }else  missmatch->Fill("had TopR miss",weight);
+    }
 
     //Massfit lep. top
 
     double distance_blep = deltaR(zprimegen.BLep(),hyp->blep_v4()) ;
+    double distance_lepton = deltaR(hyp->lepton(),zprimegen.Lepton());
 
-    if(distance_blep<=0.4){
-      massfitlepTop ->Fill(hyp->toplep_v4().M(), weight);
-      missmatch->Fill("lep TopR matched",weight);
-    }else{missmatch->Fill("lep TopR miss",weight);}
+    if(zprimegen.IsSemiLeptonicDecay()){
+      if(distance_blep<=0.8&& distance_lepton<= 0.8){
+	massfitlepTop ->Fill(hyp->toplep_v4().M(), weight);
+	missmatch->Fill("lep TopR matched",weight);
+      }else{missmatch->Fill("lep TopR miss",weight);}
 
+      if(distance_blep<=0.8){
+	missmatch->Fill("lep Top b  matched",weight);
+      }else{missmatch->Fill("lep Top b miss",weight);}
+      
+      if(distance_lepton<=0.8){
+	missmatch->Fill("lep Top lepton  matched",weight);
+      }else{missmatch->Fill("lep Top lepton miss",weight);}
+
+
+    }
     // go over each jet to define the matching by the closest jet to the generator b quark and not over deltaR (might be different due to hadronisation)
     double deltaR_bgen_breco_min=1000;
     Jet closets_reco_jet;

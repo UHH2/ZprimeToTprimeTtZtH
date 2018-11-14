@@ -481,6 +481,17 @@ class MuonTrkWeights{
   std::unique_ptr<TGraphAsymmErrors> Trk_SF;
 
 };
+//////////////////////////////////////////////////////////////////////////////////////////////////////////
+class reweightingHT{
+ public:
+  explicit reweightingHT(uhh2::Context & ctx);
+  void process(uhh2::Event & event);
+
+ private:
+  TH1F* nominal_hist,*QCD_hist;
+  uhh2::Event::Handle<double> h_ht;
+  double ht;
+};
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
 class MistagRateSF{

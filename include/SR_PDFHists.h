@@ -26,6 +26,7 @@ public:
     virtual void fill(const uhh2::Event & ev) override;
 
     std::string histo_names[100];
+    std::string histo_names_toppt[100];
     std::string histo_names_pt[100];
     std::string histo_names_mass[100];
     std::string histo_names_eta[100];
